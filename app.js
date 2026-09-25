@@ -4937,6 +4937,13 @@ function setupRoleSwitchers() {
 
 function loadRole(role, preserveSectionId = null) {
   currentRole = role;
+  document.querySelectorAll('.role-btn').forEach(b => {
+    if (b.getAttribute('data-role') === role) {
+      b.classList.add('active');
+    } else {
+      b.classList.remove('active');
+    }
+  });
   const loc = roleLocalization[currentLang] || roleLocalization['ES'];
 
   // Encyclopedia is a separate data source
@@ -5126,6 +5133,16 @@ function setupSearch() {
         }
       });
     });
+
+    const encData = getEncyclopediaData();
+    if (encData && encData.sections) {
+      Object.keys(encData.sections).forEach(secId => {
+        const text = encData.sections[secId].replace(/<[^>]*>?/gm, '');
+        if (text.toLowerCase().includes(query)) {
+          matches.push({ role: 'encyclopedia', secId, textSnippet: text.substring(0, 180) + '...' });
+        }
+      });
+    }
 
     const loc = roleLocalization[currentLang] || roleLocalization['ES'];
 

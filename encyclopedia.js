@@ -1,1039 +1,953 @@
 /* ==========================================================================
-   EDEL Elevator Encyclopedia — Component & System Knowledge Base
-   Data file: encyclopedia.js
-   Status: WIP — Initial structure from PCB software scan (2026-09-25)
-   DO NOT MIX with existing docsData — this is a separate knowledge domain.
+   EDEL Elevator Encyclopedia — Complete Knowledge Base
+   encyclopedia.js — Full taxonomy with all subsections (Bilingual EN / ES)
+   Built from systematic PCB software scan
    ========================================================================== */
 
 window.encyclopediaData = {
 
-  // ---- ENGLISH VERSION ----
-  EN: {
-    title: "Elevator Encyclopedia",
-    nav: [
-      { id: "enc-overview",    label: "📦  Encyclopedia Overview",                   icon: "📦" },
-      { id: "enc-anatomy",     label: "🏗️  1. Elevator Anatomy & Zones",             icon: "🏗️" },
-      { id: "enc-can-bus",     label: "🔌  2. CAN Bus Architecture",                 icon: "🔌" },
-      { id: "enc-mainboard",   label: "🖥️  3.1 Main Board — K2-64278",               icon: "🖥️" },
-      { id: "enc-cabin",       label: "🚗  3.2 Cabin Boards (K2-64290 / 64291)",     icon: "🚗" },
-      { id: "enc-botcan",      label: "🔘  3.3 Floor Call Buttons (BotCAN)",         icon: "🔘" },
-      { id: "enc-exteriores",  label: "🏢  3.4 Exterior / Landing Displays",         icon: "🏢" },
-      { id: "enc-encoder",     label: "📏  3.5 Position Encoder (K2-64296)",         icon: "📏" },
-      { id: "enc-displays",    label: "🖥️  3.6 Indicator Display Modules",           icon: "🖥️" },
-      { id: "enc-arrows",      label: "⬆️  3.7 Directional Arrows (FlechasPP)",     icon: "⬆️" },
-      { id: "enc-expansion",   label: "🔌  3.8 Expansion & Interface Modules",       icon: "🔌" },
-      { id: "enc-access",      label: "🔑  3.9 Access Control (CA-02)",              icon: "🔑" },
-      { id: "enc-third-party", label: "🤝  4. Third-Party Components",               icon: "🤝" },
-      { id: "enc-variants",    label: "🔀  5. Product Variants (K2 / K3 / ADVANCED)","icon": "🔀" },
-      { id: "enc-compat",      label: "🔗  6. Compatibility & Dependency Matrix",    icon: "🔗" },
-      { id: "enc-montacargas", label: "🚛  K3: Goods Lift (Montacargas)",            icon: "🚛" }
-    ],
-    sections: {
-
-"enc-overview": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-cyan">Encyclopedia</span>
-    <h1>📦 EDEL Elevator Encyclopedia</h1>
-    <p>A complete internal reference covering every hardware module, component, and subsystem in the EDEL elevator control ecosystem. Built from a systematic scan of all PCB software projects.</p>
-  </div>
-
-  <div class="callout callout-human">
-    <div class="callout-icon">🎯</div>
-    <div class="callout-content">
-      <h4>Purpose of this Encyclopedia</h4>
-      <p>This is an <strong>internal knowledge base</strong> designed to accelerate support, troubleshooting, and onboarding. It answers questions like: <em>"What does this PCB do?", "What depends on what?", "Which components are fixed vs. interchangeable?", "What happens if one module fails?"</em></p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">Complete Module Inventory at a Glance</h2>
-  <div class="table-container">
-    <table>
-      <thead><tr><th>PCB Code</th><th>Software Name</th><th>Version</th><th>Function</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td><code>K2-64278</code></td><td>EDELElevatorFULL</td><td>v4.4.0</td><td>Main controller board (Placa Base)</td><td><span class="badge badge-green">Obligatory</span></td></tr>
-        <tr><td><code>K2-64290</code></td><td>EDELCabinaFull</td><td>v4.0.0</td><td>Cabin board v1 — with voice audio</td><td><span class="badge badge-cyan">Interchangeable</span></td></tr>
-        <tr><td><code>K2-64291</code></td><td>EDELCabina-v2</td><td>v1.2</td><td>Cabin board v2 ADVANCED — no audio</td><td><span class="badge badge-cyan">Interchangeable</span></td></tr>
-        <tr><td><code>K2-64295</code></td><td>EDELBotCAN</td><td>v1</td><td>Floor call button v1 (older)</td><td><span class="badge badge-cyan">Interchangeable</span></td></tr>
-        <tr><td><code>K2-64292</code></td><td>EDELBotCAN-v2</td><td>v1.2</td><td>Floor call button v2 ADVANCED</td><td><span class="badge badge-cyan">Interchangeable</span></td></tr>
-        <tr><td><code>K2-64280</code></td><td>EDELExteriores</td><td>v2.1</td><td>Landing position indicator v1</td><td><span class="badge badge-cyan">Interchangeable</span></td></tr>
-        <tr><td><code>K2-64281</code></td><td>EDELExterioresV2</td><td>v1.0</td><td>Landing indicator v2 (mCAN-12, ARM)</td><td><span class="badge badge-cyan">Interchangeable</span></td></tr>
-        <tr><td><code>K2-64296</code></td><td>EDELEncoder</td><td>v2.8</td><td>Absolute position encoder interface</td><td><span class="badge badge-green">Obligatory</span></td></tr>
-        <tr><td><code>K2-64300H-B</code></td><td>EDELDisplayLCD (H)</td><td>v2.4</td><td>Horizontal LCD indicator display</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K2-64300V</code></td><td>EDELDisplayLCD (V)</td><td>v1.0</td><td>Vertical LCD indicator display</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K2-64310</code></td><td>EDELDisplayRotativo (DRC)</td><td>—</td><td>Rotating/scrolling LED display</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K2-64315</code></td><td>EDELDisplayDotMatrix (DDM)</td><td>v1.0</td><td>Dot-matrix indicator display</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K2-64320</code></td><td>EDELDisplayTFT</td><td>v1.1–v2.5</td><td>Full-color TFT indicator display</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K2-64330</code></td><td>EDELminiLCD</td><td>v2.7</td><td>Small LCD indicator (cabin or landing)</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K2-64350</code></td><td>EDELFlechasPP</td><td>v2.1</td><td>Push-pull directional arrow indicators</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K2-64297</code></td><td>EDELExpansion</td><td>v1.0</td><td>Digital I/O expansion module</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K2-64299</code></td><td>EDELiCOM-v1</td><td>v1.0</td><td>Remote communication + VFD interface</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K2-64406</code></td><td>EDELMKInterface (MKI-01)</td><td>v1.1</td><td>MK bus bridge to 3rd-party panels</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K2-64435</code></td><td>EDELControlAcceso (CA-02)</td><td>v2.0</td><td>iButton access control reader</td><td><span class="badge badge-amber">Optional</span></td></tr>
-        <tr><td><code>K3-74278</code></td><td>EDELMontacargas</td><td>v1.2.2</td><td>Goods lift (separate product family)</td><td><span class="badge badge-indigo">K3 Family</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="callout callout-warning" style="margin-top:2rem;">
-    <div class="callout-icon">🚧</div>
-    <div class="callout-content">
-      <h4>Work In Progress</h4>
-      <p>This encyclopedia was seeded from an automated PCB software scan. Sections will be enriched progressively as manuals, schematics, and field knowledge are added.</p>
-    </div>
-  </div>
-</div>
-`,
-
-"enc-anatomy": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-indigo">Anatomy</span>
-    <h1>🏗️ 1. Elevator Anatomy & Physical Zones</h1>
-    <p>Understanding the physical zones of an elevator is fundamental to locating hardware and diagnosing problems. Each zone has specific EDEL electronics associated with it.</p>
-  </div>
-
-  <div class="callout callout-human">
-    <div class="callout-icon">💡</div>
-    <div class="callout-content">
-      <h4>Why Zones Matter for Support</h4>
-      <p>When a fault occurs, knowing <em>where</em> in the elevator the problem is narrows down which PCB to inspect. A door-related fault points to the cabin zone or landing zone. A position error points to the shaft encoder. A CAN communication error could be anywhere on the bus.</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">The 5 Physical Zones</h2>
-
-  <div class="grid-2col" style="margin-top:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
-
-    <div class="info-card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-cyan);">🏭 Machine Room (Cuarto de Máquinas)</h3>
-      <p style="color:var(--text-secondary);margin-top:.5rem;">Located at the top of the building (or remote in machine-room-less designs). Contains:</p>
-      <ul style="margin-top:.75rem;padding-left:1.2rem;color:var(--text-secondary);">
-        <li><strong>Main board K2-64278</strong> — Placa Base (the brain)</li>
-        <li><strong>Fuji VFD</strong> — Traction motor drive (obligatory, fixed manufacturer)</li>
-        <li><strong>Door VFD</strong> — Automatic door drive (obligatory, fixed manufacturer)</li>
-        <li>Electrical panel, breakers, contactor assembly</li>
-        <li><strong>iCOM K2-64299</strong> — If remote monitoring installed</li>
-      </ul>
-    </div>
-
-    <div class="info-card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-indigo);">🕳️ Shaft (Hueco)</h3>
-      <p style="color:var(--text-secondary);margin-top:.5rem;">The vertical column the elevator car travels through. Contains:</p>
-      <ul style="margin-top:.75rem;padding-left:1.2rem;color:var(--text-secondary);">
-        <li><strong>Encoder K2-64296</strong> — Absolute position sensor (Wachendorff or ELGO)</li>
-        <li>Guide rails, counterweight, traction rope/belt</li>
-        <li>Limit switches (final floor up/down)</li>
-        <li>CAN bus cable running from machine room to cabin</li>
-        <li>Magnetic tape or ruler (for absolute encoder)</li>
-      </ul>
-    </div>
-
-    <div class="info-card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-emerald);">🚗 Cabin (Cabina)</h3>
-      <p style="color:var(--text-secondary);margin-top:.5rem;">The passenger car. Contains the most electronic modules:</p>
-      <ul style="margin-top:.75rem;padding-left:1.2rem;color:var(--text-secondary);">
-        <li><strong>Cabin board K2-64290 or K2-64291</strong> — Car operating panel controller</li>
-        <li>Floor call buttons (inside the car)</li>
-        <li>Door open/close buttons</li>
-        <li>Speaker (if K2-64290 with audio)</li>
-        <li><strong>Display modules</strong> — One or more of: LCD, TFT, mLCD, DDM (shows current floor)</li>
-        <li>Inspection box (for technician use)</li>
-        <li>Emergency lighting, alarm button</li>
-        <li>Access control reader <strong>K2-64435</strong> (if CA-02 installed)</li>
-      </ul>
-    </div>
-
-    <div class="info-card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-amber);">🏢 Landings / Floors (Plantas)</h3>
-      <p style="color:var(--text-secondary);margin-top:.5rem;">Each floor landing where passengers call the elevator:</p>
-      <ul style="margin-top:.75rem;padding-left:1.2rem;color:var(--text-secondary);">
-        <li><strong>BotCAN K2-64295/64292</strong> — Floor call button PCB (up/down)</li>
-        <li><strong>Exteriores K2-64280/64281</strong> — Position indicator display (which floor the elevator is at)</li>
-        <li><strong>FlechasPP K2-64350</strong> — Directional arrows (up/down indicator)</li>
-        <li>Landing door lock mechanism</li>
-        <li>Floor door operator (if automatic doors)</li>
-      </ul>
-    </div>
-
-    <div class="info-card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:1.5rem; grid-column: span 2;">
-      <h3 style="color:var(--accent-rose);">⬇️ Pit (Foso)</h3>
-      <p style="color:var(--text-secondary);margin-top:.5rem;">The bottom of the shaft, below the lowest landing:</p>
-      <ul style="margin-top:.75rem;padding-left:1.2rem;color:var(--text-secondary);">
-        <li>Final limit switch (bottom overtravel protection)</li>
-        <li>Buffer (hydraulic shock absorber)</li>
-        <li>Hydraulic pump and cylinder base (if hydraulic installation)</li>
-        <li>Pit inspection box (for technician use)</li>
-        <li>No EDEL PCBs normally located here</li>
-      </ul>
-    </div>
-  </div>
-</div>
-`,
-
-"enc-can-bus": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-cyan">Architecture</span>
-    <h1>🔌 2. CAN Bus Architecture</h1>
-    <p>All EDEL peripheral modules communicate with the main board via CAN bus — a robust, differential serial protocol used in automotive and industrial systems. The EDEL system uses <strong>two separate CAN buses</strong>.</p>
-  </div>
-
-  <h2>The Two CAN Buses</h2>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
-    <div class="callout callout-blue">
-      <div class="callout-icon">🔵</div>
-      <div class="callout-content">
-        <h4>CAN Bus "CABINA" (Cabin Bus)</h4>
-        <p>Internal bus connecting the machine room controller to all cabin-side modules.</p>
-        <ul style="margin-top:.5rem;">
-          <li>Protocol ID: <code>$XBD</code> (EDEL), <code>$ZBD</code> (ATES/custom)</li>
-          <li>Cabin board (K2-64290/64291)</li>
-          <li>Encoder (K2-64296)</li>
-          <li>BotCAN floor buttons (K2-64292/64295)</li>
-          <li>Expansion I/O (K2-64297)</li>
-          <li>FlechasPP arrows (K2-64350)</li>
-          <li>iCOM remote module (K2-64299)</li>
-          <li>Display modules (mLCD, DDM, TFT)</li>
-        </ul>
-      </div>
-    </div>
-    <div class="callout callout-human">
-      <div class="callout-icon">🟡</div>
-      <div class="callout-content">
-        <h4>CAN Bus "EXTERIOR" (Landing Bus)</h4>
-        <p>External bus connecting the machine room to all floor landing modules.</p>
-        <ul style="margin-top:.5rem;">
-          <li>Protocol ID: <code>$XTR</code> (EDEL), <code>$ZTR</code> (custom)</li>
-          <li>Exteriores display v1 (K2-64280)</li>
-          <li>Exteriores display v2 mCAN-12 (K2-64281)</li>
-          <li>FlechasPP arrows (K2-64350) — also connected here</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">CAN Message ID Reference</h2>
-  <div class="table-container">
-    <table>
-      <thead><tr><th>Message ID</th><th>Direction</th><th>Subscribing Modules</th></tr></thead>
-      <tbody>
-        <tr><td><code>$XBD</code></td><td>Main Board → Cabin</td><td>Cabin board, Encoder, BotCAN, Expansion, mLCD, FlechasPP (cabin side)</td></tr>
-        <tr><td><code>$XBN</code></td><td>Cabin Board → Main</td><td>Cabin board TX response</td></tr>
-        <tr><td><code>$XBL</code></td><td>Encoder → Main</td><td>Encoder position TX</td></tr>
-        <tr><td><code>$XPD</code></td><td>Main Board → BotCAN</td><td>BotCAN buttons, Expansion I/O</td></tr>
-        <tr><td><code>$XTR</code></td><td>Main Board → Exterior</td><td>Exterior displays, FlechasPP (exterior side)</td></tr>
-        <tr><td><code>$XTL</code></td><td>Exterior → Main</td><td>FlechasPP TX to main, Exterior TX</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="callout callout-warning" style="margin-top:1.5rem;">
-    <div class="callout-icon">⚠️</div>
-    <div class="callout-content">
-      <h4>Hardware Variant Prefix</h4>
-      <p>The first character of each protocol ID defines the hardware variant family:<br>
-      <code>$X</code> = EDEL hardware &nbsp;|&nbsp; <code>$Y</code> = GENESIS hardware &nbsp;|&nbsp; <code>$Z</code> = ATES / custom hardware<br>
-      Mixing protocol prefixes on the same bus will cause communication failures.</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">Token / Firmware Authentication System</h2>
-  <p>Modules with <code>Token.c / Token.h</code> include a cryptographic handshake using the <code>Cifrado()</code> function (XOR with random-number lookup table). This prevents unauthorized firmware from being flashed. If a module has a token mismatch with the main board, it will <strong>not communicate</strong>.</p>
-  <p style="margin-top:.75rem;"><strong>Modules with Token system:</strong> K2-64280, K2-64292, K2-64296, K2-64350, K2-64406.</p>
-</div>
-`,
-
-"enc-mainboard": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-green">Obligatory</span>
-    <h1>🖥️ 3.1 Main Board — K2-64278 (EDELElevatorFULL)</h1>
-    <p>The central controller of the entire elevator system. Every other module depends on this board.</p>
-  </div>
-
-  <div class="callout callout-blue">
-    <div class="callout-icon">🧠</div>
-    <div class="callout-content">
-      <h4>Role in the System</h4>
-      <p>The main board is the <strong>CAN bus master</strong> for both the Cabin bus and the Exterior bus. It reads the safety chain, manages the state machine (idle → moving → stopping), dispatches calls, controls the Fuji VFD motor drive, and coordinates all peripheral modules.</p>
-    </div>
-  </div>
-
-  <div class="table-container" style="margin-top:1.5rem;">
-    <table>
-      <thead><tr><th>Property</th><th>Value</th></tr></thead>
-      <tbody>
-        <tr><td>PCB Code</td><td><code>K2-64278</code></td></tr>
-        <tr><td>Software</td><td>EDELElevatorFULL v4.4.0 / Bootloader v0.6.2</td></tr>
-        <tr><td>MCU</td><td>Freescale MC9S12XDT512 (HCS12X)</td></tr>
-        <tr><td>Toolchain</td><td>CodeWarrior for HCS12(X)</td></tr>
-        <tr><td>Presence</td><td><span class="badge badge-green">Always present — obligatory</span></td></tr>
-        <tr><td>CAN Role</td><td>Master — drives $XBD and $XTR</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 style="margin-top:2rem;">What It Controls</h2>
-  <ul style="padding-left:1.2rem;color:var(--text-secondary);">
-    <li>Full elevator state machine (idle, moving, door, emergency, inspection)</li>
-    <li>Safety chain monitoring (EN81-20 compliant)</li>
-    <li>Call registration and dispatching (simplex, duplex, multiplex)</li>
-    <li>Motor drive via Fuji VFD (speed profiles, deceleration)</li>
-    <li>Door control via door VFD</li>
-    <li>All peripheral modules via CAN (sends and receives)</li>
-    <li>EEPROM configuration storage (floor count, timers, features)</li>
-    <li>RTC fault logging (timestamped with PCF8583)</li>
-    <li>Programming console (16×2 LCD + keypad)</li>
-    <li>Special modes: Firefighter (Bomberos), VIP, Inspection, Group control</li>
-  </ul>
-
-  <div class="callout callout-warning" style="margin-top:2rem;">
-    <div class="callout-icon">🔧</div>
-    <div class="callout-content">
-      <h4>Support Note</h4>
-      <p>The vast majority of faults (all 99 fault codes) are generated and stored by this board. See the <strong>Developer Portal → Section 25</strong> for the full fault code matrix. If this board fails, the entire elevator stops — it has no redundancy.</p>
-    </div>
-  </div>
-</div>
-`,
-
-"enc-cabin": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-cyan">Interchangeable</span>
-    <h1>🚗 3.2 Cabin Boards</h1>
-    <p>The cabin board is the PCB inside the elevator car that manages the Car Operating Panel (COP) — the buttons passengers press inside the cabin, plus the display showing the current floor.</p>
-  </div>
-
-  <h2>Choose One: K2-64290 vs. K2-64291</h2>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
-    <div class="info-card" style="background:var(--bg-card);border:2px solid var(--accent-indigo);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-indigo);">K2-64290 — EDELCabinaFull v4.0.0</h3>
-      <span class="badge badge-indigo" style="margin:.5rem 0;display:inline-block;">v1 — with audio</span>
-      <div class="table-container" style="margin-top:.75rem;">
-        <table>
-          <tbody>
-            <tr><td>MCU</td><td>Freescale MC9S12XDT256 (HC12)</td></tr>
-            <tr><td>Toolchain</td><td>CodeWarrior HCS12</td></tr>
-            <tr><td>Project size</td><td>1,196 files</td></tr>
-            <tr><td>Audio</td><td>✅ 14 voice samples (audio00.c – audio13.c)</td></tr>
-            <tr><td>CAN</td><td>$XBD / $XBN</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="margin-top:.75rem;color:var(--text-secondary);">The "full" cabin board. Has pre-stored audio announcements (floor numbers, door opening, etc.) played through a speaker in the cabin. Larger board with dedicated audio hardware.</p>
-    </div>
-    <div class="info-card" style="background:var(--bg-card);border:2px solid var(--accent-cyan);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-cyan);">K2-64291 — EDELCabina-v2 v1.2</h3>
-      <span class="badge badge-cyan" style="margin:.5rem 0;display:inline-block;">v2 — ADVANCED</span>
-      <div class="table-container" style="margin-top:.75rem;">
-        <table>
-          <tbody>
-            <tr><td>MCU</td><td>Freescale MC9S08 (HCS08)</td></tr>
-            <tr><td>Toolchain</td><td>CodeWarrior HCS08</td></tr>
-            <tr><td>Project size</td><td>77 files</td></tr>
-            <tr><td>Audio</td><td>❌ No audio</td></tr>
-            <tr><td>CAN</td><td>$XBD (EDEL) / $ZBD (custom)</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="margin-top:.75rem;color:var(--text-secondary);">Compact ADVANCED variant. No audio. Smaller footprint. Uses MSCAN.c, EEPROM, and Test.c. Used in the ADVANCED series cabins where audio is not required.</p>
-    </div>
-  </div>
-
-  <div class="callout callout-warning" style="margin-top:1.5rem;">
-    <div class="callout-icon">⚠️</div>
-    <div class="callout-content">
-      <h4>Dependency: CAN protocol must match</h4>
-      <p>The cabin board and the main board must use the same CAN protocol prefix ($X for EDEL, $Z for custom). Mixing will result in the cabin not responding. The protocol is compiled into the firmware.</p>
-    </div>
-  </div>
-</div>
-`,
-
-"enc-botcan": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-cyan">Interchangeable</span>
-    <h1>🔘 3.3 Floor Call Buttons (BotCAN)</h1>
-    <p>The BotCAN is the small PCB embedded in every floor's landing button panel (LOP — Landing Operating Panel). When a passenger presses UP or DOWN, this PCB registers the call and sends it to the main board via CAN.</p>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
-    <div class="info-card" style="background:var(--bg-card);border:2px solid var(--accent-amber);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-amber);">K2-64295 — EDELBotCAN v1</h3>
-      <span class="badge badge-amber" style="margin:.5rem 0;display:inline-block;">v1 — older generation</span>
-      <div class="table-container" style="margin-top:.75rem;">
-        <table>
-          <tbody>
-            <tr><td>MCU</td><td>MC68HC908GZ8 (HC08)</td></tr>
-            <tr><td>Communication</td><td>CLK / DATA / STROBE (shift register)</td></tr>
-            <tr><td>Token</td><td>❌ No token</td></tr>
-            <tr><td>Files</td><td>65</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="margin-top:.75rem;color:var(--text-secondary);">Original design. Uses shift-register signaling. Older and being phased out in favor of v2.</p>
-    </div>
-    <div class="info-card" style="background:var(--bg-card);border:2px solid var(--accent-cyan);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-cyan);">K2-64292 — EDELBotCAN-v2 v1.2 (ADVANCED)</h3>
-      <span class="badge badge-cyan" style="margin:.5rem 0;display:inline-block;">v2 — ADVANCED</span>
-      <div class="table-container" style="margin-top:.75rem;">
-        <table>
-          <tbody>
-            <tr><td>MCU</td><td>MC9S08 (HCS08)</td></tr>
-            <tr><td>CAN Recv</td><td>$XBD (cabin data from main)</td></tr>
-            <tr><td>CAN Send</td><td>$XPD (call data to main)</td></tr>
-            <tr><td>Token</td><td>✅ Yes — Cifrado() auth</td></tr>
-            <tr><td>Variants</td><td>EDEL, GENESIS, ATES</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="margin-top:.75rem;color:var(--text-secondary);">Current generation. Full CAN integration with firmware token licensing. Used in ADVANCED series.</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">How Call Registration Works</h2>
-  <ol style="padding-left:1.2rem;color:var(--text-secondary);">
-    <li>Passenger presses floor button</li>
-    <li>BotCAN detects button press via digital input</li>
-    <li>BotCAN registers call via <code>RegistroLlamadas()</code></li>
-    <li>BotCAN sends CAN frame $XPD to main board with call data</li>
-    <li>Main board acknowledges and lights the button LED via $XBD response</li>
-    <li>Main board adds call to dispatch queue</li>
-  </ol>
-</div>
-`,
-
-"enc-exteriores": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-cyan">Interchangeable</span>
-    <h1>🏢 3.4 Exterior / Landing Displays (Exteriores)</h1>
-    <p>The Exteriores PCB drives the floor indicator display visible to passengers waiting at each landing — showing which floor the elevator is on and its direction of travel.</p>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
-    <div class="info-card" style="background:var(--bg-card);border:2px solid var(--accent-amber);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-amber);">K2-64280 — EDELExteriores v2.1</h3>
-      <span class="badge badge-amber" style="margin:.5rem 0;display:inline-block;">v1 — HCS08</span>
-      <div class="table-container" style="margin-top:.75rem;">
-        <table>
-          <tbody>
-            <tr><td>MCU</td><td>HCS08</td></tr>
-            <tr><td>Version</td><td>v2.1 (June 2018)</td></tr>
-            <tr><td>Token</td><td>✅ Yes</td></tr>
-            <tr><td>Files</td><td>79</td></tr>
-            <tr><td>CAN</td><td>$XBD / $XPD receive</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="margin-top:.75rem;color:var(--text-secondary);">Established design. Inputs include: <code>COMPLETO</code> (full load), <code>REAPERTURA</code> (door reopen), <code>BOMB_CABINA</code> (firefighter mode), and up to 16 <code>LLAMADA</code> (call) inputs. v2.1 added a second firefighter telegram type for Polish installations.</p>
-    </div>
-    <div class="info-card" style="background:var(--bg-card);border:2px solid var(--accent-cyan);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-cyan);">K2-64281 — EDELExterioresV2 v1.0 (mCAN-12)</h3>
-      <span class="badge badge-cyan" style="margin:.5rem 0;display:inline-block;">v2 — ARM Cortex-M0+</span>
-      <div class="table-container" style="margin-top:.75rem;">
-        <table>
-          <tbody>
-            <tr><td>MCU</td><td>NXP ARM Cortex-M0+</td></tr>
-            <tr><td>SDK</td><td>NXP MCUXpresso FSL</td></tr>
-            <tr><td>Name</td><td>"mCAN-12" — 12-zone CAN</td></tr>
-            <tr><td>Files</td><td>185</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="margin-top:.75rem;color:var(--text-secondary);">Complete rewrite on modern ARM platform. Higher processing power, better CAN handling. "mCAN-12" suggests support for up to 12 CAN address zones — useful in larger buildings with many landings.</p>
-    </div>
-  </div>
-</div>
-`,
-
-"enc-encoder": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-green">Obligatory</span>
-    <h1>📏 3.5 Position Encoder — K2-64296 (EDELEncoder)</h1>
-    <p>The encoder module reads the elevator's absolute position in the shaft and sends it to the main board via CAN. Without accurate position data, the elevator cannot stop at the correct floors.</p>
-  </div>
-
-  <div class="table-container" style="margin-top:1.5rem;">
-    <table>
-      <thead><tr><th>Property</th><th>Value</th></tr></thead>
-      <tbody>
-        <tr><td>PCB Code</td><td><code>K2-64296</code></td></tr>
-        <tr><td>Software</td><td>EDELEncoder v2.8 (January 2022)</td></tr>
-        <tr><td>MCU</td><td>MC9S08 (HCS08)</td></tr>
-        <tr><td>Token</td><td>✅ Cifrado() authentication</td></tr>
-        <tr><td>Interface</td><td>SSI — Synchronous Serial Interface</td></tr>
-        <tr><td>CAN Receive</td><td><code>$XBD</code> / <code>$ZBD</code></td></tr>
-        <tr><td>CAN Send</td><td><code>$XBL</code> (position) / <code>$XBN</code> (id)</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 style="margin-top:2rem;">Supported Encoder Models (SSI)</h2>
-  <p>The PCB supports two absolute encoder models, selected by <strong>DIP switches SW2 and SW3</strong>:</p>
-  <div class="table-container" style="margin-top:1rem;">
-    <table>
-      <thead><tr><th>Encoder Brand</th><th>Model type</th><th>SW2</th><th>SW3</th><th>Resolution</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Wachendorff</strong></td><td>SSI Absolute</td><td>OFF</td><td>OFF</td><td>12-bit single-turn</td></tr>
-        <tr><td><strong>ELGO</strong></td><td>SSI Absolute</td><td>ON</td><td>OFF</td><td>—</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="callout callout-warning" style="margin-top:1.5rem;">
-    <div class="callout-icon">⚠️</div>
-    <div class="callout-content">
-      <h4>Critical: DIP Switch Must Match Physical Encoder</h4>
-      <p>If the DIP switch setting does not match the brand of encoder physically installed, the position readings will be garbage. This causes incorrect floor stopping, unexpected door openings, and potentially safety faults.</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">Known Bug Fixed in v2.7 (Jan 2022)</h2>
-  <div class="callout callout-human">
-    <div class="callout-icon">🐛</div>
-    <div class="callout-content">
-      <h4>Symptom: Elevator at rest opens doors unexpectedly</h4>
-      <p><strong>Root cause:</strong> Erroneous encoder readings with jumps greater than 100mm were being accepted as valid positions. A momentary noisy reading could make the controller think the cabin had moved, triggering a door-open at the nearest floor.<br>
-      <strong>Fix in v2.7:</strong> Readings with >100mm jump from the previous reading are now discarded as invalid noise.</p>
-    </div>
-  </div>
-</div>
-`,
-
-"enc-displays": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-amber">Optional</span>
-    <h1>🖥️ 3.6 Indicator Display Modules</h1>
-    <p>EDEL offers multiple display technologies for floor indicators. All receive floor position data from the main board via the Cabin CAN bus. Choose based on aesthetics and customer requirements — they are interchangeable in function.</p>
-  </div>
-
-  <div class="table-container" style="margin-top:1.5rem;">
-    <table>
-      <thead><tr><th>PCB</th><th>Software</th><th>Technology</th><th>MCU</th><th>Notes</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><code>K2-64300H-B</code></td>
-          <td>EDELDisplayLCD (H) v2.4</td>
-          <td>LCD character — Horizontal</td>
-          <td>HCS08</td>
-          <td>v2.4 (Dec 2013) — Backlight support. v2.0 added CAN exterior support.</td>
-        </tr>
-        <tr>
-          <td><code>K2-64300V</code></td>
-          <td>EDELDisplayLCD (V) v1.0</td>
-          <td>LCD character — Vertical</td>
-          <td>HCS08</td>
-          <td>Same as LCD-H but portrait orientation</td>
-        </tr>
-        <tr>
-          <td><code>K2-64310</code></td>
-          <td>EDELDisplayRotativo (DRC)</td>
-          <td>LED/LCD rotating</td>
-          <td>MC9S08GT32</td>
-          <td>Has built-in LCD config menu (Menu.c, MenuLCD.c). I2C bus. Configurable via local keypad.</td>
-        </tr>
-        <tr>
-          <td><code>K2-64315</code></td>
-          <td>EDELDisplayDotMatrix (DDM) v1.0</td>
-          <td>Dot matrix LED</td>
-          <td>NXP ARM Cortex-M0+</td>
-          <td>Modern ARM platform. Same SDK as mCAN-12 and mLCD.</td>
-        </tr>
-        <tr>
-          <td><code>K2-64320</code></td>
-          <td>EDELDisplayTFT</td>
-          <td>TFT full color</td>
-          <td>HCS08</td>
-          <td>5 hardware sub-versions: v1.1, v1.2, v1.3, v2.0, v2.5 (25-inch variant). Most premium option.</td>
-        </tr>
-        <tr>
-          <td><code>K2-64330</code></td>
-          <td>EDELminiLCD v2.7</td>
-          <td>Small LCD</td>
-          <td>NXP ARM Cortex-M0+</td>
-          <td>v2.7: Language selection via CAN. Inspection image on CAN. ATES variant. I2C EEPROM.</td>
-        </tr>
-        <tr>
-          <td><code>K2-64MdPConsola</code></td>
-          <td>EDELConsolaMdP16x4 v3.5</td>
-          <td>16×4 LCD</td>
-          <td>—</td>
-          <td>Large programming console. Planned future addition to this encyclopedia.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="callout callout-human" style="margin-top:1.5rem;">
-    <div class="callout-icon">💡</div>
-    <div class="callout-content">
-      <h4>Support note: CAN language programming</h4>
-      <p>The miniLCD (K2-64330) v2.7+ supports programming the display language directly over the CAN bus. If the display shows garbled text or wrong characters, check the CAN language configuration before replacing the unit.</p>
-    </div>
-  </div>
-</div>
-`,
-
-"enc-arrows": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-amber">Optional</span>
-    <h1>⬆️ 3.7 Directional Arrows — K2-64350 (EDELFlechasPP)</h1>
-    <p>Push-Pull arrow indicators showing UP or DOWN direction at each floor landing. These are separate from the floor indicator display — they specifically show which direction the elevator is traveling.</p>
-  </div>
-
-  <div class="table-container" style="margin-top:1.5rem;">
-    <table>
-      <thead><tr><th>Property</th><th>Value</th></tr></thead>
-      <tbody>
-        <tr><td>PCB Code</td><td><code>K2-64350</code></td></tr>
-        <tr><td>Software</td><td>EDELFlechasPP v2.1</td></tr>
-        <tr><td>MCU</td><td>HCS08</td></tr>
-        <tr><td>Token</td><td>✅ Yes — Cifrado() auth</td></tr>
-        <tr><td>Files</td><td>60</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 style="margin-top:2rem;">Unique Feature: Dual-Bus Capability</h2>
-  <div class="callout callout-blue">
-    <div class="callout-icon">🔀</div>
-    <div class="callout-content">
-      <h4>Works on either CAN bus</h4>
-      <p>The FlechasPP can receive data from <strong>both the Cabin bus ($XBD) and the Exterior bus ($XTR)</strong>. This gives installation flexibility — the arrow module can be wired to whichever bus is more convenient for its physical location in the building.</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:1.5rem;">Configuration (DIP Switches)</h2>
-  <div class="table-container">
-    <table>
-      <thead><tr><th>Switch</th><th>Function</th></tr></thead>
-      <tbody>
-        <tr><td>SW_PLANTA_A–E (5 switches)</td><td>Select which floor this unit is assigned to (binary encoding)</td></tr>
-        <tr><td>SW_ID_0–1 (2 switches)</td><td>CAN node ID / address within the floor</td></tr>
-        <tr><td>SW_FLECHAS</td><td>Arrow display mode selection</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-`,
-
-"enc-expansion": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-amber">Optional</span>
-    <h1>🔌 3.8 Expansion & Interface Modules</h1>
-    <p>A family of add-on modules that extend the elevator system's I/O capacity, remote connectivity, or third-party hardware compatibility.</p>
-  </div>
-
-  <h2>K2-64297 — EDELExpansion v1.0 (I/O Expansion)</h2>
-  <div class="callout callout-blue" style="margin-top:1rem;">
-    <div class="callout-icon">📡</div>
-    <div class="callout-content">
-      <p><strong>MCU:</strong> HCS08 &nbsp;|&nbsp; <strong>Files:</strong> 221 &nbsp;|&nbsp; <strong>Token:</strong> No</p>
-      <p style="margin-top:.5rem;">Adds <strong>4 digital inputs + 4 digital outputs</strong> to the installation. Listens on both CAN buses ($XBD and $XPD). Used when the main board's I/O is insufficient for special configurations (e.g., extra floor sensors, custom signals).</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">K2-64299 — EDELiCOM-v1 v1.0 (Remote Communication)</h2>
-  <div class="callout callout-human" style="margin-top:1rem;">
-    <div class="callout-icon">🌐</div>
-    <div class="callout-content">
-      <p><strong>MCU:</strong> NXP MKE16Z4 ARM Cortex-M0+ &nbsp;|&nbsp; <strong>Files:</strong> 200+</p>
-      <p style="margin-top:.5rem;">The most complex peripheral module. Provides:</p>
-      <ul style="margin-top:.5rem;">
-        <li><strong>MCP2515</strong> external CAN controller (SPI) — secondary CAN port</li>
-        <li><strong>CANOpenLift.c</strong> — Full CANopen industrial protocol for remote monitoring</li>
-        <li><strong>UART bridge to Fuji VFD</strong> — reads inverter status (speed, faults)</li>
-        <li><strong>VirtualConsole.c</strong> — Remote debugging interface</li>
-        <li>Overspeed detection: LOW threshold = 12 m/min, HIGH = 18 m/min</li>
-        <li>4 digital monitoring inputs</li>
-        <li>Status LEDs: UP, DOWN, SPEED, ALARM, PWR</li>
-      </ul>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">K2-64406 — EDELMKInterface v1.1 (MKI-01)</h2>
-  <div class="callout callout-warning" style="margin-top:1rem;">
-    <div class="callout-icon">🤝</div>
-    <div class="callout-content">
-      <p><strong>MCU:</strong> HCS08 &nbsp;|&nbsp; <strong>Token:</strong> Yes &nbsp;|&nbsp; <strong>Files:</strong> 77</p>
-      <p style="margin-top:.5rem;">Bridge module between EDEL's CAN bus and an external <strong>MK proprietary bus</strong> (MKBUS.c/h). Allows connecting third-party MK-brand button panels to an EDEL elevator installation. Contains both Expansion firmware and MK Interface firmware.</p>
-      <p style="color:var(--text-muted);margin-top:.5rem;font-style:italic;">⚠️ The MK bus protocol details are still to be documented.</p>
-    </div>
-  </div>
-</div>
-`,
-
-"enc-access": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-amber">Optional</span>
-    <h1>🔑 3.9 Access Control — K2-64435 (CA-02)</h1>
-    <p>The access control module restricts elevator usage to authorized users using iButton key fobs — small electronic keys the size of a watch battery.</p>
-  </div>
-
-  <div class="table-container" style="margin-top:1.5rem;">
-    <table>
-      <thead><tr><th>Property</th><th>Value</th></tr></thead>
-      <tbody>
-        <tr><td>PCB Code</td><td><code>K2-64435</code></td></tr>
-        <tr><td>Software</td><td>EDELControlAcceso v2.0</td></tr>
-        <tr><td>MCU</td><td>HCS08 / RS08</td></tr>
-        <tr><td>Key technology</td><td>Dallas/Maxim iButton (1-Wire)</td></tr>
-        <tr><td>Storage</td><td>I2C EEPROM (Memory.c) — stores authorized key IDs</td></tr>
-        <tr><td>Companion app</td><td>EDELConsolaKeyManager v1.0 — for programming keys</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 style="margin-top:2rem;">How it Works</h2>
-  <ol style="padding-left:1.2rem;color:var(--text-secondary);">
-    <li>User touches iButton key fob to the reader</li>
-    <li>CA-02 reads the unique 64-bit ROM ID via 1-Wire protocol (<code>iButton.c</code>)</li>
-    <li>Checks ID against authorized key list in EEPROM (<code>Memory.c</code>)</li>
-    <li>If authorized: activates output relay (grants elevator access)</li>
-    <li>If unauthorized: beeps, stays locked (<code>TimerBeep</code> countdown)</li>
-  </ol>
-
-  <h2 style="margin-top:2rem;">Key Management</h2>
-  <p>The <strong>EDELConsolaKeyManager v1.0</strong> is a separate firmware that allows administrators to:</p>
-  <ul style="padding-left:1.2rem;color:var(--text-secondary);margin-top:.5rem;">
-    <li>Add new authorized iButton keys</li>
-    <li>Remove revoked keys</li>
-    <li>View the authorized key database</li>
-  </ul>
-</div>
-`,
-
-"enc-third-party": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-rose">External</span>
-    <h1>🤝 4. Third-Party Components</h1>
-    <p>Some components in the elevator installation are <strong>not manufactured by EDEL</strong> but are essential to the system. Understanding these is critical for support — a fault may originate in a third-party device, not an EDEL PCB.</p>
-  </div>
-
-  <h2>4.1 Fuji VFD — Motor Drive (OBLIGATORY)</h2>
-  <div class="callout callout-blue" style="margin-top:1rem;">
-    <div class="callout-icon">⚡</div>
-    <div class="callout-content">
-      <h4>Fuji Frenic Lift Series VFD</h4>
-      <p><strong>Role:</strong> Controls the speed and torque of the traction motor that moves the elevator car.<br>
-      <strong>Status:</strong> Fixed manufacturer — always Fuji. Cannot be substituted.<br>
-      <strong>Interface:</strong> Controlled by the main board K2-64278 via dedicated drive control outputs. The iCOM module (K2-64299) additionally monitors it via UART.<br>
-      <strong>Documentation:</strong> Full parameter reference in <em>Developer Portal → Section 30</em>.</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">4.2 Door VFD — Automatic Door Drive (OBLIGATORY)</h2>
-  <div class="callout callout-blue" style="margin-top:1rem;">
-    <div class="callout-icon">🚪</div>
-    <div class="callout-content">
-      <h4>Door Operator VFD</h4>
-      <p><strong>Role:</strong> Controls the speed at which automatic landing/cabin doors open and close.<br>
-      <strong>Status:</strong> Fixed manufacturer (confirmed Fuji or manufacturer-specific). Cannot be substituted without firmware changes.<br>
-      <strong>Interface:</strong> Controlled directly by the main board K2-64278.</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">4.3 Position Encoders (INTERCHANGEABLE)</h2>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem;">
-    <div class="info-card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-cyan);">Wachendorff SSI Encoder</h3>
-      <ul style="padding-left:1.2rem;color:var(--text-secondary);margin-top:.5rem;">
-        <li>Type: SSI (Synchronous Serial)</li>
-        <li>Resolution: 12-bit single-turn</li>
-        <li>DIP: SW2=OFF, SW3=OFF</li>
-        <li>Most common installation</li>
-      </ul>
-    </div>
-    <div class="info-card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:1.5rem;">
-      <h3 style="color:var(--accent-amber);">ELGO SSI Encoder</h3>
-      <ul style="padding-left:1.2rem;color:var(--text-secondary);margin-top:.5rem;">
-        <li>Type: SSI (Synchronous Serial)</li>
-        <li>DIP: SW2=ON, SW3=OFF</li>
-        <li>Alternative to Wachendorff</li>
-      </ul>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">4.4 Dallas/Maxim iButton</h2>
-  <p>Used with the CA-02 access control module. Standard 1-Wire protocol key fobs. Any Dallas/Maxim iButton with 64-bit unique ROM ID is compatible.</p>
-
-  <h2 style="margin-top:2rem;">4.5 MCP2515 (used internally in iCOM)</h2>
-  <p>External CAN controller chip used inside the K2-64299 iCOM module. Communicates with the iCOM MCU via SPI. Provides a second CAN port for CANopen-based remote monitoring.</p>
-</div>
-`,
-
-"enc-variants": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-indigo">Variants</span>
-    <h1>🔀 5. Product Variants</h1>
-    <p>EDEL's elevator controller ecosystem is organized into product families, each targeting a different application or market segment.</p>
-  </div>
-
-  <h2>5.1 K2 Series — Standard Passenger Elevator</h2>
-  <div class="callout callout-blue" style="margin-top:1rem;">
-    <div class="callout-icon">🛗</div>
-    <div class="callout-content">
-      <p>The main product line. Supports both traction and hydraulic elevator types. Full EN81-20 compliance. All PCBs with K2-6xxxx prefix belong to this family. Supports simplex, duplex, and multiplex group configurations.</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:1.5rem;">5.2 K3 Series — Goods Lift (Montacargas)</h2>
-  <div class="callout callout-human" style="margin-top:1rem;">
-    <div class="callout-icon">🚛</div>
-    <div class="callout-content">
-      <p>Completely separate product family from K2. Uses K3-74278 as the main board. Built for freight / goods transport. Has built-in LCD display and menu — no external display module needed. Supports hydraulic oil (oleo) drive with reenvio (return) timing. Latest version 1.2.2 actively maintained (May 2026).</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:1.5rem;">5.3 ADVANCED Series — Premium K2 Variant</h2>
-  <div class="callout callout-warning" style="margin-top:1rem;">
-    <div class="callout-icon">⭐</div>
-    <div class="callout-content">
-      <p>Premium version of the K2 series. Uses v2 variants of the cabin (K2-64291) and BotCAN (K2-64292) boards. Smaller PCB footprint, cleaner design. No audio in the standard ADVANCED cabin. Designed for higher-end installations.</p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:1.5rem;">5.4 Hardware Brand Variants (Firmware Level)</h2>
-  <div class="table-container" style="margin-top:1rem;">
-    <table>
-      <thead><tr><th>Brand</th><th>CAN Prefix</th><th>Description</th></tr></thead>
-      <tbody>
-        <tr><td><strong>EDEL</strong></td><td><code>$X</code></td><td>EDEL's own hardware. Default configuration.</td></tr>
-        <tr><td><strong>GENESIS</strong></td><td><code>$Y</code></td><td>Genesis brand hardware. Same firmware compiled differently.</td></tr>
-        <tr><td><strong>ATES</strong></td><td><code>$Z</code></td><td>ATES brand / custom hardware. Largest hardware variant family.</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p style="margin-top:.75rem;color:var(--text-secondary);">All modules on the same installation must use the same brand prefix or CAN communication will fail.</p>
-</div>
-`,
-
-"enc-compat": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-rose">Critical</span>
-    <h1>🔗 6. Compatibility & Dependency Matrix</h1>
-    <p>When diagnosing problems or planning a replacement, this section maps what depends on what — and what breaks when something fails.</p>
-  </div>
-
-  <h2>Component Dependency Summary</h2>
-  <div class="table-container" style="margin-top:1.5rem;">
-    <table>
-      <thead><tr><th>If this fails/changes...</th><th>These are directly affected</th><th>Impact</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><strong>Main Board K2-64278</strong></td>
-          <td>Everything</td>
-          <td><span class="badge badge-rose">Full stop</span> — entire elevator halts</td>
-        </tr>
-        <tr>
-          <td><strong>Fuji VFD (motor)</strong></td>
-          <td>Main board, iCOM</td>
-          <td><span class="badge badge-rose">Full stop</span> — no motor drive</td>
-        </tr>
-        <tr>
-          <td><strong>Encoder K2-64296</strong></td>
-          <td>Main board (position data)</td>
-          <td><span class="badge badge-rose">Full stop</span> — cannot position without encoder</td>
-        </tr>
-        <tr>
-          <td><strong>Encoder DIP switch mismatch</strong></td>
-          <td>Position system</td>
-          <td><span class="badge badge-amber">Incorrect position</span> — random stops, door faults</td>
-        </tr>
-        <tr>
-          <td><strong>Cabin board K2-64290/291</strong></td>
-          <td>COP buttons, display</td>
-          <td><span class="badge badge-amber">No car calls</span> — cabin unresponsive</td>
-        </tr>
-        <tr>
-          <td><strong>BotCAN K2-64292/295</strong></td>
-          <td>Floor calls for that floor</td>
-          <td><span class="badge badge-amber">No landing calls</span> from that floor</td>
-        </tr>
-        <tr>
-          <td><strong>CAN bus wiring break</strong></td>
-          <td>All modules beyond the break</td>
-          <td><span class="badge badge-rose">CAN fault</span> — all downstream modules go offline</td>
-        </tr>
-        <tr>
-          <td><strong>Token mismatch (firmware)</strong></td>
-          <td>That module only</td>
-          <td><span class="badge badge-amber">No communication</span> — module ignored by main board</td>
-        </tr>
-        <tr>
-          <td><strong>iCOM K2-64299 fails</strong></td>
-          <td>Remote monitoring, VFD UART data</td>
-          <td><span class="badge badge-green">Elevator continues</span> — iCOM is monitoring-only</td>
-        </tr>
-        <tr>
-          <td><strong>Display module fails</strong></td>
-          <td>Visual indicator only</td>
-          <td><span class="badge badge-green">Elevator continues</span> — cosmetic issue only</td>
-        </tr>
-        <tr>
-          <td><strong>CA-02 access control fails</strong></td>
-          <td>Access restriction</td>
-          <td><span class="badge badge-amber">Check config</span> — may lock out all or allow all depending on fail-safe mode</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 style="margin-top:2rem;">Hardware Variant Compatibility Rule</h2>
-  <div class="callout callout-warning">
-    <div class="callout-icon">⚠️</div>
-    <div class="callout-content">
-      <h4>All modules on one installation must use the same CAN prefix</h4>
-      <p>You cannot mix an EDEL-type main board ($X) with an ATES-type cabin board ($Z). The Token authentication will reject the module. Always verify when replacing a PCB that the firmware variant matches the installation's hardware type.</p>
-    </div>
-  </div>
-</div>
-`,
-
-"enc-montacargas": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-indigo">K3 Family</span>
-    <h1>🚛 K3 Series: Goods Lift (Montacargas)</h1>
-    <p>The EDELMontacargas is a completely separate controller family from the K2 passenger elevator line, designed specifically for freight / goods transport applications.</p>
-  </div>
-
-  <div class="table-container" style="margin-top:1.5rem;">
-    <table>
-      <thead><tr><th>Property</th><th>Value</th></tr></thead>
-      <tbody>
-        <tr><td>PCB Code</td><td><code>K3-74278</code></td></tr>
-        <tr><td>Software</td><td>EDELMontacargas v1.2.2</td></tr>
-        <tr><td>MCU</td><td>Freescale MC9S12DG128B (HCS12)</td></tr>
-        <tr><td>Latest version</td><td>v1.2.2 — May 2026 (actively maintained)</td></tr>
-        <tr><td>E2PROM version</td><td>0x0A</td></tr>
-        <tr><td>Display</td><td>Built-in LCD + menu system (no external display module)</td></tr>
-        <tr><td>Drive type</td><td>Supports hydraulic (oleo) + traction</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 style="margin-top:2rem;">Key Differences vs. K2 Passenger Elevator</h2>
-  <div class="table-container">
-    <table>
-      <thead><tr><th>Feature</th><th>K2 (Passenger)</th><th>K3 (Montacargas)</th></tr></thead>
-      <tbody>
-        <tr><td>External display module</td><td>Required (separate PCB)</td><td>✅ Built-in on controller board</td></tr>
-        <tr><td>External CAN peripherals</td><td>Yes (full ecosystem)</td><td>Minimal — self-contained</td></tr>
-        <tr><td>Hydraulic support</td><td>Yes (Oleo configuration)</td><td>✅ Yes + extended reenvio timing</td></tr>
-        <tr><td>EN81-20 compliance</td><td>Yes (passenger standard)</td><td>Freight standard (different norms)</td></tr>
-        <tr><td>Audio</td><td>Optional (K2-64290)</td><td>No audio</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 style="margin-top:2rem;">Recent Version History</h2>
-  <div class="table-container">
-    <table>
-      <thead><tr><th>Version</th><th>Date</th><th>Key Changes</th></tr></thead>
-      <tbody>
-        <tr><td>v1.2.2</td><td>May 2026</td><td>Fix: hydraulic positioning error with NC door — door no longer opens during oleo reenvio when it shouldn't</td></tr>
-        <tr><td>v1.2.1</td><td>2025</td><td>Fault 53/57 → reset via menu. Oleo max reenvio time extended from 30 to 90 min</td></tr>
-        <tr><td>v1.2.0</td><td>2023</td><td>Major update — E2P version 0x09</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-`
-
-    } // end sections
-  }, // end EN
-
-  // ---- SPANISH VERSION ----
-  ES: {
-    title: "Enciclopedia del Ascensor",
-    nav: [
-      { id: "enc-overview",    label: "📦  Resumen de la Enciclopedia",                icon: "📦" },
-      { id: "enc-anatomy",     label: "🏗️  1. Anatomía y Zonas del Ascensor",         icon: "🏗️" },
-      { id: "enc-can-bus",     label: "🔌  2. Arquitectura del Bus CAN",               icon: "🔌" },
-      { id: "enc-mainboard",   label: "🖥️  3.1 Placa Principal — K2-64278",           icon: "🖥️" },
-      { id: "enc-cabin",       label: "🚗  3.2 Placas de Cabina (K2-64290 / 64291)",  icon: "🚗" },
-      { id: "enc-botcan",      label: "🔘  3.3 Pulsadores de Planta (BotCAN)",        icon: "🔘" },
-      { id: "enc-exteriores",  label: "🏢  3.4 Indicadores Exteriores",               icon: "🏢" },
-      { id: "enc-encoder",     label: "📏  3.5 Encoder de Posición (K2-64296)",       icon: "📏" },
-      { id: "enc-displays",    label: "🖥️  3.6 Módulos de Visualización",             icon: "🖥️" },
-      { id: "enc-arrows",      label: "⬆️  3.7 Flechas Direccionales (FlechasPP)",   icon: "⬆️" },
-      { id: "enc-expansion",   label: "🔌  3.8 Expansión e Interfaces",               icon: "🔌" },
-      { id: "enc-access",      label: "🔑  3.9 Control de Acceso (CA-02)",            icon: "🔑" },
-      { id: "enc-third-party", label: "🤝  4. Componentes de Terceros",               icon: "🤝" },
-      { id: "enc-variants",    label: "🔀  5. Variantes de Producto (K2 / K3 / ADV)", icon: "🔀" },
-      { id: "enc-compat",      label: "🔗  6. Matriz de Compatibilidad",              icon: "🔗" },
-      { id: "enc-montacargas", label: "🚛  K3: Montacargas",                          icon: "🚛" }
-    ],
-    sections: {
-
-"enc-overview": `
-<div class="doc-section">
-  <div class="doc-header">
-    <span class="badge badge-cyan">Enciclopedia</span>
-    <h1>📦 Enciclopedia del Ascensor EDEL</h1>
-    <p>Referencia interna completa que cubre cada módulo de hardware, componente y subsistema del ecosistema de control de ascensores EDEL. Construida a partir del análisis sistemático de todos los proyectos software de PCB.</p>
-  </div>
-
-  <div class="callout callout-human">
-    <div class="callout-icon">🎯</div>
-    <div class="callout-content">
-      <h4>Propósito de esta Enciclopedia</h4>
-      <p>Es una <strong>base de conocimiento interna</strong> diseñada para acelerar el soporte, la resolución de averías y la incorporación de nuevos técnicos. Responde preguntas como: <em>¿Qué hace esta placa? ¿De qué depende? ¿Qué componentes son fijos y cuáles intercambiables? ¿Qué pasa si un módulo falla?</em></p>
-    </div>
-  </div>
-
-  <h2 style="margin-top:2rem;">Inventario Completo de Módulos</h2>
-  <div class="table-container">
-    <table>
-      <thead><tr><th>Código PCB</th><th>Software</th><th>Versión</th><th>Función</th><th>Estado</th></tr></thead>
-      <tbody>
-        <tr><td><code>K2-64278</code></td><td>EDELElevatorFULL</td><td>v4.4.0</td><td>Placa principal (Placa Base)</td><td><span class="badge badge-green">Obligatoria</span></td></tr>
-        <tr><td><code>K2-64290</code></td><td>EDELCabinaFull</td><td>v4.0.0</td><td>Placa de cabina v1 — con audio de voz</td><td><span class="badge badge-cyan">Intercambiable</span></td></tr>
-        <tr><td><code>K2-64291</code></td><td>EDELCabina-v2</td><td>v1.2</td><td>Placa de cabina v2 ADVANCED — sin audio</td><td><span class="badge badge-cyan">Intercambiable</span></td></tr>
-        <tr><td><code>K2-64295</code></td><td>EDELBotCAN</td><td>v1</td><td>Pulsador de planta v1 (generación antigua)</td><td><span class="badge badge-cyan">Intercambiable</span></td></tr>
-        <tr><td><code>K2-64292</code></td><td>EDELBotCAN-v2</td><td>v1.2</td><td>Pulsador de planta v2 ADVANCED</td><td><span class="badge badge-cyan">Intercambiable</span></td></tr>
-        <tr><td><code>K2-64280</code></td><td>EDELExteriores</td><td>v2.1</td><td>Indicador de posición en rellano v1</td><td><span class="badge badge-cyan">Intercambiable</span></td></tr>
-        <tr><td><code>K2-64281</code></td><td>EDELExterioresV2</td><td>v1.0</td><td>Indicador rellano v2 (mCAN-12, ARM)</td><td><span class="badge badge-cyan">Intercambiable</span></td></tr>
-        <tr><td><code>K2-64296</code></td><td>EDELEncoder</td><td>v2.8</td><td>Interfaz de encoder de posición absoluta</td><td><span class="badge badge-green">Obligatoria</span></td></tr>
-        <tr><td><code>K2-64300H-B</code></td><td>EDELDisplayLCD (H)</td><td>v2.4</td><td>Indicador LCD horizontal</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K2-64300V</code></td><td>EDELDisplayLCD (V)</td><td>v1.0</td><td>Indicador LCD vertical</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K2-64310</code></td><td>EDELDisplayRotativo (DRC)</td><td>—</td><td>Display giratorio/rotativo LED</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K2-64315</code></td><td>EDELDisplayDotMatrix (DDM)</td><td>v1.0</td><td>Display de puntos (dot matrix)</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K2-64320</code></td><td>EDELDisplayTFT</td><td>v1.1–v2.5</td><td>Display TFT a color (5 versiones)</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K2-64330</code></td><td>EDELminiLCD</td><td>v2.7</td><td>Display mini LCD (cabina o rellano)</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K2-64350</code></td><td>EDELFlechasPP</td><td>v2.1</td><td>Flechas direccionales push-pull</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K2-64297</code></td><td>EDELExpansion</td><td>v1.0</td><td>Módulo de expansión de E/S digitales</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K2-64299</code></td><td>EDELiCOM-v1</td><td>v1.0</td><td>Comunicación remota + interfaz VFD</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K2-64406</code></td><td>EDELMKInterface (MKI-01)</td><td>v1.1</td><td>Puente bus MK para paneles de terceros</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K2-64435</code></td><td>EDELControlAcceso (CA-02)</td><td>v2.0</td><td>Lector de acceso por iButton</td><td><span class="badge badge-amber">Opcional</span></td></tr>
-        <tr><td><code>K3-74278</code></td><td>EDELMontacargas</td><td>v1.2.2</td><td>Montacargas (familia de producto separada)</td><td><span class="badge badge-indigo">Familia K3</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="callout callout-warning" style="margin-top:2rem;">
-    <div class="callout-icon">🚧</div>
-    <div class="callout-content">
-      <h4>En Construcción</h4>
-      <p>Esta enciclopedia se ha creado a partir del análisis automático del software de PCB. Las secciones se irán ampliando progresivamente a medida que se añadan manuales, esquemas y conocimiento de campo.</p>
-    </div>
-  </div>
-</div>
-`
-    } // end ES sections — other ES sections fall back to EN
-  } // end ES
+EN: {
+  title: "Elevator Encyclopedia",
+  nav: [
+  {
+    "id": "enc-overview",
+    "label": "📦  Overview & Full Index",
+    "icon": "📦"
+  },
+  {
+    "id": "enc-anatomy",
+    "label": "🏗️  1. Elevator Anatomy & Zones",
+    "icon": "🏗️"
+  },
+  {
+    "id": "enc-zone-machine",
+    "label": "  ↳ 1.1 Machine Room",
+    "icon": "🏭"
+  },
+  {
+    "id": "enc-zone-shaft",
+    "label": "  ↳ 1.2 Shaft (Hueco)",
+    "icon": "🕳️"
+  },
+  {
+    "id": "enc-zone-cabin",
+    "label": "  ↳ 1.3 Cabin (Cabina)",
+    "icon": "🚗"
+  },
+  {
+    "id": "enc-zone-landings",
+    "label": "  ↳ 1.4 Landings (Plantas)",
+    "icon": "🏢"
+  },
+  {
+    "id": "enc-zone-pit",
+    "label": "  ↳ 1.5 Pit (Foso)",
+    "icon": "⬇️"
+  },
+  {
+    "id": "enc-electrical",
+    "label": "⚡  2. Electrical Installation Overview",
+    "icon": "⚡"
+  },
+  {
+    "id": "enc-power",
+    "label": "  ↳ 2.1 Power Circuits (Motor, Door, Lighting)",
+    "icon": "⚡"
+  },
+  {
+    "id": "enc-control",
+    "label": "  ↳ 2.2 Control Circuits & Safety Chain",
+    "icon": "🛡️"
+  },
+  {
+    "id": "enc-can-bus",
+    "label": "  ↳ 2.3 CAN Bus Architecture",
+    "icon": "🔌"
+  },
+  {
+    "id": "enc-3rd-points",
+    "label": "  ↳ 2.4 Third-Party Integration Points",
+    "icon": "🤝"
+  },
+  {
+    "id": "enc-pcb-index",
+    "label": "🖥️  3. EDEL PCB Modules",
+    "icon": "🖥️"
+  },
+  {
+    "id": "enc-mainboard",
+    "label": "  ↳ 3.1 Main Board — K2-64278",
+    "icon": "🧠"
+  },
+  {
+    "id": "enc-cabin",
+    "label": "  ↳ 3.2 Cabin Boards",
+    "icon": "🚗"
+  },
+  {
+    "id": "enc-cabin-v1",
+    "label": "    · 3.2.1 K2-64290 CabinaFull (with audio)",
+    "icon": "🔊"
+  },
+  {
+    "id": "enc-cabin-v2",
+    "label": "    · 3.2.2 K2-64291 Cabina-v2 ADVANCED",
+    "icon": "📱"
+  },
+  {
+    "id": "enc-botcan",
+    "label": "  ↳ 3.3 Floor Call Buttons (BotCAN)",
+    "icon": "🔘"
+  },
+  {
+    "id": "enc-botcan-v1",
+    "label": "    · 3.3.1 K2-64295 BotCAN v1",
+    "icon": "🔘"
+  },
+  {
+    "id": "enc-botcan-v2",
+    "label": "    · 3.3.2 K2-64292 BotCAN-v2 ADVANCED",
+    "icon": "🔘"
+  },
+  {
+    "id": "enc-exteriores",
+    "label": "  ↳ 3.4 Exterior / Landing Displays",
+    "icon": "🏢"
+  },
+  {
+    "id": "enc-ext-v1",
+    "label": "    · 3.4.1 K2-64280 Exteriores v1",
+    "icon": "📺"
+  },
+  {
+    "id": "enc-ext-v2",
+    "label": "    · 3.4.2 K2-64281 Exteriores v2 (mCAN-12)",
+    "icon": "📺"
+  },
+  {
+    "id": "enc-encoder",
+    "label": "  ↳ 3.5 Position Encoder",
+    "icon": "📏"
+  },
+  {
+    "id": "enc-encoder-pcb",
+    "label": "    · 3.5.1 K2-64296 EDELEncoder",
+    "icon": "📏"
+  },
+  {
+    "id": "enc-displays",
+    "label": "  ↳ 3.6 Indicator Display Modules",
+    "icon": "🖥️"
+  },
+  {
+    "id": "enc-disp-lcd",
+    "label": "    · 3.6.1 K2-64300H/V LCD Display (H/V)",
+    "icon": "📟"
+  },
+  {
+    "id": "enc-disp-drc",
+    "label": "    · 3.6.2 K2-64310 DRC Rotating Display",
+    "icon": "🔄"
+  },
+  {
+    "id": "enc-disp-ddm",
+    "label": "    · 3.6.3 K2-64315 DDM Dot Matrix",
+    "icon": "⬛"
+  },
+  {
+    "id": "enc-disp-tft",
+    "label": "    · 3.6.4 K2-64320 TFT Color Display",
+    "icon": "🎨"
+  },
+  {
+    "id": "enc-disp-mlcd",
+    "label": "    · 3.6.5 K2-64330 miniLCD",
+    "icon": "🔡"
+  },
+  {
+    "id": "enc-disp-consolap",
+    "label": "    · 3.6.6 K2-64MdP Console 16×4 (future)",
+    "icon": "⌨️"
+  },
+  {
+    "id": "enc-arrows",
+    "label": "  ↳ 3.7 Directional Arrows",
+    "icon": "⬆️"
+  },
+  {
+    "id": "enc-flechas",
+    "label": "    · 3.7.1 K2-64350 FlechasPP",
+    "icon": "⬆️"
+  },
+  {
+    "id": "enc-expansion",
+    "label": "  ↳ 3.8 Expansion & Interface Modules",
+    "icon": "🔌"
+  },
+  {
+    "id": "enc-exp-io",
+    "label": "    · 3.8.1 K2-64297 Expansion I/O",
+    "icon": "🔌"
+  },
+  {
+    "id": "enc-icom",
+    "label": "    · 3.8.2 K2-64299 iCOM Remote Module",
+    "icon": "🌐"
+  },
+  {
+    "id": "enc-mki",
+    "label": "    · 3.8.3 K2-64406 MK Bus Interface (MKI-01)",
+    "icon": "🤝"
+  },
+  {
+    "id": "enc-access",
+    "label": "  ↳ 3.9 Access Control",
+    "icon": "🔑"
+  },
+  {
+    "id": "enc-ca02",
+    "label": "    · 3.9.1 K2-64435 CA-02 (iButton reader)",
+    "icon": "🔑"
+  },
+  {
+    "id": "enc-keymgr",
+    "label": "    · 3.9.2 K2-64435 KeyManager Console",
+    "icon": "🗝️"
+  },
+  {
+    "id": "enc-third",
+    "label": "🤝  4. Third-Party Components",
+    "icon": "🤝"
+  },
+  {
+    "id": "enc-fuji-motor",
+    "label": "  ↳ 4.1 Fuji VFD — Motor Drive",
+    "icon": "⚡"
+  },
+  {
+    "id": "enc-fuji-door",
+    "label": "  ↳ 4.2 Door Drive VFD",
+    "icon": "🚪"
+  },
+  {
+    "id": "enc-encoders-ext",
+    "label": "  ↳ 4.3 Position Encoders (SSI)",
+    "icon": "📏"
+  },
+  {
+    "id": "enc-wachendorff",
+    "label": "    · 4.3.1 Wachendorff SSI",
+    "icon": "📏"
+  },
+  {
+    "id": "enc-elgo",
+    "label": "    · 4.3.2 ELGO SSI",
+    "icon": "📏"
+  },
+  {
+    "id": "enc-ibutton",
+    "label": "  ↳ 4.4 Dallas/Maxim iButton Keys",
+    "icon": "🔑"
+  },
+  {
+    "id": "enc-variants",
+    "label": "🔀  5. Product Variants",
+    "icon": "🔀"
+  },
+  {
+    "id": "enc-k2",
+    "label": "  ↳ 5.1 K2 Series — Passenger Elevator",
+    "icon": "🛗"
+  },
+  {
+    "id": "enc-montacargas",
+    "label": "  ↳ 5.2 K3 Series — Goods Lift (Montacargas)",
+    "icon": "🚛"
+  },
+  {
+    "id": "enc-advanced",
+    "label": "  ↳ 5.3 ADVANCED Series — Premium K2",
+    "icon": "⭐"
+  },
+  {
+    "id": "enc-compat",
+    "label": "🔗  6. Dependencies & Compatibility Matrix",
+    "icon": "🔗"
+  },
+  {
+    "id": "enc-hw-variants",
+    "label": "  ↳ 6.1 Hardware Variants (EDEL/GENESIS/ATES)",
+    "icon": "🔧"
+  },
+  {
+    "id": "enc-can-compat",
+    "label": "  ↳ 6.2 CAN Protocol Compatibility",
+    "icon": "🔌"
+  },
+  {
+    "id": "enc-fw-deps",
+    "label": "  ↳ 6.3 Firmware Version Dependencies",
+    "icon": "💾"
+  },
+  {
+    "id": "enc-token",
+    "label": "  ↳ 6.4 Token / Firmware Licensing",
+    "icon": "🔐"
+  },
+  {
+    "id": "enc-maps",
+    "label": "🗺️  7. Visual Maps",
+    "icon": "🗺️"
+  }
+],
+  sections: {
+
+// --- enc-overview ---
+"enc-overview": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">Encyclopedia</span>\n    <h1>📦 EDEL Elevator Encyclopedia — Complete Index</h1>\n    <p>A structured internal knowledge base covering every hardware module, electrical subsystem, third-party component, and product variant in the EDEL elevator control ecosystem.</p>\n  </div>\n  <div class=\"callout callout-human\">\n    <div class=\"callout-icon\">🎯</div>\n    <div class=\"callout-content\">\n      <h4>How to use this Encyclopedia</h4>\n      <p>Navigate the left sidebar to go directly to any topic. Parent sections give you the big picture; child sections (marked ↳ or ·) give deep technical detail on each specific component — including how it interacts with other elements, what configurations are possible, and what alternatives exist.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:2rem;\">Structure at a Glance</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Section</th><th>What you'll find</th></tr></thead>\n      <tbody>\n        <tr><td><strong>1. Elevator Anatomy</strong></td><td>The 5 physical zones; which hardware belongs where</td></tr>\n        <tr><td><strong>2. Electrical Installation</strong></td><td>Power circuits, safety chain, CAN buses, third-party integration</td></tr>\n        <tr><td><strong>3. EDEL PCB Modules</strong></td><td>Every PCB in depth — function, CAN IDs, configs, alternatives, failure impact</td></tr>\n        <tr><td><strong>4. Third-Party Components</strong></td><td>Fuji VFDs, SSI encoders, iButton keys — what's fixed vs interchangeable</td></tr>\n        <tr><td><strong>5. Product Variants</strong></td><td>K2 (passenger), K3 (goods lift), ADVANCED — what differs and why</td></tr>\n        <tr><td><strong>6. Compatibility Matrix</strong></td><td>What depends on what; hardware variants; token licensing; failure cascade</td></tr>\n        <tr><td><strong>7. Visual Maps</strong></td><td>Block diagrams and topology maps</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:2rem;\">Quick PCB Reference</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>PCB Code</th><th>Software</th><th>Version</th><th>Role</th><th>Status</th></tr></thead>\n      <tbody>\n        <tr><td><code>K2-64278</code></td><td>EDELElevatorFULL</td><td>v4.4.0</td><td>Main board — system brain</td><td><span class=\"badge badge-green\">Obligatory</span></td></tr>\n        <tr><td><code>K2-64290</code></td><td>EDELCabinaFull</td><td>v4.0.0</td><td>Cabin board v1 (with 5-language audio)</td><td><span class=\"badge badge-cyan\">Interchangeable</span></td></tr>\n        <tr><td><code>K2-64291</code></td><td>EDELCabina-v2</td><td>v1.2</td><td>Cabin board v2 ADVANCED (no audio)</td><td><span class=\"badge badge-cyan\">Interchangeable</span></td></tr>\n        <tr><td><code>K2-64295</code></td><td>EDELBotCAN</td><td>v1</td><td>Floor call button v1 (older HC08)</td><td><span class=\"badge badge-cyan\">Interchangeable</span></td></tr>\n        <tr><td><code>K2-64292</code></td><td>EDELBotCAN-v2</td><td>v1.2</td><td>Floor call button v2 ADVANCED (token)</td><td><span class=\"badge badge-cyan\">Interchangeable</span></td></tr>\n        <tr><td><code>K2-64280</code></td><td>EDELExteriores</td><td>v2.1</td><td>Landing display v1 (HCS08)</td><td><span class=\"badge badge-cyan\">Interchangeable</span></td></tr>\n        <tr><td><code>K2-64281</code></td><td>EDELExterioresV2</td><td>v1.0</td><td>Landing display v2 mCAN-12 (ARM)</td><td><span class=\"badge badge-cyan\">Interchangeable</span></td></tr>\n        <tr><td><code>K2-64296</code></td><td>EDELEncoder</td><td>v2.8</td><td>Absolute SSI encoder interface</td><td><span class=\"badge badge-green\">Obligatory</span></td></tr>\n        <tr><td><code>K2-64300H-B</code></td><td>EDELDisplayLCD (H)</td><td>v2.4</td><td>Horizontal LCD indicator</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K2-64300V</code></td><td>EDELDisplayLCD (V)</td><td>v1.0</td><td>Vertical LCD indicator</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K2-64310</code></td><td>EDELDisplayRotativo (DRC)</td><td>—</td><td>Rotating LED/LCD display</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K2-64315</code></td><td>EDELDisplayDotMatrix (DDM)</td><td>v1.0</td><td>Dot-matrix display (ARM)</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K2-64320</code></td><td>EDELDisplayTFT</td><td>v1.1–v2.5</td><td>Full-colour TFT display (5 sub-versions)</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K2-64330</code></td><td>EDELminiLCD</td><td>v2.7</td><td>Mini LCD display (ARM)</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K2-64350</code></td><td>EDELFlechasPP</td><td>v2.1</td><td>Push-pull directional arrows</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K2-64297</code></td><td>EDELExpansion</td><td>v1.0–v2.1</td><td>Digital I/O expansion (4 versions)</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K2-64299</code></td><td>EDELiCOM-v1</td><td>v1.0</td><td>Remote comms + CANopen + VFD UART</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K2-64406</code></td><td>EDELMKInterface (MKI-01)</td><td>v1.1</td><td>MK bus bridge (third-party panels)</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K2-64435</code></td><td>EDELControlAcceso (CA-02)</td><td>v2.0</td><td>iButton access control</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td><code>K3-74278</code></td><td>EDELMontacargas</td><td>v1.2.2</td><td>Goods lift controller (separate family)</td><td><span class=\"badge badge-indigo\">K3 Family</span></td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-anatomy ---
+"enc-anatomy": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Section 1</span>\n    <h1>🏗️ 1. Elevator Anatomy & Physical Zones</h1>\n    <p>Every elevator installation is divided into 5 distinct physical zones. Knowing which zone you're in immediately narrows down which hardware and wiring is relevant to a fault or installation task.</p>\n  </div>\n  <div class=\"callout callout-human\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>Why zones matter for support</h4>\n      <p>When a fault occurs, the first question is always <em>where</em>. A door-related fault → check cabin and landing zones. A position error → shaft encoder. A CAN communication failure → follow the cable from machine room down. Most faults can be localized to a zone before touching any PCB.</p>\n    </div>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Zone</th><th>Location</th><th>EDEL PCBs present</th><th>Third-party hardware</th></tr></thead>\n      <tbody>\n        <tr><td>1.1 Machine Room</td><td>Top of building (or remote)</td><td>K2-64278 Main board, K2-64299 iCOM</td><td>Fuji motor VFD, Door VFD, breakers</td></tr>\n        <tr><td>1.2 Shaft</td><td>Vertical travel space</td><td>K2-64296 Encoder</td><td>Encoder (Wachendorff/ELGO), magnetic tape, guide rails</td></tr>\n        <tr><td>1.3 Cabin</td><td>Passenger car</td><td>K2-64290/91, displays (any type), K2-64435 CA-02</td><td>Speaker, door operator sensors</td></tr>\n        <tr><td>1.4 Landings</td><td>Each floor</td><td>K2-64292/95 BotCAN, K2-64280/81 Exteriores, K2-64350 FlechasPP</td><td>Landing door lock, floor door operator</td></tr>\n        <tr><td>1.5 Pit</td><td>Below lowest landing</td><td>None normally</td><td>Buffer, hydraulic cylinder (if hydraulic), pit inspection box</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <p style=\"margin-top:1rem;color:var(--text-secondary);\">Select a sub-zone from the sidebar for detailed hardware mapping.</p>\n</div>",
+
+// --- enc-zone-machine ---
+"enc-zone-machine": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Zone 1.1</span>\n    <h1>🏭 1.1 Machine Room (Cuarto de Máquinas)</h1>\n    <p>The nerve centre of the installation. Located at the top of the building shaft, or remote in MRL (Machine-Room-Less) designs. Everything that drives the elevator originates here.</p>\n  </div>\n  <h2>Hardware present</h2>\n  <div style=\"display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem;\">\n    <div class=\"callout callout-blue\">\n      <div class=\"callout-icon\">🧠</div>\n      <div class=\"callout-content\">\n        <h4>EDEL Main Board K2-64278</h4>\n        <p>The central controller. Mounted in the electrical panel. Receives all wiring: safety chain inputs, CAN bus cables, VFD control signals, inspection box, and programming console. All 99 fault codes are logged and stored here. <strong>If this board fails, the elevator stops completely.</strong></p>\n      </div>\n    </div>\n    <div class=\"callout callout-human\">\n      <div class=\"callout-icon\">⚡</div>\n      <div class=\"callout-content\">\n        <h4>Fuji Motor VFD</h4>\n        <p>Variable Frequency Drive that controls the traction motor. Receives speed/direction commands from the main board. The main board reads VFD status (running, fault, speed reached). <strong>Fixed manufacturer — always Fuji Frenic Lift series.</strong></p>\n      </div>\n    </div>\n    <div class=\"callout callout-blue\">\n      <div class=\"callout-icon\">🚪</div>\n      <div class=\"callout-content\">\n        <h4>Door VFD</h4>\n        <p>Controls the speed profile of automatic door opening and closing. Separate from motor drive. Receives open/close commands from main board. <strong>Fixed manufacturer.</strong></p>\n      </div>\n    </div>\n    <div class=\"callout callout-human\">\n      <div class=\"callout-icon\">🌐</div>\n      <div class=\"callout-content\">\n        <h4>iCOM Module K2-64299 (optional)</h4>\n        <p>If remote monitoring is installed, this module is also in the machine room. Connects to both the EDEL CAN bus and the Fuji VFD via UART for independent monitoring. Also implements CANopen protocol for external systems.</p>\n      </div>\n    </div>\n  </div>\n  <h2 style=\"margin-top:2rem;\">CAN Bus origin point</h2>\n  <p>Both CAN buses originate here from the main board K2-64278 and travel physically through the shaft to the cabin and along the building for floor landings.</p>\n</div>",
+
+// --- enc-zone-shaft ---
+"enc-zone-shaft": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Zone 1.2</span>\n    <h1>🕳️ 1.2 Shaft (Hueco)</h1>\n    <p>The vertical space the elevator car travels through. Contains minimal electronics — mostly mechanical components and the critical position sensing system.</p>\n  </div>\n  <h2>Hardware present</h2>\n  <div class=\"callout callout-blue\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">📏</div>\n    <div class=\"callout-content\">\n      <h4>Encoder PCB K2-64296 + Physical Encoder</h4>\n      <p>The EDEL encoder PCB is typically mounted in the shaft near the top or mid-point. It reads the physical absolute encoder (Wachendorff or ELGO) via SSI (Synchronous Serial Interface) and sends position data to the main board via CAN. The physical encoder is attached to the governor or to the car, reading a magnetic tape or ruler running the full height of the shaft.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Other shaft components</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li><strong>Guide rails</strong> — Steel channels that constrain the cabin to vertical travel</li>\n    <li><strong>Counterweight</strong> — Balances cabin weight; reduces motor load</li>\n    <li><strong>Traction rope / flat belt</strong> — Connects cabin to counterweight over the motor sheave</li>\n    <li><strong>Magnetic tape / ruler</strong> — Reference scale read by the absolute encoder</li>\n    <li><strong>Limit switches</strong> — Hardware end-of-travel protection (topmost and bottommost positions)</li>\n    <li><strong>CAN bus cable</strong> — Runs from machine room down to cabin. The cabin CAN bus ($XBD) travels through the traveling cable (festoon)</li>\n    <li><strong>Traveling cable (festoon)</strong> — Flexible cable bundle that moves with the cabin</li>\n  </ul>\n  <div class=\"callout callout-warning\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Critical dependency: encoder + magnetic tape alignment</h4>\n      <p>If the magnetic tape is delaminated, bent, or has a gap, the encoder readings will jump, causing the elevator to stop at wrong positions or trigger faults. This is the most common shaft-zone fault.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-zone-cabin ---
+"enc-zone-cabin": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Zone 1.3</span>\n    <h1>🚗 1.3 Cabin (Cabina)</h1>\n    <p>The passenger car. The most electronics-dense zone after the machine room. Everything the passenger interacts with is here.</p>\n  </div>\n  <h2>Hardware present in the cabin</h2>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Component</th><th>EDEL PCB</th><th>Function</th></tr></thead>\n      <tbody>\n        <tr><td>Car Operating Panel (COP)</td><td>K2-64290 or K2-64291</td><td>Floor destination buttons, door buttons, alarm, intercom</td></tr>\n        <tr><td>Floor indicator display</td><td>Any display module (LCD, TFT, mLCD, DDM, DRC)</td><td>Shows current floor number and direction arrow</td></tr>\n        <tr><td>Audio announcement speaker</td><td>K2-64290 only (CabinaFull)</td><td>Voice announcements: floor numbers, door status, directions (5 languages)</td></tr>\n        <tr><td>Access control reader</td><td>K2-64435 CA-02 (optional)</td><td>iButton key fob reader for restricted access</td></tr>\n        <tr><td>Inspection box</td><td>Wired to main board</td><td>Technician inspection mode switch + up/down buttons</td></tr>\n        <tr><td>Emergency lighting</td><td>—</td><td>Battery-backed lighting (not EDEL PCB)</td></tr>\n        <tr><td>Alarm bell / telephone</td><td>K2-64290/91 (signal relay)</td><td>Emergency call relay driven from cabin CAN data</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-human\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>Two cabin board types — not interchangeable mid-installation</h4>\n      <p>The CabinaFull (K2-64290) and Cabina-v2 (K2-64291) are different hardware generations. You cannot swap one for the other without verifying CAN protocol compatibility with the main board and checking whether audio is required by the specification.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-zone-landings ---
+"enc-zone-landings": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Zone 1.4</span>\n    <h1>🏢 1.4 Landings / Floors (Plantas / Rellanos)</h1>\n    <p>Each floor where passengers call the elevator. The number of PCBs per landing depends on the installation options chosen. Minimum: one BotCAN. Maximum: BotCAN + Exterior display + Directional arrows.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Component</th><th>EDEL PCB</th><th>Presence</th><th>Notes</th></tr></thead>\n      <tbody>\n        <tr><td>Floor call buttons (LOP)</td><td>K2-64292 or K2-64295 BotCAN</td><td><span class=\"badge badge-green\">Every floor</span></td><td>One per landing. Registers UP/DOWN calls.</td></tr>\n        <tr><td>Position indicator display</td><td>K2-64280 or K2-64281 Exteriores</td><td><span class=\"badge badge-amber\">Optional</span></td><td>Shows which floor the elevator is at. One per landing.</td></tr>\n        <tr><td>Directional arrows</td><td>K2-64350 FlechasPP</td><td><span class=\"badge badge-amber\">Optional</span></td><td>Shows UP / DOWN travel direction. One per landing.</td></tr>\n        <tr><td>Landing door lock</td><td>—</td><td><span class=\"badge badge-green\">Every floor</span></td><td>Electromechanical lock on landing door. Wired to safety chain.</td></tr>\n        <tr><td>Floor door operator</td><td>Controlled by Door VFD</td><td>Automatic doors only</td><td>Opens/closes landing door when cabin is at that floor.</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-warning\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>CAN node addressing</h4>\n      <p>Each BotCAN PCB must have a unique CAN node address for its floor. This is configured via DIP switches on the PCB. On v2 boards, 5 switches define the floor (0–31), plus 2 ID switches for when multiple modules share a floor. Duplicate addresses = CAN bus collision = unpredictable behavior on that floor.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-zone-pit ---
+"enc-zone-pit": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Zone 1.5</span>\n    <h1>⬇️ 1.5 Pit (Foso)</h1>\n    <p>The space below the lowest landing floor, at the bottom of the shaft. The elevator car rests here if it travels to the bottommost position. Safety-critical zone for maintenance.</p>\n  </div>\n  <h2>What is in the pit</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li><strong>Buffer / bumper</strong> — Absorbs kinetic energy if the car or counterweight over-travels (required by EN81-20)</li>\n    <li><strong>Pit inspection box</strong> — Small control box for technician; enables inspection mode from pit level. Wired to main board.</li>\n    <li><strong>Pit lighting</strong> — Fixed lighting required by regulation</li>\n    <li><strong>Pit stop switch</strong> — Emergency stop in the pit (safety chain element)</li>\n    <li><strong>Hydraulic cylinder base</strong> — In hydraulic installations, the piston cylinder is at the pit floor</li>\n    <li><strong>Hydraulic pump unit</strong> — Sometimes located in pit in non-MR hydraulic designs</li>\n  </ul>\n  <div class=\"callout callout-human\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>No EDEL PCBs normally in the pit</h4>\n      <p>The pit inspection box is just a wired switch/button panel — no intelligence. Any fault codes appearing from pit-level signals (e.g., pit stop activated) are processed by the main board K2-64278 in the machine room.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-electrical ---
+"enc-electrical": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 2</span>\n    <h1>⚡ 2. Electrical Installation Overview</h1>\n    <p>The electrical installation of an elevator is divided into power circuits and control circuits. Understanding this division is fundamental for safe troubleshooting and for understanding how EDEL's hardware fits into the wider system.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Circuit type</th><th>Voltage</th><th>Purpose</th><th>Key components</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Power (motor)</strong></td><td>3×400V AC (three-phase)</td><td>Drives the traction motor</td><td>Motor, Fuji VFD, breaker, contactors</td></tr>\n        <tr><td><strong>Power (door)</strong></td><td>3×400V or 1×230V AC</td><td>Drives door operator</td><td>Door VFD, door motor</td></tr>\n        <tr><td><strong>Control supply</strong></td><td>24V DC or 230V AC</td><td>Powers EDEL boards, sensors, safety chain</td><td>PSU, main board, peripherals</td></tr>\n        <tr><td><strong>Safety chain</strong></td><td>24V–230V (depends on design)</td><td>Verifies all safety contacts are closed</td><td>Door locks, limit switches, emergency stop, safety gear</td></tr>\n        <tr><td><strong>CAN bus</strong></td><td>Differential (CAN, ~5V)</td><td>Digital communication between all EDEL modules</td><td>Main board + all peripherals</td></tr>\n        <tr><td><strong>Lighting</strong></td><td>230V or LED 24V</td><td>Cabin and shaft lighting</td><td>Switches on main board output relays</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-power ---
+"enc-power": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 2.1</span>\n    <h1>⚡ 2.1 Power Circuits (Motor, Door, Lighting)</h1>\n    <p>The high-power circuits that drive the mechanical components of the elevator.</p>\n  </div>\n  <h2>Motor Drive Circuit</h2>\n  <div class=\"callout callout-blue\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">⚡</div>\n    <div class=\"callout-content\">\n      <h4>Three-phase traction motor + Fuji VFD</h4>\n      <p><strong>Path:</strong> Building supply (3×400V) → Main circuit breaker → Fuji Frenic Lift VFD → Motor contactor (safety redundancy) → Traction motor → Sheave → Rope → Cabin + Counterweight.<br>\n      <strong>EDEL interface:</strong> The main board sends speed setpoint and direction signals to the Fuji VFD. The VFD controls actual motor current. The main board reads VFD \"at speed\" and \"fault\" feedback signals.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Door Drive Circuit</h2>\n  <div class=\"callout callout-blue\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">🚪</div>\n    <div class=\"callout-content\">\n      <h4>Door operator motor + Door VFD</h4>\n      <p><strong>Path:</strong> Supply → Door VFD → Door motor → Door mechanism.<br>\n      <strong>EDEL interface:</strong> Main board sends OPEN / CLOSE digital signals to Door VFD. VFD controls door speed profile (fast open, slow close for safety). Door fully-closed and fully-open feedback returns to main board for safety chain logic.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Control Supply</h2>\n  <p>All EDEL PCBs run on a low-voltage control supply (typically 24V DC). The main board includes a 5V regulator for its MCU. Peripheral CAN modules each have their own on-board voltage regulators. A single power supply unit (PSU) in the electrical panel typically provides the 24V rail.</p>\n  <div class=\"callout callout-warning\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Troubleshooting tip: check 24V first</h4>\n      <p>If multiple CAN modules stop responding simultaneously, check the 24V control supply before replacing boards. A sagging or failed PSU causes all peripherals to drop off the bus at once — identical symptom to a CAN bus break.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-control ---
+"enc-control": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 2.2</span>\n    <h1>🛡️ 2.2 Control Circuits & Safety Chain</h1>\n    <p>The safety chain is the most critical circuit in any elevator. It is a series circuit of all safety contacts — if any single contact opens (door unlocked, emergency stop pressed, overspeed triggered), the safety chain breaks and the elevator immediately stops and locks out.</p>\n  </div>\n  <h2>Safety Chain Elements (in series order)</h2>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Element</th><th>Location</th><th>Opens when...</th></tr></thead>\n      <tbody>\n        <tr><td>Main circuit breaker</td><td>Machine room</td><td>Power fault or manual trip</td></tr>\n        <tr><td>Pit stop switch</td><td>Pit</td><td>Technician presses emergency stop</td></tr>\n        <tr><td>Bottom limit switch</td><td>Shaft, bottom</td><td>Car over-travels at bottom</td></tr>\n        <tr><td>All landing door locks (series)</td><td>Each floor</td><td>Any landing door is not fully closed and locked</td></tr>\n        <tr><td>Cabin door contact</td><td>Cabin</td><td>Cabin door is not fully closed</td></tr>\n        <tr><td>Safety gear switch</td><td>Cabin / shaft</td><td>Safety gear (parachute) activated</td></tr>\n        <tr><td>Overspeed governor switch</td><td>Machine room / shaft</td><td>Car speed exceeds governor threshold</td></tr>\n        <tr><td>Buffer switch</td><td>Pit</td><td>Cabin or counterweight contacts buffer</td></tr>\n        <tr><td>Top limit switch</td><td>Shaft, top</td><td>Car over-travels at top</td></tr>\n        <tr><td>Inspection box stop</td><td>Cabin / pit</td><td>Emergency stop pressed during inspection</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-warning\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>EN81-20 Safety Supervision — EDEL implementation</h4>\n      <p>The main board K2-64278 implements EN81-20 safety supervision in software (Safety Supervisor module). It monitors the safety chain continuously and cross-checks door lock signals. In addition to hardware break detection, the software can detect partial failures (e.g., door lock contact welded closed) and generate specific fault codes (e.g., Faults 50–59 relate to door and safety chain anomalies).</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-can-bus ---
+"enc-can-bus": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 2.3</span>\n    <h1>🔌 2.3 CAN Bus Architecture</h1>\n    <p>EDEL uses CAN bus (Controller Area Network) as the digital communication backbone between all intelligent modules. It is a robust differential-pair protocol designed for harsh industrial environments — the same standard used in automotive electronics.</p>\n  </div>\n  <h2>Two CAN Buses</h2>\n  <div style=\"display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem;\">\n    <div class=\"callout callout-blue\">\n      <div class=\"callout-icon\">🔵</div>\n      <div class=\"callout-content\">\n        <h4>CAN Cabin Bus (\"Bus Cabina\")</h4>\n        <p>Runs from machine room through the traveling cable to the cabin. All cabin-side modules connect here.</p>\n        <ul style=\"margin-top:.5rem;\"><li>Main board (master)</li><li>K2-64290/91 Cabin board</li><li>K2-64296 Encoder</li><li>K2-64292/95 BotCAN</li><li>K2-64297 Expansion I/O</li><li>K2-64350 FlechasPP</li><li>K2-64299 iCOM</li><li>Display modules (mLCD, DDM, TFT)</li></ul>\n      </div>\n    </div>\n    <div class=\"callout callout-human\">\n      <div class=\"callout-icon\">🟡</div>\n      <div class=\"callout-content\">\n        <h4>CAN Exterior Bus (\"Bus Exterior\")</h4>\n        <p>Runs from machine room along the building wall to each floor landing. All landing-side display modules connect here.</p>\n        <ul style=\"margin-top:.5rem;\"><li>Main board (master)</li><li>K2-64280/81 Exteriores (all floors)</li><li>K2-64350 FlechasPP (can also use this bus)</li></ul>\n      </div>\n    </div>\n  </div>\n  <h2 style=\"margin-top:2rem;\">CAN Message Protocol IDs</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Message ID</th><th>Direction</th><th>Data content</th><th>Subscribers</th></tr></thead>\n      <tbody>\n        <tr><td><code>$XBD</code></td><td>Main → Cabin bus</td><td>Floor position, door commands, status flags, arrows, gong trigger</td><td>Cabin board, Encoder, BotCAN, Expansion, mLCD, FlechasPP</td></tr>\n        <tr><td><code>$XBN</code></td><td>Cabin board → Main</td><td>Cabin button states, alarm, overload signal</td><td>Main board only</td></tr>\n        <tr><td><code>$XBL</code></td><td>Encoder → Main</td><td>Absolute position in mm</td><td>Main board only</td></tr>\n        <tr><td><code>$XPD</code></td><td>Main → BotCAN</td><td>Floor call acknowledgement, LED on/off</td><td>BotCAN, Expansion</td></tr>\n        <tr><td><code>$XTR</code></td><td>Main → Exterior bus</td><td>Floor number, direction arrow, status</td><td>Exteriores displays, FlechasPP (exterior side)</td></tr>\n        <tr><td><code>$XTL</code></td><td>Exterior/FlechasPP → Main</td><td>Call button states from exterior (if equipped)</td><td>Main board</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Hardware Variant Prefix</h2>\n  <p>The first character of all message IDs defines the hardware brand family:</p>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Prefix</th><th>Brand</th><th>Example IDs</th></tr></thead>\n      <tbody>\n        <tr><td><code>$X</code></td><td>EDEL hardware</td><td>$XBD, $XTR, $XPD</td></tr>\n        <tr><td><code>$Y</code></td><td>GENESIS hardware</td><td>$YBD, $YTR, $YPD</td></tr>\n        <tr><td><code>$Z</code></td><td>ATES / custom hardware</td><td>$ZBD, $ZTR, $ZPD</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-warning\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Never mix prefixes on the same installation</h4>\n      <p>All modules on a single installation must use the same prefix. Mixing (e.g., $X main board with $Z cabin) causes the CAN authentication (Token/Firma system) to reject the module — it will not communicate.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Token / Firma Authentication</h2>\n  <p>Modules with <code>Token.c / Token.h</code> include a cryptographic challenge-response: the <code>Cifrado()</code> function uses XOR with a random-number lookup table (<code>RDM[8]</code>) to generate a signed response. The main board issues a random challenge; the module must respond correctly within the timeout (<code>INI_T_INCOMPATIBILIDAD = 30000ms</code>). If the response fails, the module is flagged as incompatible and ignored. Modules with Token: <strong>K2-64280, K2-64292, K2-64296, K2-64350, K2-64406</strong>.</p>\n</div>",
+
+// --- enc-3rd-points ---
+"enc-3rd-points": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 2.4</span>\n    <h1>🤝 2.4 Third-Party Integration Points</h1>\n    <p>Points in the EDEL system where non-EDEL hardware connects and what interface protocol each uses.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Integration Point</th><th>EDEL side</th><th>Third-party hardware</th><th>Interface</th><th>Fixed?</th></tr></thead>\n      <tbody>\n        <tr><td>Traction motor</td><td>Main board K2-64278</td><td>Fuji Frenic Lift VFD → AC motor</td><td>Digital I/O (speed steps, direction, enable)</td><td>Yes — Fuji only</td></tr>\n        <tr><td>Door operator</td><td>Main board K2-64278</td><td>Door VFD → door motor</td><td>Digital I/O (open, close commands)</td><td>Yes — fixed manufacturer</td></tr>\n        <tr><td>VFD monitoring</td><td>iCOM K2-64299</td><td>Fuji VFD via UART</td><td>Serial UART — reads VFD parameters</td><td>Yes — Fuji protocol</td></tr>\n        <tr><td>Remote/CANopen</td><td>iCOM K2-64299</td><td>External monitoring system</td><td>CANopen (CANOpenLift.h) via MCP2515</td><td>No — open standard</td></tr>\n        <tr><td>Absolute encoder</td><td>Encoder K2-64296</td><td>Wachendorff or ELGO encoder</td><td>SSI (Synchronous Serial)</td><td>No — interchangeable</td></tr>\n        <tr><td>Access control</td><td>CA-02 K2-64435</td><td>Dallas/Maxim iButton keys</td><td>1-Wire (iButton.c)</td><td>No — any compatible iButton</td></tr>\n        <tr><td>MK bus panels</td><td>MKI-01 K2-64406</td><td>Third-party MK-brand button panels</td><td>Proprietary ASCII serial ($EMI: frame)</td><td>MK brand panels only</td></tr>\n        <tr><td>Safety chain</td><td>Main board K2-64278</td><td>Door locks, limit switches, safety gear</td><td>Digital inputs (24V/230V)</td><td>Standard components</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-pcb-index ---
+"enc-pcb-index": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">Section 3</span>\n    <h1>🖥️ 3. EDEL PCB Modules</h1>\n    <p>All hardware modules manufactured or programmed by EDEL. Each has its own section in the sidebar with full technical detail.</p>\n  </div>\n  <div class=\"callout callout-human\">\n    <div class=\"callout-icon\">🧩</div>\n    <div class=\"callout-content\">\n      <h4>How to read the PCB sections</h4>\n      <p>Each PCB section covers: what it does, technical specs, CAN messages it uses, configuration options, hardware variants, interactions with other modules, what alternatives exist, and what happens when it fails.</p>\n    </div>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>#</th><th>PCB</th><th>Software</th><th>Zone</th><th>Category</th></tr></thead>\n      <tbody>\n        <tr><td>3.1</td><td><code>K2-64278</code></td><td>EDELElevatorFULL v4.4.0</td><td>Machine Room</td><td><span class=\"badge badge-green\">Core / Obligatory</span></td></tr>\n        <tr><td>3.2.1</td><td><code>K2-64290</code></td><td>EDELCabinaFull v4.0.0</td><td>Cabin</td><td><span class=\"badge badge-cyan\">Cabin</span></td></tr>\n        <tr><td>3.2.2</td><td><code>K2-64291</code></td><td>EDELCabina-v2 v1.2</td><td>Cabin</td><td><span class=\"badge badge-cyan\">Cabin</span></td></tr>\n        <tr><td>3.3.1</td><td><code>K2-64295</code></td><td>EDELBotCAN v1</td><td>Landings</td><td><span class=\"badge badge-amber\">Floor Buttons</span></td></tr>\n        <tr><td>3.3.2</td><td><code>K2-64292</code></td><td>EDELBotCAN-v2 v1.2</td><td>Landings</td><td><span class=\"badge badge-amber\">Floor Buttons</span></td></tr>\n        <tr><td>3.4.1</td><td><code>K2-64280</code></td><td>EDELExteriores v2.1</td><td>Landings</td><td><span class=\"badge badge-amber\">Displays</span></td></tr>\n        <tr><td>3.4.2</td><td><code>K2-64281</code></td><td>EDELExterioresV2 v1.0</td><td>Landings</td><td><span class=\"badge badge-amber\">Displays</span></td></tr>\n        <tr><td>3.5.1</td><td><code>K2-64296</code></td><td>EDELEncoder v2.8</td><td>Shaft</td><td><span class=\"badge badge-green\">Core / Obligatory</span></td></tr>\n        <tr><td>3.6.1–6</td><td>Various K2-643xx</td><td>Display modules</td><td>Cabin / Landings</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td>3.7.1</td><td><code>K2-64350</code></td><td>EDELFlechasPP v2.1</td><td>Landings</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td>3.8.1–3</td><td>K2-64297, 64299, 64406</td><td>Expansion/Interface</td><td>Varies</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n        <tr><td>3.9.1–2</td><td><code>K2-64435</code></td><td>CA-02 + KeyManager</td><td>Cabin</td><td><span class=\"badge badge-amber\">Optional</span></td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-mainboard ---
+"enc-mainboard": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-green\">Obligatory</span>\n    <h1>🧠 3.1 Main Board — K2-64278 (EDELElevatorFULL)</h1>\n    <p>The central brain of the entire elevator system. Without this board, no other module can function. Every safety decision, every movement command, every call dispatch passes through here.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64278</code></td></tr>\n        <tr><td>Software</td><td>EDELElevatorFULL v4.4.0</td></tr>\n        <tr><td>Bootloader</td><td>v0.6.2</td></tr>\n        <tr><td>MCU</td><td>Freescale MC9S12XDT512 (HCS12X, 16-bit)</td></tr>\n        <tr><td>EEPROM version</td><td>0x0020</td></tr>\n        <tr><td>CAN role</td><td>Master on both Cabin bus and Exterior bus</td></tr>\n        <tr><td>Supported lift types</td><td>Traction (1V, 2V, 3VF, gearless) + Hydraulic (oleo)</td></tr>\n        <tr><td>Supported configurations</td><td>Simplex, Duplex, Multiplex group</td></tr>\n        <tr><td>Token system</td><td>Issues Token challenges to all peripheral modules</td></tr>\n        <tr><td>Fault log</td><td>Up to 99 fault codes, timestamped via RTC PCF8583</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:2rem;\">What it controls</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li>Full elevator state machine: Idle → Dispatch → Moving → Decelerating → Door opening → Door dwelling → Door closing → Idle</li>\n    <li>EN81-20 safety chain monitoring and supervisor</li>\n    <li>Call registration from BotCAN and cabin buttons</li>\n    <li>Dispatch algorithm (nearest call, direction priority)</li>\n    <li>Motor drive: sends speed profile to Fuji VFD</li>\n    <li>Door control: open/close commands to Door VFD</li>\n    <li>Special modes: Firefighter (Bomberos), VIP, Inspection, Coded Access</li>\n    <li>Programming console: 16×2 or 16×4 LCD + keypad menu</li>\n    <li>All CAN communication (master)</li>\n    <li>Factory self-test and computer vision benchmark</li>\n    <li>Duplex/multiplex group coordination with other EDEL controllers</li>\n  </ul>\n  <h2 style=\"margin-top:2rem;\">Interactions with other modules</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Connected to</th><th>What is exchanged</th></tr></thead>\n      <tbody>\n        <tr><td>Fuji VFD (motor)</td><td>Speed setpoint, direction, enable → VFD; \"At speed\", fault status ← VFD</td></tr>\n        <tr><td>Door VFD</td><td>Open/close commands → VFD; fully-open, fully-closed feedback ← VFD</td></tr>\n        <tr><td>Cabin board (K2-64290/91) via CAN $XBD/$XBN</td><td>Door commands, floor data, arrows, gong → Cabin; button states, alarm ← Cabin</td></tr>\n        <tr><td>Encoder (K2-64296) via CAN $XBD/$XBL</td><td>Commands → Encoder; absolute position (mm) ← Encoder</td></tr>\n        <tr><td>BotCAN (K2-64292/95) via CAN $XBD/$XPD</td><td>LED state, call acknowledge → BotCAN; call register ← BotCAN</td></tr>\n        <tr><td>Exteriores (K2-64280/81) via CAN $XTR</td><td>Floor number, direction, status → Exteriores</td></tr>\n        <tr><td>Safety chain</td><td>All contacts hardwired as digital inputs; monitored every cycle</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Failure impact</h2>\n  <div class=\"callout callout-danger\">\n    <div class=\"callout-icon\">🚨</div>\n    <div class=\"callout-content\">\n      <h4>Full system stop — no redundancy</h4>\n      <p>If the main board fails, the elevator stops immediately and cannot be restarted without replacing or reprogramming the board. There is no redundant controller. Keep a spare programmed board with matching firmware and EEPROM configuration for fast recovery.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-cabin ---
+"enc-cabin": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">Section 3.2</span>\n    <h1>🚗 3.2 Cabin Boards</h1>\n    <p>The cabin board manages the Car Operating Panel (COP) inside the elevator car: floor destination buttons, door buttons, alarm, overload signal, and (in v1) the audio announcement system.</p>\n  </div>\n  <div class=\"callout callout-warning\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Choose one: CabinaFull v1 OR Cabina-v2 ADVANCED</h4>\n      <p>These are two different hardware generations. They cannot coexist on the same cabin. The choice determines whether the installation has voice announcements and which hardware platform (HC12 vs HCS08) runs the cabin logic.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">At a glance: comparison</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Feature</th><th>K2-64290 CabinaFull</th><th>K2-64291 Cabina-v2</th></tr></thead>\n      <tbody>\n        <tr><td>MCU</td><td>HC12 / HCS12X (MC9S12XDT256)</td><td>HCS08</td></tr>\n        <tr><td>Audio system</td><td>✅ ADPCM voice, 5 languages, 352+ audio files</td><td>❌ No audio</td></tr>\n        <tr><td>Series</td><td>K2 standard</td><td>K2 ADVANCED</td></tr>\n        <tr><td>Project complexity</td><td>1,196 files</td><td>77 files</td></tr>\n        <tr><td>CAN RX</td><td>$XBD (cabin data from main)</td><td>$XBD (EDEL) / $ZBD (custom)</td></tr>\n        <tr><td>CAN TX</td><td>$XBN (status to main)</td><td>$XBN (EDEL) / $ZBN (custom)</td></tr>\n        <tr><td>Token</td><td>✅ Yes</td><td>✅ Yes</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <p style=\"margin-top:1rem;color:var(--text-secondary);\">See sub-sections 3.2.1 and 3.2.2 for full detail on each.</p>\n</div>",
+
+// --- enc-cabin-v1 ---
+"enc-cabin-v1": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">3.2.1</span>\n    <h1>🔊 K2-64290 — EDELCabinaFull v4.0.0</h1>\n    <p>The original full-featured cabin board with 5-language voice announcement system. The most complex cabin module EDEL produces.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64290</code></td></tr>\n        <tr><td>Software</td><td>EDELCabinaFull v4.0.0 (2013)</td></tr>\n        <tr><td>MCU</td><td>Freescale MC9S12XDT256 (HC12 family)</td></tr>\n        <tr><td>Project size</td><td>1,196 files (including 352 ADPCM audio files)</td></tr>\n        <tr><td>Hardware variants</td><td>HARD_EDEL (0) / HARD_ATES (1)</td></tr>\n        <tr><td>CAN Receive</td><td><code>$XBD</code> — main board → cabin data</td></tr>\n        <tr><td>CAN Transmit</td><td><code>$XBN</code> — cabin status → main board</td></tr>\n        <tr><td>Operation mode</td><td>MODO_PLACALLAMADAS (0) or MODO_BOTCAN (1)</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:2rem;\">Audio System — 5 Languages</h2>\n  <div class=\"callout callout-blue\">\n    <div class=\"callout-icon\">🔊</div>\n    <div class=\"callout-content\">\n      <h4>ADPCM compressed voice announcements</h4>\n      <p>The cabin board stores audio in ADPCM format (PWM.c / ADPCM.c modules). Audio is played through a speaker on the cabin.</p>\n      <div class=\"table-container\" style=\"margin-top:.75rem;\">\n        <table>\n          <thead><tr><th>Language code</th><th>Language</th><th>Value</th></tr></thead>\n          <tbody>\n            <tr><td>ESPANYOL</td><td>Spanish</td><td>0</td></tr>\n            <tr><td>INGLES</td><td>English</td><td>1</td></tr>\n            <tr><td>CATALAN</td><td>Catalan</td><td>2</td></tr>\n            <tr><td>FRANCES</td><td>French</td><td>3</td></tr>\n            <tr><td>INGLES2</td><td>English (alternative accent)</td><td>4</td></tr>\n          </tbody>\n        </table>\n      </div>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Audio triggers (from CAN $XBD data)</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>CAN bit / flag</th><th>Audio triggered</th></tr></thead>\n      <tbody>\n        <tr><td><code>GONG</code> (0x80)</td><td>Floor arrival gong</td></tr>\n        <tr><td><code>FLECHA_SUBIR</code> (0x40)</td><td>Going up announcement</td></tr>\n        <tr><td><code>FLECHA_BAJAR</code> (0x20)</td><td>Going down announcement</td></tr>\n        <tr><td><code>AUDIO_PUERTASABIERTAS</code> (0x04)</td><td>\"Doors open\"</td></tr>\n        <tr><td><code>AUDIO_CERRANDOPUERTAS</code> (0x08)</td><td>\"Doors closing\"</td></tr>\n        <tr><td><code>AUDIO_REAPERTURA</code> (0x20)</td><td>Door reopen announcement</td></tr>\n        <tr><td><code>AUDIO_SENTIDO</code> (0x10)</td><td>Direction change announcement</td></tr>\n        <tr><td><code>AUDIO_SEC_BLOQ</code> (0x40)</td><td>Security lock announcement</td></tr>\n        <tr><td>Floor number data in CAN frame</td><td>Floor number: \"Floor one\", \"Floor two\"...</td></tr>\n        <tr><td><code>FALLO_FUERASERVICIO</code> (0x01)</td><td>\"Out of service\" announcement</td></tr>\n        <tr><td><code>FALLO_EXCESOCARGA</code> (0x02)</td><td>\"Overload\" announcement</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Interactions</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li><strong>Main board:</strong> Receives floor data and commands via $XBD; sends button states and overload via $XBN</li>\n    <li><strong>Display modules:</strong> Compatible with any EDEL display module attached to cabin (LCD, TFT, mLCD, etc.)</li>\n    <li><strong>BotCAN:</strong> Can operate alongside BotCAN (MODO_BOTCAN) or as standalone call panel (MODO_PLACALLAMADAS)</li>\n    <li><strong>Speaker:</strong> External 8Ω speaker required for audio output</li>\n  </ul>\n  <h2 style=\"margin-top:1.5rem;\">Alternatives</h2>\n  <p>If audio is not required: use K2-64291 Cabina-v2 (ADVANCED) — simpler, smaller, more modern platform. If audio is required but in a different language, the firmware must be recompiled with the correct <code>IDIOMA</code> define.</p>\n</div>",
+
+// --- enc-cabin-v2 ---
+"enc-cabin-v2": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">3.2.2</span>\n    <h1>📱 K2-64291 — EDELCabina-v2 v1.2 (ADVANCED)</h1>\n    <p>Compact second-generation cabin board designed for the ADVANCED series. No audio hardware — focussed purely on CAN communication and button I/O.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64291</code></td></tr>\n        <tr><td>Software</td><td>EDELCabina-v2 v1.2</td></tr>\n        <tr><td>MCU</td><td>Freescale MC9S08 (HCS08)</td></tr>\n        <tr><td>Project size</td><td>77 files</td></tr>\n        <tr><td>Hardware variants</td><td>HARD_EDEL / HARD_GENESIS / HARD_ATES</td></tr>\n        <tr><td>CAN Receive</td><td><code>$XBD</code> (EDEL) or <code>$ZBD</code> (custom)</td></tr>\n        <tr><td>CAN Transmit</td><td><code>$XBN</code> (EDEL) or <code>$ZBN</code> (custom)</td></tr>\n        <tr><td>Token</td><td>Yes — Cifrado() authentication</td></tr>\n        <tr><td>Test module</td><td>Test.c / Test.h — built-in self-test</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Interactions</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li><strong>Main board:</strong> Same CAN protocol as v1 ($XBD/$XBN) — compatible with same main board firmware</li>\n    <li><strong>Display modules:</strong> Compatible with all EDEL display modules</li>\n    <li><strong>No speaker connection:</strong> Audio system not present</li>\n  </ul>\n  <h2 style=\"margin-top:1.5rem;\">When to use v2 vs v1</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Requirement</th><th>Choose</th></tr></thead>\n      <tbody>\n        <tr><td>Voice announcements required</td><td>K2-64290 CabinaFull</td></tr>\n        <tr><td>Standard K2 series installation</td><td>Either (K2-64290 is standard K2)</td></tr>\n        <tr><td>ADVANCED series installation</td><td>K2-64291 Cabina-v2</td></tr>\n        <tr><td>Space-constrained installation</td><td>K2-64291 (smaller PCB)</td></tr>\n        <tr><td>GENESIS or ATES hardware variant</td><td>K2-64291 (supports all 3 variants)</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-botcan ---
+"enc-botcan": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 3.3</span>\n    <h1>🔘 3.3 Floor Call Buttons (BotCAN)</h1>\n    <p>The BotCAN (\"Botón CAN\") is the PCB embedded in every floor's Landing Operating Panel (LOP). It converts physical button presses into CAN messages and drives button LEDs based on call status.</p>\n  </div>\n  <div class=\"callout callout-human\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>One BotCAN per floor landing</h4>\n      <p>Each floor must have exactly one BotCAN. Ground floor typically has only DOWN button; top floor has only UP; intermediate floors have both. The BotCAN's DIP switches must be set to its floor number — no two BotCANs can share the same address.</p>\n    </div>\n  </div>\n  <p style=\"margin-top:1rem;color:var(--text-secondary);\">See sub-sections 3.3.1 and 3.3.2 for detail on each version.</p>\n</div>",
+
+// --- enc-botcan-v1 ---
+"enc-botcan-v1": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.3.1</span>\n    <h1>🔘 K2-64295 — EDELBotCAN v1</h1>\n    <p>Original generation floor call button PCB. Uses an older HC08 microcontroller and shift-register based I/O. Being phased out in favour of v2.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64295</code></td></tr>\n        <tr><td>Software</td><td>EDELBotCAN v1</td></tr>\n        <tr><td>MCU</td><td>Motorola MC68HC908GZ8 (HC08)</td></tr>\n        <tr><td>I/O method</td><td>CLK / DATA / STROBE shift-register bus</td></tr>\n        <tr><td>CAN</td><td>MSCAN module</td></tr>\n        <tr><td>Token</td><td>❌ No token authentication</td></tr>\n        <tr><td>Files</td><td>65</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Call registration flow</h2>\n  <ol style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li>Passenger presses UP or DOWN button</li>\n    <li>BotCAN reads button via shift register (<code>ReadLlamadas()</code>)</li>\n    <li>BotCAN registers call (<code>RegistroLlamadas()</code>)</li>\n    <li>BotCAN sends CAN frame to main board</li>\n    <li>Main board acknowledges — BotCAN lights the LED via output shift register</li>\n  </ol>\n  <h2 style=\"margin-top:1.5rem;\">Limitations vs v2</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li>No Token authentication — cannot be licensed/paired</li>\n    <li>Older HC08 platform — no longer in active development</li>\n    <li>Shift register I/O — less flexible than direct digital I/O of v2</li>\n    <li>Not compatible with GENESIS or ATES hardware variants</li>\n  </ul>\n</div>",
+
+// --- enc-botcan-v2 ---
+"enc-botcan-v2": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.3.2</span>\n    <h1>🔘 K2-64292 — EDELBotCAN-v2 v1.2 (ADVANCED)</h1>\n    <p>Current-generation floor call button PCB. HCS08 MCU with full CAN integration, Token licensing, and support for all 3 hardware variants.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64292</code></td></tr>\n        <tr><td>Software</td><td>EDELBotCAN-v2 v1.2</td></tr>\n        <tr><td>MCU</td><td>Freescale MC9S08 (HCS08)</td></tr>\n        <tr><td>CAN Receive</td><td><code>$XBD</code> — main sends floor data and LED commands</td></tr>\n        <tr><td>CAN Transmit</td><td><code>$XPD</code> — BotCAN sends call register to main</td></tr>\n        <tr><td>Token</td><td>✅ Yes — Cifrado() authentication</td></tr>\n        <tr><td>Hardware variants</td><td>EDEL ($X), GENESIS ($Y), ATES ($Z)</td></tr>\n        <tr><td>Files</td><td>75</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">DIP switch configuration</h2>\n  <div class=\"callout callout-blue\">\n    <div class=\"callout-icon\">🔧</div>\n    <div class=\"callout-content\">\n      <h4>Floor address must be unique per landing</h4>\n      <p>The BotCAN's floor address is set via DIP switches. On v2 boards, multiple switches encode the floor number in binary. The ID switches (SW_ID_0, SW_ID_1) allow multiple modules on the same floor (e.g., one BotCAN + one FlechasPP). Duplicate addresses on the same CAN bus will cause message collision.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Interactions</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li><strong>Main board:</strong> Bidirectional CAN — receives $XBD (LED control), sends $XPD (call data)</li>\n    <li><strong>Expansion I/O K2-64297:</strong> Also subscribes to $XPD — can trigger additional outputs on landing call</li>\n    <li><strong>Token system:</strong> Main board issues firmware token challenge at startup; BotCAN must respond within 30s or be ignored</li>\n  </ul>\n</div>",
+
+// --- enc-exteriores ---
+"enc-exteriores": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 3.4</span>\n    <h1>🏢 3.4 Exterior / Landing Displays (Exteriores)</h1>\n    <p>The Exteriores PCB drives the floor indicator at each landing — showing waiting passengers the elevator's current floor, direction of travel, and priority operational statuses (Firefighter service, Full car, Out of Service). It connects to the Exterior CAN bus ($XTR frame).</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Feature</th><th>K2-64280 Exteriores v1</th><th>K2-64281 Exteriores v2 (mCAN-12)</th></tr></thead>\n      <tbody>\n        <tr><td>MCU</td><td>Freescale HCS08 (8-bit)</td><td>NXP ARM Cortex-M0+ (MKE16Z4)</td></tr>\n        <tr><td>Discrete Inputs</td><td>Up to 16 floor calls, COMPLETO, REAPERTURA, BOMB_CABINA</td><td>Network-centric CAN messaging (minimal discrete wiring)</td></tr>\n        <tr><td>CAN Protocol</td><td>$XBD / $XPD / Firefighter Frame Type 2</td><td>MSCAN with FSL SDK supporting up to 12 zones</td></tr>\n        <tr><td>Token Security</td><td>✅ Yes (Token.c)</td><td>✅ Yes (firmware encryption)</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <p style=\"margin-top:1rem;color:var(--text-secondary);\">Two generations exist. See sub-sections 3.4.1 and 3.4.2 for comprehensive technical details.</p>\n</div>",
+
+// --- enc-ext-v1 ---
+"enc-ext-v1": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.4.1</span>\n    <h1>📺 K2-64280 — EDELExteriores v2.1</h1>\n    <p>Established HCS08-based landing display PCB. Drives the visible floor indicator and handles firefighter mode signal inputs.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64280</code></td></tr>\n        <tr><td>Software</td><td>EDELExteriores v2.1 (June 2018)</td></tr>\n        <tr><td>MCU</td><td>HCS08</td></tr>\n        <tr><td>Token</td><td>✅ Yes</td></tr>\n        <tr><td>Max floors supported</td><td>16 LLAMADA inputs (floor call inputs)</td></tr>\n        <tr><td>CAN</td><td>Receives $XBD (cabin bus) and $XPD (BotCAN bus)</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Key inputs from Defines.h</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Signal</th><th>I/O pin</th><th>Meaning</th></tr></thead>\n      <tbody>\n        <tr><td><code>COMPLETO</code></td><td>PTGD4</td><td>Cabin full load signal (inputs to indicator)</td></tr>\n        <tr><td><code>REAPERTURA</code></td><td>PTFD3</td><td>Door reopen signal</td></tr>\n        <tr><td><code>BOMB_CABINA</code></td><td>PTFD2</td><td>Firefighter mode from cabin</td></tr>\n        <tr><td><code>PULS_CERRAR</code></td><td>PTFD1</td><td>Close door push signal</td></tr>\n        <tr><td><code>LLAMADA_1–16</code></td><td>Multiple ports</td><td>Up to 16 floor call inputs</td></tr>\n        <tr><td><code>SW_MASTER</code></td><td>PTED5</td><td>Master switch</td></tr>\n        <tr><td><code>BUZZER</code></td><td>PTGD0</td><td>Buzzer output</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Version history</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>\n      <tbody>\n        <tr><td>v2.1</td><td>June 2018</td><td>Added Firefighter mode telegram type 2 (for Polish installations)</td></tr>\n        <tr><td>v2.0</td><td>Earlier</td><td>Base version — CAN exterior operation</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Alternatives</h2>\n  <p>If 12+ floors or modern platform needed → use K2-64281 Exteriores v2 (mCAN-12). Both are electrically interchangeable on the CAN bus side.</p>\n</div>",
+
+// --- enc-ext-v2 ---
+"enc-ext-v2": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.4.2</span>\n    <h1>📺 K2-64281 — EDELExterioresV2 v1.0 (mCAN-12)</h1>\n    <p>Second generation landing display on modern ARM Cortex-M0+ platform. The \"mCAN-12\" name indicates support for up to 12 CAN address zones.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64281</code></td></tr>\n        <tr><td>Software</td><td>EDELExterioresV2 v1.0</td></tr>\n        <tr><td>MCU</td><td>NXP ARM Cortex-M0+</td></tr>\n        <tr><td>SDK</td><td>NXP MCUXpresso / FSL (same platform as iCOM, DDM, mLCD)</td></tr>\n        <tr><td>Files</td><td>185</td></tr>\n        <tr><td>Name meaning</td><td>\"mCAN\" = mini CAN; \"12\" = 12 addressable zones</td></tr>\n        <tr><td>Processing power</td><td>Significantly higher than v1 (32-bit ARM vs 8-bit HCS08)</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">When to choose v2 over v1</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li>Buildings with more than 16 floors (v1 is limited to 16 LLAMADA inputs)</li>\n    <li>Installations requiring more sophisticated CAN addressing (12 zones)</li>\n    <li>Standardizing on modern ARM platform alongside DDM, mLCD, and iCOM</li>\n    <li>Futureproofing — v2 platform will receive ongoing updates</li>\n  </ul>\n</div>",
+
+// --- enc-encoder ---
+"enc-encoder": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-green\">Section 3.5</span>\n    <h1>📏 3.5 Position Encoder System</h1>\n    <p>The position encoder system is the \"eyes\" of the elevator — it continuously tells the main board exactly where in the shaft the cabin is. Without accurate position data, the elevator cannot stop at floors, and all floor-related logic fails.</p>\n  </div>\n  <div class=\"callout callout-warning\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Obligatory system — no alternative to having a position encoder</h4>\n      <p>Unlike display modules or arrows (optional), the encoder system is required. The only choice is which physical encoder model to use (Wachendorff or ELGO). The EDEL interface PCB K2-64296 is always the same; only the physical encoder and DIP switch change.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-encoder-pcb ---
+"enc-encoder-pcb": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-green\">3.5.1</span>\n    <h1>📏 K2-64296 — EDELEncoder v2.8</h1>\n    <p>The EDEL encoder interface PCB. Reads the physical absolute encoder via SSI (Synchronous Serial Interface) and continuously sends position data to the main board via CAN.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64296</code></td></tr>\n        <tr><td>Software</td><td>EDELEncoder v2.8 (January 2022)</td></tr>\n        <tr><td>MCU</td><td>Freescale MC9S08 (HCS08)</td></tr>\n        <tr><td>Token</td><td>✅ Yes — required pairing with main board</td></tr>\n        <tr><td>Physical interface</td><td>SSI — synchronous serial (PIN_SSI_CLK + PIN_SSI_DATA)</td></tr>\n        <tr><td>CAN Receive</td><td><code>$XBD</code> or <code>$ZBD</code></td></tr>\n        <tr><td>CAN Transmit position</td><td><code>$XBL</code> — absolute position in mm</td></tr>\n        <tr><td>CAN Transmit identity</td><td><code>$XBN</code> — identification frame</td></tr>\n        <tr><td>Supported hardware</td><td>ENC04 and ENC10 PCB variants (pin definitions differ)</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Supported Physical Encoders</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Encoder Brand</th><th>Type</th><th>Resolution</th><th>DIP SW2</th><th>DIP SW3</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Wachendorff</strong></td><td>SSI Absolute</td><td>12-bit single-turn (4096 positions/rev)</td><td>OFF</td><td>OFF</td></tr>\n        <tr><td><strong>ELGO</strong></td><td>SSI Absolute</td><td>TBD</td><td>ON</td><td>OFF</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-warning\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>DIP switch must match physical encoder — critical</h4>\n      <p>Wrong DIP setting → wrong SSI frame decoding → garbage position data. Symptoms: elevator stops at wrong floors, generates position fault codes, and in the worst case (v2.6 and earlier bug): doors open at rest positions. Always verify encoder model matches DIP configuration after any encoder replacement.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Key bug fixed in v2.7 (January 2022)</h2>\n  <div class=\"callout callout-human\">\n    <div class=\"callout-icon\">🐛</div>\n    <div class=\"callout-content\">\n      <h4>Symptom: Elevator opens doors while at rest</h4>\n      <p><strong>Root cause:</strong> SSI readings with a jump greater than 100mm between consecutive reads were accepted as valid. A momentary SSI noise spike produced a false position jump, which the main board interpreted as the cabin having moved to a floor, triggering door open.<br>\n      <strong>Fix in v2.7:</strong> Readings with &gt;100mm jump vs. previous reading are now discarded and flagged as invalid. If running v2.6 or earlier and seeing this symptom, upgrade to v2.7+.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">ENC-04 vs ENC-10 hardware</h2>\n  <p>The PCB firmware supports two physical encoder board variants (ENC04 and ENC10) selected by a hardware pin (<code>PIN_HARD</code>). The main logical behaviour is identical; the pin assignments for LEDs, outputs, and push buttons differ.</p>\n</div>",
+
+// --- enc-displays ---
+"enc-displays": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 3.6</span>\n    <h1>🖥️ 3.6 Indicator Display Modules</h1>\n    <p>Display modules show the current floor number (and optionally direction) to passengers inside the cabin or waiting at a landing. EDEL offers 6 different display technologies — all are optional and interchangeable in function (they receive the same CAN data).</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Module</th><th>Technology</th><th>MCU</th><th>Best for</th></tr></thead>\n      <tbody>\n        <tr><td>K2-64300H-B</td><td>LCD character, horizontal</td><td>HCS08</td><td>Standard installations, low cost</td></tr>\n        <tr><td>K2-64300V</td><td>LCD character, vertical</td><td>HCS08</td><td>Portrait form factor</td></tr>\n        <tr><td>K2-64310 DRC</td><td>Rotating LED/LCD</td><td>MC9S08GT32</td><td>Dynamic/animated display, speed indicator</td></tr>\n        <tr><td>K2-64315 DDM</td><td>Dot matrix LED</td><td>NXP ARM Cortex-M0+</td><td>High resolution, custom characters</td></tr>\n        <tr><td>K2-64320 TFT</td><td>Full color TFT screen</td><td>HCS08</td><td>Premium installations, graphics</td></tr>\n        <tr><td>K2-64330 mLCD</td><td>Small LCD</td><td>NXP ARM Cortex-M0+</td><td>Compact spaces, cabin or landing</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-human\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>All receive the same CAN data</h4>\n      <p>Every display module listens to the CAN cabin bus ($XBD) and decodes the floor number and direction from the same frame. Swapping one display type for another requires no main board firmware change — only the physical module is replaced.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-disp-lcd ---
+"enc-disp-lcd": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.1</span>\n    <h1>📟 K2-64300H-B / K2-64300V — EDELDisplayLCD (Horizontal / Vertical)</h1>\n    <p>Character LCD display modules — the most common and cost-effective option for floor indicators.</p>\n  </div>\n  <div style=\"display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem;\">\n    <div class=\"callout callout-blue\">\n      <div class=\"callout-icon\">📟</div>\n      <div class=\"callout-content\">\n        <h4>K2-64300H-B — Horizontal (LCD-H)</h4>\n        <ul>\n          <li>Version v2.4 (December 2013)</li>\n          <li>v2.4: Added backlight support (new LCD-H04 hardware)</li>\n          <li>v2.0: Added CAN exterior bus support</li>\n          <li>v1.7: Emergency signal (E2) readable on E1 input (for Polish installations)</li>\n        </ul>\n      </div>\n    </div>\n    <div class=\"callout callout-human\">\n      <div class=\"callout-icon\">📟</div>\n      <div class=\"callout-content\">\n        <h4>K2-64300V — Vertical (LCD-V)</h4>\n        <ul>\n          <li>Version v1.0</li>\n          <li>Same hardware platform as LCD-H</li>\n          <li>Portrait orientation layout</li>\n          <li>Used in narrow display spaces</li>\n        </ul>\n      </div>\n    </div>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value (both)</th></tr></thead>\n      <tbody>\n        <tr><td>MCU</td><td>HCS08</td></tr>\n        <tr><td>Display type</td><td>Character LCD (typically 2 characters)</td></tr>\n        <tr><td>CAN source</td><td>$XBD (cabin bus) — floor number and arrows decoded</td></tr>\n        <tr><td>Emergency input</td><td>Direct input E1/E2 for emergency signal</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-disp-drc ---
+"enc-disp-drc": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.2</span>\n    <h1>🔄 K2-64310 — EDELDisplayRotativo (DRC)</h1>\n    <p>A rotating/scrolling display module with an LCD screen and configurable menu. The DRC (Display Rotativo CAN) is unique in that it has local configuration via an LCD menu system — no PC needed to configure it.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64310</code></td></tr>\n        <tr><td>Software</td><td>EDELDisplayRotativo</td></tr>\n        <tr><td>MCU</td><td>Freescale MC9S08GT32 (HC08)</td></tr>\n        <tr><td>Local config</td><td>LCD screen + keypad menu (Menu.c, MenuLCD.c, Acciones.c)</td></tr>\n        <tr><td>I2C</td><td>Yes — I2C bus for EEPROM and potentially LCD controller</td></tr>\n        <tr><td>Configurable parameters</td><td>Rotation speed, scroll direction, display format, brightness</td></tr>\n        <tr><td>Key source files</td><td>Acciones.c, Caracteres.c, HC08.c, I2C.c, LCD.c, Menu.c, MenuLCD.c</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-human\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>Rotation speed configuration</h4>\n      <p>The DRC has 8 discrete rotation speeds controlled by <code>timer_velocidad[] = {250,218,186,154,122,90,58,26}</code>. These values are the rotation timer intervals in ms. Speed 0 (250ms) is slowest, speed 7 (26ms) is fastest. Configured via local LCD menu.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Special features</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li><strong>Scroll animation:</strong> Unidades/Decenas arrays store digit segments for animated scrolling</li>\n    <li><strong>Direction arrows:</strong> Flechas variable controls arrow display alongside floor number</li>\n    <li><strong>Speaker:</strong> TimerSpeaker / TimerBeep suggest optional buzzer output</li>\n    <li><strong>Auto-test:</strong> Test.c module for self-test</li>\n  </ul>\n</div>",
+
+// --- enc-disp-ddm ---
+"enc-disp-ddm": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.3</span>\n    <h1>⬛ K2-64315 — EDELDisplayDotMatrix (DDM) v1.0</h1>\n    <p>Dot-matrix LED display on modern ARM Cortex-M0+ platform. Supports custom character rendering and high-resolution output.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64315</code></td></tr>\n        <tr><td>Software</td><td>EDELDisplayDotMatrix v1.0</td></tr>\n        <tr><td>MCU</td><td>NXP ARM Cortex-M0+ (same platform as mCAN-12, mLCD, iCOM)</td></tr>\n        <tr><td>SDK</td><td>NXP MCUXpresso FSL</td></tr>\n        <tr><td>Files</td><td>326</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <p style=\"margin-top:1rem;color:var(--text-secondary);\">The DDM shares the same ARM platform as K2-64281, K2-64330, and K2-64299, enabling future consolidated firmware development. Custom characters and floor number graphics are rendered pixel-by-pixel on the dot matrix grid.</p>\n</div>",
+
+// --- enc-disp-tft ---
+"enc-disp-tft": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.4</span>\n    <h1>🎨 K2-64320 — EDELDisplayTFT</h1>\n    <p>The most premium display option — a full-color TFT touch-screen or graphic display. Available in multiple hardware versions and a 2.5\" variant.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Sub-version</th><th>Description</th></tr></thead>\n      <tbody>\n        <tr><td>EDELDisplayTFT v1.1</td><td>Initial TFT version</td></tr>\n        <tr><td>EDELDisplayTFT v1.2</td><td>Updated hardware</td></tr>\n        <tr><td>EDELDisplayTFT v1.3</td><td>Further hardware revision</td></tr>\n        <tr><td>EDELDisplayTFT v2.0</td><td>Major redesign</td></tr>\n        <tr><td>EDELDisplayTFT25 v1.1</td><td>2.5-inch TFT variant — larger screen</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-warning\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>5 hardware versions — verify firmware matches PCB</h4>\n      <p>When replacing a TFT display, verify which hardware version is installed. The firmware for v1.1 is not interchangeable with v2.0. Each has its own project folder under <code>K2-64320 (TFT)/</code>.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-disp-mlcd ---
+"enc-disp-mlcd": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.5</span>\n    <h1>🔡 K2-64330 — EDELminiLCD v2.7</h1>\n    <p>Compact LCD display on ARM Cortex-M0+ platform. Latest version supports language programming via CAN bus — no physical configuration needed.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64330</code></td></tr>\n        <tr><td>Software</td><td>EDELminiLCD v2.7</td></tr>\n        <tr><td>MCU</td><td>NXP ARM Cortex-M0+</td></tr>\n        <tr><td>EEPROM version</td><td>0x05</td></tr>\n        <tr><td>I2C</td><td>Yes — EEPROM + LCD controller</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">v2.7 new features</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li><strong>Language programming via CAN:</strong> Language can be set remotely over the cabin CAN bus — no physical jumper or menu needed</li>\n    <li><strong>Inspection image via CAN:</strong> When elevator enters inspection mode, a special \"INS\" indicator appears on the display</li>\n    <li><strong>ATES variant:</strong> Firmware includes ATES brand variant (shows \"AT\" in version string)</li>\n    <li><strong>Garbled character fix:</strong> If an invalid character is sent via CAN programming, now shows \"-\" instead of crashing</li>\n    <li><strong>Timer initialization fix:</strong> TimerCAN_KO now initialized correctly so fast-blink LED works from power-on if module has a token</li>\n  </ul>\n  <div class=\"callout callout-warning\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Debug build timing note</h4>\n      <p>v2.7 was compiled in Debug mode (not Release) to respect I2C read timing. If ever recompiling, do not switch to Release without verifying I2C timing is still correct.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-disp-consolap ---
+"enc-disp-consolap": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">3.6.6 — Future</span>\n    <h1>⌨️ K2-64MdPConsola — EDELConsolaMdP16x4 v3.5</h1>\n    <p>A large 16×4 character LCD programming console. Listed as a future addition to this encyclopedia — to be fully documented when integrated.</p>\n  </div>\n  <div class=\"callout callout-warning\">\n    <div class=\"callout-icon\">🚧</div>\n    <div class=\"callout-content\">\n      <h4>Planned for future documentation</h4>\n      <p>The software folder <code>P:I+DSOFTWAREK2-64MdPConsolaEDELConsolaMdP16x4 v3.5</code> exists and the folder was confirmed accessible. Full documentation will be added in a future encyclopedia update.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-arrows ---
+"enc-arrows": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 3.7</span>\n    <h1>⬆️ 3.7 Directional Arrows</h1>\n    <p>Directional arrow indicators show UP or DOWN at each floor landing and inside the car, informing passengers of the upcoming travel direction before the doors open.</p>\n  </div>\n  <div class=\"callout callout-info\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>Dual-Bus Universal Capability</h4>\n      <p>The K2-64350 FlechasPP board features a unique dual-bus architecture: it can be wired to either the Cabin CAN bus ($XBD) or the Exterior CAN bus ($XTR). The onboard firmware auto-detects the active bus protocol, automatically transmitting confirmation frames ($XBN on cabin bus, $XTL on exterior bus).</p>\n    </div>\n  </div>\n  <p style=\"margin-top:1rem;color:var(--text-secondary);\">See sub-section 3.7.1 for complete hardware specifications, DIP switch addressing, and push-pull driver circuitry.</p>\n</div>",
+
+// --- enc-flechas ---
+"enc-flechas": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.7.1</span>\n    <h1>⬆️ K2-64350 — EDELFlechasPP v2.1 (Push-Pull Arrows)</h1>\n    <p>Push-Pull directional arrow indicators. The FlechasPP is unique in that it can receive data from either CAN bus — cabin bus or exterior bus — making it highly flexible for installation wiring.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64350</code></td></tr>\n        <tr><td>Software</td><td>EDELFlechasPP v2.1</td></tr>\n        <tr><td>MCU</td><td>HCS08</td></tr>\n        <tr><td>Token</td><td>✅ Yes — licensed module</td></tr>\n        <tr><td>CAN Receive (cabin)</td><td><code>$XBD</code> / <code>$ZBD</code></td></tr>\n        <tr><td>CAN Receive (exterior)</td><td><code>$XTR</code> / <code>$ZTR</code></td></tr>\n        <tr><td>CAN Transmit (cabin)</td><td><code>$XBN</code> / <code>$ZBN</code></td></tr>\n        <tr><td>CAN Transmit (exterior)</td><td><code>$XTL</code> / <code>$ZTL</code></td></tr>\n        <tr><td>Files</td><td>60</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">DIP switch configuration</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Switch</th><th>Function</th></tr></thead>\n      <tbody>\n        <tr><td>SW_PLANTA_A, B, C, D, E (5 bits)</td><td>Binary floor address — which floor this unit is on</td></tr>\n        <tr><td>SW_ID_0, SW_ID_1 (2 bits)</td><td>CAN node sub-ID — for multiple modules on same floor</td></tr>\n        <tr><td>SW_FLECHAS</td><td>Arrow display mode: FLECHAS_DIR (0) = directional arrows / FLECHAS_PP (1) = push-pull mode</td></tr>\n        <tr><td>SW_FREE</td><td>Reserved / free configuration switch</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Dual-bus unique capability</h2>\n  <div class=\"callout callout-blue\">\n    <div class=\"callout-icon\">🔀</div>\n    <div class=\"callout-content\">\n      <h4>Works on either bus — installation flexibility</h4>\n      <p>The FlechasPP can be connected to the cabin bus ($XBD) OR the exterior bus ($XTR). This is chosen based on which bus runs closer to the arrow unit in the building. Typically: if the floor has an Exteriores display (exterior bus), wire the arrows to the same exterior bus. If not, wire to cabin bus.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-expansion ---
+"enc-expansion": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 3.8</span>\n    <h1>🔌 3.8 Expansion & Interface Modules</h1>\n    <p>Add-on modules that extend the system's I/O capacity, remote connectivity, or ability to connect third-party hardware. All are optional.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Module</th><th>Purpose</th><th>Key feature</th></tr></thead>\n      <tbody>\n        <tr><td>K2-64297 EDELExpansion</td><td>Extra digital I/O</td><td>4 inputs + 4 outputs on CAN bus</td></tr>\n        <tr><td>K2-64299 EDELiCOM</td><td>Remote monitoring + VFD interface</td><td>CANopen, UART to Fuji VFD, overspeed detection</td></tr>\n        <tr><td>K2-64406 EDELMKInterface</td><td>Third-party panel bridge</td><td>MK bus ↔ EDEL CAN; ASCII serial protocol</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-exp-io ---
+"enc-exp-io": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.8.1</span>\n    <h1>🔌 K2-64297 — EDELExpansion (I/O Expansion Module)</h1>\n    <p>Adds extra digital inputs and outputs to the installation when the main board's I/O is insufficient for the required configuration.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64297</code></td></tr>\n        <tr><td>Software versions</td><td>v1.0, v2.0, v2.0 (DZ60 variant), v2.1 (development token)</td></tr>\n        <tr><td>MCU</td><td>HCS08</td></tr>\n        <tr><td>Inputs</td><td>4 digital inputs (INPUT_1 to INPUT_4)</td></tr>\n        <tr><td>Outputs</td><td>4 digital outputs (OUTPUT_1 to OUTPUT_4)</td></tr>\n        <tr><td>Switch</td><td>1 configuration switch (INPUT_SWITCH)</td></tr>\n        <tr><td>CAN Receive</td><td><code>$XBD</code> (cabin bus) + <code>$XPD</code> (BotCAN bus)</td></tr>\n        <tr><td>Token</td><td>v2.1 development version has token; earlier versions may not</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Version evolution</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Version</th><th>Notes</th></tr></thead>\n      <tbody>\n        <tr><td>v1.0</td><td>Base version — 8 files</td></tr>\n        <tr><td>v2.0</td><td>Updated — 11 files</td></tr>\n        <tr><td>v2.0 DZ60</td><td>DZ60 hardware variant — 14 files</td></tr>\n        <tr><td>v2.1 (dev token)</td><td>Development version with Token — 12 files</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Typical use cases</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li>Extra output relay for external alarm or signage</li>\n    <li>Additional input for a non-standard safety sensor</li>\n    <li>Output for fire panel integration</li>\n    <li>DZ60 variant likely for specific door zone or 60Hz market</li>\n  </ul>\n  <div class=\"callout callout-human\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>CAN initialization timing</h4>\n      <p>From Defines.h: <code>INI_T_CAN = 1000ms</code> initial wait, <code>INI_T_CAN_KO = 10000ms</code> timeout, <code>INI_T_INCOMPATIBILIDAD = 30000ms</code>. If the module sees no valid CAN frames for 30 seconds, it enters incompatibility mode.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-icom ---
+"enc-icom": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.8.2</span>\n    <h1>🌐 K2-64299 — EDELiCOM-v1 v1.0 (Remote Communication Module)</h1>\n    <p>The most sophisticated peripheral module. Acts as a bridge between EDEL's internal CAN bus, the Fuji VFD (via UART), and external monitoring systems (via CANopen). Also monitors physical signals (speed, direction, alarm).</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64299</code></td></tr>\n        <tr><td>Software</td><td>EDELiCOM-v1 v1.0</td></tr>\n        <tr><td>MCU</td><td>NXP MKE16Z4 (ARM Cortex-M0+)</td></tr>\n        <tr><td>Secondary CAN chip</td><td>MCP2515 (external CAN controller via SPI)</td></tr>\n        <tr><td>Protocols</td><td>EDEL CAN ($XBD), CANopen (CANOpenLift.h), UART to VFD</td></tr>\n        <tr><td>Token</td><td>✅ Yes — Firma (Token) authentication</td></tr>\n        <tr><td>Hardware variants</td><td>HARD_EDEL (0), HARD_GENESIS (1), HARD_ATES (2)</td></tr>\n        <tr><td>Files</td><td>200+</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Output LED status signals</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>LED/Output</th><th>I/O Pin</th><th>Meaning</th></tr></thead>\n      <tbody>\n        <tr><td>OUT_UP</td><td>PTB4</td><td>Elevator traveling UP</td></tr>\n        <tr><td>OUT_DOWN</td><td>PTB5</td><td>Elevator traveling DOWN</td></tr>\n        <tr><td>OUT_SPEED</td><td>PTC3</td><td>At full speed</td></tr>\n        <tr><td>OUT_ALARM</td><td>PTE10</td><td>Fault / alarm active</td></tr>\n        <tr><td>OUT_PWR</td><td>PTD2</td><td>Power on / system running</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Overspeed detection thresholds</h2>\n  <div class=\"callout callout-warning\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Independent overspeed monitoring</h4>\n      <p>The iCOM independently monitors speed and can trigger an alarm output if:<br>\n      <code>OVERSPEED_LOW = 1200</code> → 12 m/min (0.2 m/s) — low overspeed threshold<br>\n      <code>OVERSPEED_HIGH = 1800</code> → 18 m/min (0.3 m/s) — high overspeed threshold<br>\n      This is independent of the main board's speed monitoring and is an additional safety layer for remote reporting.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">UART bridge to Fuji VFD</h2>\n  <p>The iCOM connects to the Fuji VFD via UART serial port (TimerCOMInverter manages polling). It reads VFD parameters (output frequency, current, fault codes) and can relay this data over CANopen to an external monitoring system. This is the only EDEL module with direct VFD data access beyond on/off control.</p>\n  <h2 style=\"margin-top:1.5rem;\">CANopen lift protocol</h2>\n  <p>The <code>CANOpenLift.c/h</code> implements the CANopen lift profile — a standardized industrial protocol for elevator monitoring. Via the MCP2515 secondary CAN controller, external building management systems can query real-time elevator status using standard CANopen commands.</p>\n  <h2 style=\"margin-top:1.5rem;\">Failure impact</h2>\n  <div class=\"callout callout-blue\">\n    <div class=\"callout-icon\">✅</div>\n    <div class=\"callout-content\">\n      <h4>Elevator continues if iCOM fails</h4>\n      <p>The iCOM is monitoring-only. If it fails, the elevator continues operating normally. Only remote monitoring and VFD data logging are lost. This is one of the few modules where failure has zero operational impact.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-mki ---
+"enc-mki": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.8.3</span>\n    <h1>🤝 K2-64406 — EDELMKInterface v1.1 (MKI-01)</h1>\n    <p>A bridge module between EDEL's CAN bus and the proprietary MK serial bus used by certain third-party button panel manufacturers. Allows non-EDEL button panels to be integrated into an EDEL elevator installation.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64406</code></td></tr>\n        <tr><td>Software</td><td>EDELMKInterface v1.1</td></tr>\n        <tr><td>MCU</td><td>HCS08</td></tr>\n        <tr><td>Token</td><td>✅ Yes</td></tr>\n        <tr><td>CAN Receive (cabin)</td><td><code>$XBD</code> / <code>$ZBD</code></td></tr>\n        <tr><td>CAN Receive (exterior)</td><td><code>$XTR</code> / <code>$ZTR</code></td></tr>\n        <tr><td>CAN Transmit</td><td><code>$XBN</code> / <code>$XTL</code></td></tr>\n        <tr><td>MK bus update interval</td><td><code>INI_T_MKUPDATE = 1000ms</code></td></tr>\n        <tr><td>Monitor TX interval</td><td><code>INI_T_MONITOR_TX = 100ms</code></td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">MK Bus Protocol (decoded from MKBUS.c)</h2>\n  <div class=\"callout callout-blue\">\n    <div class=\"callout-icon\">📡</div>\n    <div class=\"callout-content\">\n      <h4>ASCII serial frame: <code>$EMI:FPPDASKK\r\n</code></h4>\n      <p>The MK bus uses a text-based ASCII serial protocol. Each frame is 16 characters:</p>\n      <div class=\"table-container\" style=\"margin-top:.75rem;\">\n        <table>\n          <thead><tr><th>Position</th><th>Characters</th><th>Content</th></tr></thead>\n          <tbody>\n            <tr><td>0–4</td><td><code>$EMI:</code></td><td>Frame header (PROTO_MK_TRAMA)</td></tr>\n            <tr><td>5</td><td>F</td><td>Flags byte (high nibble as hex char)</td></tr>\n            <tr><td>6–7</td><td>PP</td><td>Floor number (two hex nibbles)</td></tr>\n            <tr><td>8</td><td>D</td><td>Door/Arrows byte (high nibble)</td></tr>\n            <tr><td>9</td><td>A</td><td>Door/Arrows byte (low nibble)</td></tr>\n            <tr><td>10–11</td><td>SS</td><td>Status byte (two nibbles)</td></tr>\n            <tr><td>12–13</td><td>KK</td><td>Checksum (byte sum mod 256, as two hex nibbles)</td></tr>\n            <tr><td>14–15</td><td>\r\n</td><td>Frame terminator</td></tr>\n          </tbody>\n        </table>\n      </div>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Arrow mode configuration</h2>\n  <p>The MKI-01 Defines.h shows two arrow modes: <code>FLECHAS_DIR = 0</code> (directional arrow display) and <code>FLECHAS_PP = 1</code> (push-pull arrow mode), selected by <code>SWITCH_FLECHAS</code> DIP switch.</p>\n</div>",
+
+// --- enc-access ---
+"enc-access": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Section 3.9</span>\n    <h1>🔑 3.9 Access Control Subsystem</h1>\n    <p>Optional access control security subsystem designed to restrict elevator travel or specific floor access to authorized personnel via Dallas/Maxim iButton key fobs.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Component</th><th>PCB Code</th><th>Function</th></tr></thead>\n      <tbody>\n        <tr><td><strong>CA-02 Access Controller</strong></td><td><code>K2-64435</code></td><td>Reads 1-Wire silicon serial IDs, verifies against onboard I2C EEPROM, and actuates authorization outputs</td></tr>\n        <tr><td><strong>KeyManager Console</strong></td><td><code>K2-64435 KM</code></td><td>Portable diagnostic console for adding, revoking, and auditing key fobs in the field</td></tr>\n        <tr><td><strong>iButton Electronic Keys</strong></td><td>Dallas DS1990A</td><td>Stainless steel rugged key fobs with globally unique factory-lasered 64-bit ROM IDs</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <p style=\"margin-top:1rem;color:var(--text-secondary);\">See sub-sections 3.9.1 and 3.9.2 for the 4 operating modes, wiring schematics, and field management procedures.</p>\n</div>",
+
+// --- enc-ca02 ---
+"enc-ca02": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.9.1</span>\n    <h1>🔑 K2-64435 — EDELControlAcceso v2.0 (CA-02)</h1>\n    <p>iButton reader and access control module. Grants or denies elevator access based on whether the presented key fob is in the authorized database.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64435</code></td></tr>\n        <tr><td>Software</td><td>EDELControlAcceso v2.0</td></tr>\n        <tr><td>MCU</td><td>HCS08 / RS08</td></tr>\n        <tr><td>Key technology</td><td>Dallas/Maxim iButton (1-Wire protocol)</td></tr>\n        <tr><td>EEPROM</td><td>I2C EEPROM (Memory.c) — stores authorized key IDs</td></tr>\n        <tr><td>Output relay</td><td>OUT_RELAY — activates when access granted</td></tr>\n        <tr><td>Relay active time</td><td><code>T_RELAY_COMUN = 5000ms</code> (5 seconds)</td></tr>\n        <tr><td>Read timeout</td><td><code>T_READ = 800ms</code></td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Key types</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Key type</th><th>Code</th><th>Role</th></tr></thead>\n      <tbody>\n        <tr><td>KEY_MASTER (1)</td><td>Held for >10s enters admin mode</td><td>Enters <code>ESTADO_MASTER</code> — adds new keys</td></tr>\n        <tr><td>KEY_USER (2)</td><td>Normal authorized user key</td><td>Grants access for T_RELAY_COMUN</td></tr>\n        <tr><td>KEY_BACKUP (3)</td><td>Backup key</td><td>Emergency access</td></tr>\n        <tr><td>KEY_WRONG (4)</td><td>Unrecognized key</td><td>Denied — buzzer beep</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Operating modes</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Mode</th><th>Code</th><th>Behavior</th></tr></thead>\n      <tbody>\n        <tr><td>Common (pulse)</td><td>MODO_COMUN (0x00)</td><td>Relay activates for T_RELAY_COMUN then releases</td></tr>\n        <tr><td>Push-button</td><td>MODO_PULSADOR (0x01)</td><td>Acts as momentary push button relay</td></tr>\n        <tr><td>Bistable (toggle)</td><td>MODO_BIESTABLE (0x02)</td><td>First key ON → relay latches; second key OFF → relay releases</td></tr>\n        <tr><td>Common + Interlock</td><td>MODO_COMUN_ENCLAV (0x03)</td><td>Common mode with latch function</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">LED / Buzzer feedback</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Signal</th><th>Meaning</th></tr></thead>\n      <tbody>\n        <tr><td>LED_GREEN on + short beep</td><td>Access granted</td></tr>\n        <tr><td>LED_RED flash + long beep</td><td>Access denied (wrong key)</td></tr>\n        <tr><td>LED_REGISTRO blink</td><td>In key registration mode</td></tr>\n        <tr><td>Fast blink all</td><td>Waiting for master key to confirm add-user operation</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Failure mode</h2>\n  <div class=\"callout callout-warning\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Check fail-safe configuration</h4>\n      <p>If the CA-02 fails or loses power, the relay will de-energize. Depending on how the relay is wired (normally-open or normally-closed), this could either lock the elevator out (relay NO — safe) or leave it permanently accessible (relay NC — not secure). Verify the wiring configuration with the installer's specification.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-keymgr ---
+"enc-keymgr": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.9.2</span>\n    <h1>🗝️ K2-64435 — EDELConsolaKeyManager v1.0</h1>\n    <p>Companion firmware/console for managing the iButton key database of the CA-02 access control module.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K2-64435</code> (same hardware as CA-02)</td></tr>\n        <tr><td>Software</td><td>EDELConsolaKeyManager v1.0</td></tr>\n        <tr><td>MCU</td><td>HCS08</td></tr>\n        <tr><td>Files</td><td>66</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-human\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>Admin tool — not installed permanently</h4>\n      <p>The KeyManager firmware is typically used temporarily to program the CA-02 database, then the CA-02 is reflashed with its normal operating firmware. It allows adding authorized keys, removing revoked keys, and viewing the database. The KEY_MASTER approach (holding master key for 10s) is the field method; KeyManager provides a more controlled administrative interface.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-third ---
+"enc-third": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">Section 4</span>\n    <h1>🤝 4. Third-Party Components</h1>\n    <p>Components in the EDEL elevator installation that are <strong>not manufactured by EDEL</strong> but are essential to the system. A fault in these can appear as an EDEL fault code — knowing these components prevents misdiagnosis.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Component</th><th>Section</th><th>EDEL interface</th><th>Interchangeable?</th></tr></thead>\n      <tbody>\n        <tr><td>Fuji Frenic Lift VFD (motor)</td><td>4.1</td><td>Main board I/O + iCOM UART</td><td>❌ Fixed — Fuji only</td></tr>\n        <tr><td>Door VFD</td><td>4.2</td><td>Main board I/O</td><td>❌ Fixed manufacturer</td></tr>\n        <tr><td>Wachendorff SSI Encoder</td><td>4.3.1</td><td>K2-64296 via SSI</td><td>✅ Interchangeable with ELGO</td></tr>\n        <tr><td>ELGO SSI Encoder</td><td>4.3.2</td><td>K2-64296 via SSI</td><td>✅ Interchangeable with Wachendorff</td></tr>\n        <tr><td>Dallas/Maxim iButton</td><td>4.4</td><td>K2-64435 CA-02 via 1-Wire</td><td>✅ Any compatible iButton</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-fuji-motor ---
+"enc-fuji-motor": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">4.1</span>\n    <h1>⚡ 4.1 Fuji VFD — Motor Drive (Obligatory)</h1>\n    <p>The Fuji Frenic Lift series Variable Frequency Drive controls the traction motor that moves the elevator car. This is the most powerful component in the installation and the one with the most direct safety impact.</p>\n  </div>\n  <div class=\"callout callout-danger\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Fixed manufacturer — cannot be substituted</h4>\n      <p>The EDEL system is pre-configured and tested with Fuji Frenic Lift VFDs. The control signals, parameter configuration, and monitoring protocol (UART via iCOM) are specific to Fuji. Replacing with another VFD brand requires engineering work and re-certification.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">How EDEL interfaces with the Fuji VFD</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Signal direction</th><th>Signal</th><th>From → To</th></tr></thead>\n      <tbody>\n        <tr><td>Control</td><td>Speed setpoint (multi-step)</td><td>Main board K2-64278 → Fuji VFD</td></tr>\n        <tr><td>Control</td><td>Direction (FWD/REV)</td><td>Main board → Fuji VFD</td></tr>\n        <tr><td>Control</td><td>Enable / Run</td><td>Main board → Fuji VFD</td></tr>\n        <tr><td>Feedback</td><td>At Speed / Frequency Reached</td><td>Fuji VFD → Main board</td></tr>\n        <tr><td>Feedback</td><td>VFD Fault signal</td><td>Fuji VFD → Main board</td></tr>\n        <tr><td>Monitoring</td><td>Output frequency, current, status, faults</td><td>Fuji VFD → iCOM K2-64299 (UART)</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <p style=\"margin-top:1rem;color:var(--text-secondary);\">For the complete Fuji Frenic Lift parameter reference, see <strong>Developer Portal → Section 30</strong>.</p>\n</div>",
+
+// --- enc-fuji-door ---
+"enc-fuji-door": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">4.2</span>\n    <h1>🚪 4.2 Door Drive VFD (Obligatory)</h1>\n    <p>The door operator VFD controls the speed and torque of the automatic landing/cabin door motor, providing smooth door opening and closing with obstruction detection.</p>\n  </div>\n  <div class=\"callout callout-danger\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Fixed manufacturer — cannot be substituted</h4>\n      <p>Like the traction motor VFD, the door VFD manufacturer is fixed. Substitution would require re-engineering the control interface and re-testing door behavior against EN81-20 safety requirements.</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Interface with EDEL main board</h2>\n  <ul style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li><strong>OPEN command:</strong> Digital output from main board → Door VFD: open door</li>\n    <li><strong>CLOSE command:</strong> Digital output from main board → Door VFD: close door at programmed profile</li>\n    <li><strong>Fully OPEN feedback:</strong> Digital input to main board → safety logic knows doors are fully open</li>\n    <li><strong>Fully CLOSED feedback:</strong> Digital input to main board → critical for movement authorization (safety chain)</li>\n    <li><strong>Obstacle / re-open trigger:</strong> From cabin door safety edge → Door VFD reverses on obstruction</li>\n  </ul>\n</div>",
+
+// --- enc-encoders-ext ---
+"enc-encoders-ext": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">Section 4.3</span>\n    <h1>📏 4.3 Position Encoders (SSI)</h1>\n    <p>Physical absolute encoders that measure the elevator's exact position in the shaft. These connect to the EDEL encoder interface PCB K2-64296 via the SSI (Synchronous Serial Interface) protocol.</p>\n  </div>\n  <div class=\"callout callout-human\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>Interchangeable — choose based on installation</h4>\n      <p>Wachendorff and ELGO are the two supported encoder brands. Both use the same SSI protocol; the difference is in the data frame format. The EDEL PCB K2-64296 supports both — the DIP switch on the encoder PCB tells it which brand is connected.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-wachendorff ---
+"enc-wachendorff": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">4.3.1</span>\n    <h1>📏 Wachendorff SSI Absolute Encoder</h1>\n    <p>The primary and most common encoder brand used with EDEL systems.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>Brand</td><td>Wachendorff</td></tr>\n        <tr><td>Interface</td><td>SSI (Synchronous Serial Interface)</td></tr>\n        <tr><td>Resolution</td><td>12-bit single-turn (4,096 positions per revolution)</td></tr>\n        <tr><td>EDEL DIP setting</td><td>SW2 = OFF, SW3 = OFF</td></tr>\n        <tr><td>Code define</td><td><code>ENC_WACHENDORFF = 0</code></td></tr>\n        <tr><td>EDEL PCB</td><td>K2-64296 EDELEncoder</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-warning\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Single-turn vs multi-turn</h4>\n      <p>Wachendorff supported is 12-bit <em>single-turn</em>. If using a multi-turn variant, verify the SSI frame format is compatible — multi-turn encoders have additional bits in the SSI frame that may be misinterpreted if not configured correctly.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-elgo ---
+"enc-elgo": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">4.3.2</span>\n    <h1>📏 ELGO SSI Absolute Encoder</h1>\n    <p>Alternative encoder brand supported by EDEL. Used in specific markets or when Wachendorff is unavailable.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>Brand</td><td>ELGO</td></tr>\n        <tr><td>Interface</td><td>SSI (Synchronous Serial Interface)</td></tr>\n        <tr><td>EDEL DIP setting</td><td>SW2 = ON, SW3 = OFF</td></tr>\n        <tr><td>Code define</td><td><code>ENC_ELGO = 1</code></td></tr>\n        <tr><td>EDEL PCB</td><td>K2-64296 EDELEncoder</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <p style=\"margin-top:1rem;color:var(--text-secondary);\">Functionally equivalent to Wachendorff from the system's perspective. Selection is purely based on hardware availability and market preference.</p>\n</div>",
+
+// --- enc-ibutton ---
+"enc-ibutton": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">4.4</span>\n    <h1>🔑 4.4 Dallas/Maxim iButton Keys</h1>\n    <p>Electronic key fobs used with the CA-02 access control module. Each iButton has a factory-programmed unique 64-bit ROM ID that cannot be duplicated.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>Manufacturer</td><td>Dallas Semiconductor / Maxim Integrated (now part of Analog Devices)</td></tr>\n        <tr><td>Protocol</td><td>1-Wire (Dallas proprietary)</td></tr>\n        <tr><td>ID format</td><td>64-bit unique ROM code (factory programmed)</td></tr>\n        <tr><td>Form factor</td><td>Steel button ~17mm diameter (like a large coin)</td></tr>\n        <tr><td>Compatible models</td><td>DS1990A, DS1990R, DS1961S and compatible 1-Wire RFID fobs</td></tr>\n        <tr><td>EDEL interface</td><td>iButton.c — 1-Wire protocol in CA-02 firmware</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-human\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>Adding new users</h4>\n      <p>Two methods: (1) Field method — hold the master key to the reader for >10 seconds to enter add-user mode, then touch each new user key. (2) Admin method — use EDELConsolaKeyManager v1.0 to manage the database on a PC.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-variants ---
+"enc-variants": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Section 5</span>\n    <h1>🔀 5. Product Variants</h1>\n    <p>EDEL's elevator controller ecosystem covers three main product lines, each targeting a different application. Plus three hardware brand variants at firmware level.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Variant</th><th>Main PCB</th><th>Application</th><th>Key distinction</th></tr></thead>\n      <tbody>\n        <tr><td>K2 Standard</td><td>K2-64278</td><td>Passenger elevator, traction + hydraulic</td><td>Full ecosystem, EN81-20</td></tr>\n        <tr><td>K2 ADVANCED</td><td>K2-64278</td><td>Passenger elevator, premium</td><td>Uses v2 peripheral PCBs, no audio cabin</td></tr>\n        <tr><td>K3 Montacargas</td><td>K3-74278</td><td>Goods / freight lift</td><td>Separate controller family, built-in display</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-k2 ---
+"enc-k2": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">5.1</span>\n    <h1>🛗 5.1 K2 Series — Standard Passenger Elevator</h1>\n    <p>The flagship EDEL product. Covers the full range of residential and commercial passenger elevators.</p>\n  </div>\n  <h2>Supported configurations</h2>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Feature</th><th>Options</th></tr></thead>\n      <tbody>\n        <tr><td>Drive type</td><td>1-speed contactor, 2-speed contactor, 3VF (inverter), Gearless (PMSM), Hydraulic (oleo)</td></tr>\n        <tr><td>Control type</td><td>Simplex (single car), Duplex (2 cars shared shaft), Multiplex group (up to N cars)</td></tr>\n        <tr><td>Door type</td><td>Automatic (with door VFD), semi-automatic, manual</td></tr>\n        <tr><td>Safety standard</td><td>EN81-20 (configurable ON/OFF)</td></tr>\n        <tr><td>Assembly type</td><td>Standard (traction from top), Mixed, CAN 2-wire bus</td></tr>\n        <tr><td>Cabin boards</td><td>K2-64290 (with audio) or K2-64291 (ADVANCED, no audio)</td></tr>\n        <tr><td>Floor buttons</td><td>K2-64295 (v1) or K2-64292 (v2 ADVANCED)</td></tr>\n        <tr><td>Max floors</td><td>Configurable (limited by EEPROM call table)</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-montacargas ---
+"enc-montacargas": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">5.2</span>\n    <h1>🚛 5.2 K3 Series — Goods Lift (Montacargas)</h1>\n    <p>A completely separate controller family from K2. Designed for freight and goods transport — not for passengers. The K3-74278 is a self-contained unit with its own built-in display.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Property</th><th>Value</th></tr></thead>\n      <tbody>\n        <tr><td>PCB Code</td><td><code>K3-74278</code></td></tr>\n        <tr><td>Software</td><td>EDELMontacargas v1.2.2</td></tr>\n        <tr><td>MCU</td><td>Freescale MC9S12DG128B (HCS12)</td></tr>\n        <tr><td>Latest release</td><td>v1.2.2 — May 2026 (actively maintained)</td></tr>\n        <tr><td>EEPROM version</td><td>0x0A</td></tr>\n        <tr><td>Built-in display</td><td>Yes — LCD + menu system (no external display PCB needed)</td></tr>\n        <tr><td>Hydraulic support</td><td>Yes — oleo (hydraulic) + reenvio (return) timing</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Key differences from K2</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Feature</th><th>K2 Passenger</th><th>K3 Montacargas</th></tr></thead>\n      <tbody>\n        <tr><td>External display module</td><td>Required (separate PCB)</td><td>✅ Built-in LCD and menu</td></tr>\n        <tr><td>Peripheral CAN ecosystem</td><td>Full (cabin, BotCAN, displays, etc.)</td><td>Minimal — self-contained</td></tr>\n        <tr><td>Hydraulic max reenvio time</td><td>30 min</td><td>90 min (as of v1.2.1)</td></tr>\n        <tr><td>Passenger/goods standard</td><td>EN81-20 (passenger)</td><td>Freight lift standard</td></tr>\n        <tr><td>Audio</td><td>Optional (K2-64290)</td><td>No audio</td></tr>\n        <tr><td>Access control</td><td>CA-02 optional</td><td>Not standard</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Recent version history</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Version</th><th>Date</th><th>Key change</th></tr></thead>\n      <tbody>\n        <tr><td>v1.2.2</td><td>May 2026</td><td>Fix: hydraulic NC door — no longer opens during oleo reenvio positioning when it shouldn't</td></tr>\n        <tr><td>v1.2.1</td><td>2025</td><td>Fault 53/57 → reset via menu. Oleo reenvio max time 30→90 min</td></tr>\n        <tr><td>v1.2.0</td><td>2023</td><td>Major update — E2P version 0x09</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-advanced ---
+"enc-advanced": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">5.3</span>\n    <h1>⭐ 5.3 ADVANCED Series — Premium K2 Variant</h1>\n    <p>The ADVANCED series uses the same K2 main board but with second-generation peripheral PCBs. It targets premium installations with more compact hardware and modern ARM-based peripherals.</p>\n  </div>\n  <h2>What changes in ADVANCED vs Standard K2</h2>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Component</th><th>Standard K2</th><th>ADVANCED</th></tr></thead>\n      <tbody>\n        <tr><td>Main board</td><td>K2-64278 (same)</td><td>K2-64278 (same)</td></tr>\n        <tr><td>Cabin board</td><td>K2-64290 CabinaFull (HC12, audio)</td><td>K2-64291 Cabina-v2 (HCS08, no audio)</td></tr>\n        <tr><td>Floor buttons</td><td>K2-64295 BotCAN v1 (HC08)</td><td>K2-64292 BotCAN-v2 (HCS08)</td></tr>\n        <tr><td>Landing displays</td><td>K2-64280 (HCS08)</td><td>K2-64281 mCAN-12 (ARM) typical</td></tr>\n        <tr><td>Audio</td><td>Available</td><td>Not available in cabin</td></tr>\n        <tr><td>Token system</td><td>Present on some</td><td>Token on all v2 modules</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-compat ---
+"enc-compat": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">Section 6</span>\n    <h1>🔗 6. Dependencies & Compatibility Matrix</h1>\n    <p>What depends on what, what happens when something fails, and what constraints must be respected when mixing hardware.</p>\n  </div>\n  <h2>Failure Impact Matrix</h2>\n  <div class=\"table-container\" style=\"margin-top:1rem;\">\n    <table>\n      <thead><tr><th>Component fails</th><th>Impact</th><th>Elevator continues?</th></tr></thead>\n      <tbody>\n        <tr><td>Main board K2-64278</td><td>Complete system stop. No module can operate.</td><td>❌ No</td></tr>\n        <tr><td>Fuji motor VFD</td><td>No motor drive. Elevator stopped.</td><td>❌ No</td></tr>\n        <tr><td>Encoder K2-64296</td><td>No position data. Elevator cannot move safely.</td><td>❌ No</td></tr>\n        <tr><td>Safety chain break</td><td>Immediate stop and lockout.</td><td>❌ No</td></tr>\n        <tr><td>Cabin board K2-64290/91</td><td>No car calls; cabin buttons unresponsive. Can still take landing calls if not locked.</td><td>⚠️ Partial</td></tr>\n        <tr><td>BotCAN at one floor</td><td>Calls from that floor impossible. Other floors unaffected.</td><td>✅ Yes (other floors)</td></tr>\n        <tr><td>Display module (any)</td><td>Visual indicator lost. No operational impact.</td><td>✅ Yes</td></tr>\n        <tr><td>iCOM K2-64299</td><td>Remote monitoring lost; VFD data logging lost.</td><td>✅ Yes</td></tr>\n        <tr><td>CA-02 access control</td><td>Access restriction logic gone. Check fail-safe wiring.</td><td>✅ Yes (but security risk)</td></tr>\n        <tr><td>CAN bus wire break</td><td>All modules beyond break point go offline.</td><td>❌ Partial–No (depends on break location)</td></tr>\n        <tr><td>Token mismatch</td><td>That module ignored by main board.</td><td>⚠️ Yes (without that module)</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-hw-variants ---
+"enc-hw-variants": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">6.1</span>\n    <h1>🔧 6.1 Hardware Variants (EDEL / GENESIS / ATES)</h1>\n    <p>EDEL's firmware supports three hardware brand variants compiled from the same source. This allows the same firmware logic to run on hardware made for different OEM customers.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Variant</th><th>CAN Prefix</th><th>Define value</th><th>Description</th></tr></thead>\n      <tbody>\n        <tr><td><strong>EDEL</strong></td><td><code>$X</code></td><td>HARD_EDEL = 0</td><td>EDEL's own branded hardware. Default.</td></tr>\n        <tr><td><strong>GENESIS</strong></td><td><code>$Y</code></td><td>HARD_GENESIS = 1</td><td>Genesis brand OEM hardware. Same PCB logic, different CAN IDs.</td></tr>\n        <tr><td><strong>ATES</strong></td><td><code>$Z</code></td><td>HARD_ATES = 2</td><td>ATES brand or custom hardware variant. Most common alternative.</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-danger\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">🚨</div>\n    <div class=\"callout-content\">\n      <h4>ALL modules on one installation must use the same variant</h4>\n      <p>Mixing variants (e.g., main board compiled for EDEL/$X, cabin board compiled for ATES/$Z) causes CAN message ID mismatch. The main board sends $XBD; the cabin expects $ZBD — they never communicate. Token authentication also fails across variants. Always verify variant when replacing any module.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-can-compat ---
+"enc-can-compat": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">6.2</span>\n    <h1>🔌 6.2 CAN Protocol Compatibility</h1>\n    <p>Rules for which modules can coexist on the same CAN bus and what constraints apply.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Rule</th><th>Detail</th></tr></thead>\n      <tbody>\n        <tr><td>Same brand prefix required</td><td>All modules must use $X, $Y, or $Z — never mixed</td></tr>\n        <tr><td>Unique node addresses</td><td>Each BotCAN/FlechasPP must have a unique floor address (DIP switches)</td></tr>\n        <tr><td>CAN termination</td><td>Both ends of each CAN bus segment must be terminated with 120Ω (usually built into main board and last peripheral)</td></tr>\n        <tr><td>Max cable length</td><td>Standard CAN at 250kbps: up to ~100m. Longer runs → reduce bitrate</td></tr>\n        <tr><td>v1 vs v2 BotCAN</td><td>K2-64295 (v1) and K2-64292 (v2) can coexist — different CAN node addresses</td></tr>\n        <tr><td>Cabin bus isolation</td><td>Cabin bus runs in traveling cable — ensure cable shielding is maintained</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-fw-deps ---
+"enc-fw-deps": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">6.3</span>\n    <h1>💾 6.3 Firmware Version Dependencies</h1>\n    <p>Known version dependencies and compatibility constraints between modules.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Module</th><th>Version</th><th>Dependency / Note</th></tr></thead>\n      <tbody>\n        <tr><td>Main board K2-64278</td><td>v4.4.0</td><td>Requires EEPROM version 0x0020 — upgrading from older versions requires EEPROM migration</td></tr>\n        <tr><td>Encoder K2-64296</td><td>v2.7+</td><td>v2.7 fixes the >100mm jump false position bug — do not run v2.6 or earlier</td></tr>\n        <tr><td>Exteriores K2-64280</td><td>v2.1+</td><td>v2.1 required for firefighter trama type 2 (Polish installations)</td></tr>\n        <tr><td>miniLCD K2-64330</td><td>v2.7+</td><td>v2.7 required for language-via-CAN feature and garbled character fix</td></tr>\n        <tr><td>Montacargas K3-74278</td><td>v1.2.2+</td><td>v1.2.2 fixes hydraulic NC door reenvio bug (May 2026)</td></tr>\n        <tr><td>All Token modules</td><td>Must match main board Token key</td><td>Token key mismatch = module ignored. Re-pair after main board replacement.</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-token ---
+"enc-token": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">6.4</span>\n    <h1>🔐 6.4 Token / Firmware Licensing System</h1>\n    <p>The Token (also called \"Firma\" — signature) system is a cryptographic challenge-response authentication that prevents unauthorized replacement of licensed modules.</p>\n  </div>\n  <h2>How it works</h2>\n  <ol style=\"padding-left:1.2rem;color:var(--text-secondary);\">\n    <li>At startup, the main board issues a random 16-bit challenge to each peripheral module (<code>aleat</code> value)</li>\n    <li>The module reads its stored license key (Firma) from EEPROM</li>\n    <li>The module computes a response using <code>Cifrado(firma, aleat, tipo)</code>: XOR of the license key with the challenge, masked through a lookup table <code>RDM[8]</code></li>\n    <li>The module sends the response via CAN</li>\n    <li>The main board verifies the response. If correct → <code>FIRMA_OK</code>. If wrong → <code>FIRMA_ERR</code></li>\n    <li>Modules with FIRMA_ERR are flagged as incompatible and their data is ignored after <code>T_INCOMPATIBILIDAD = 30,000ms</code></li>\n  </ol>\n  <h2 style=\"margin-top:1.5rem;\">Modules with Token system</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Module</th><th>PCB Code</th><th>Token file</th></tr></thead>\n      <tbody>\n        <tr><td>Exteriores v1</td><td>K2-64280</td><td>Token.c / Token.h</td></tr>\n        <tr><td>BotCAN-v2</td><td>K2-64292</td><td>Token.c / Token.h</td></tr>\n        <tr><td>Encoder</td><td>K2-64296</td><td>Token.c / Token.h</td></tr>\n        <tr><td>FlechasPP</td><td>K2-64350</td><td>Token.c / Token.h</td></tr>\n        <tr><td>MK Interface</td><td>K2-64406</td><td>Token.c / Token.h</td></tr>\n        <tr><td>iCOM</td><td>K2-64299</td><td>Firma type (Type_Firma struct)</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-warning\" style=\"margin-top:1rem;\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>After replacing the main board</h4>\n      <p>If the main board is replaced, all paired Token modules must be re-paired with the new board's token key. Without re-pairing, all Token modules will fail authentication and go offline. Contact EDEL engineering for the pairing procedure.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-maps ---
+"enc-maps": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Section 7</span>\n    <h1>🗺️ 7. Visual Maps</h1>\n    <p>System block diagrams and topology maps for the EDEL elevator ecosystem.</p>\n  </div>\n  <h2>7.1 System Block Diagram (text)</h2>\n  <div class=\"code-block\" style=\"font-size:.78rem;line-height:1.8;\">\n┌─────────────────────────────────────────────────────────────┐\n│                    MACHINE ROOM                              │\n│                                                              │\n│  ┌──────────────────┐    ┌─────────────┐  ┌─────────────┐  │\n│  │  K2-64278         │    │  Fuji VFD   │  │  Door VFD   │  │\n│  │  Main Board       │───▶│  (Motor)    │  │  (Door)     │  │\n│  │  (MASTER CAN)     │    └─────────────┘  └─────────────┘  │\n│  │                   │                                       │\n│  │  ◀── Safety Chain─┼──────────────────────────────────────┤\n│  │                   │                                       │\n│  │  ┌─ CAN CABINA ───┼── $XBD/$XBN ──────────────┐         │\n│  │  └─ CAN EXTERIOR ─┼── $XTR/$XTL ──────────────┐│         │\n│  └──────────────────┘                             ││         │\n│                                                   ││         │\n│  ┌──────────────┐                                 ││         │\n│  │ K2-64299     │◀── CAN CABIN ──────────────────┘│         │\n│  │ iCOM         │◀── Fuji VFD UART ───────────────┘         │\n│  └──────────────┘                                            │\n└──────────────────────┬──────────────────────────────────────┘\n   CAN CABIN (shaft)   │        CAN EXTERIOR (along building)\n         │             │                    │\n   ┌─────▼─────┐       │             ┌──────▼──────┐\n   │ K2-64296  │       │             │ K2-64280/81 │ (×N floors)\n   │ Encoder   │       │             │ Exteriores  │\n   └───────────┘       │             └─────────────┘\n         │             │                    │\n   ┌─────▼─────┐       │             ┌──────▼──────┐\n   │ K2-64290  │  CABIN│             │ K2-64350    │ (×N floors)\n   │ /64291    │  (via │             │ FlechasPP   │\n   │ Cabin board│ traveling           └─────────────┘\n   └───────────┘ cable)│\n         │             │\n   ┌─────▼─────┐       │\n   │ Display   │       │             ┌──────────────┐\n   │ module    │       │             │ K2-64292/95  │ (×N floors)\n   │ (LCD/TFT) │       │             │ BotCAN       │\n   └───────────┘       │             └──────────────┘\n         │             │\n   ┌─────▼─────┐\n   │ K2-64297  │ (optional)\n   │ Expansion │\n   └───────────┘\n  </div>\n\n  <h2 style=\"margin-top:2rem;\">7.2 CAN Message Flow Summary</h2>\n  <div class=\"code-block\" style=\"font-size:.78rem;line-height:1.8;\">\nMain Board K2-64278\n  │\n  ├─SEND $XBD ──▶ Cabin Board (floor pos, door cmds, arrows, gong)\n  │               Encoder (commands)\n  │               BotCAN (LED on/off, call ack)\n  │               Expansion I/O\n  │               mLCD / DDM / TFT displays\n  │               FlechasPP (cabin side)\n  │\n  ├─RECV $XBN ◀── Cabin Board (button states, overload, alarm)\n  ├─RECV $XBL ◀── Encoder (absolute position mm)\n  │\n  ├─SEND $XPD ──▶ BotCAN (call acknowledge, LED)\n  │               Expansion I/O\n  │\n  ├─SEND $XTR ──▶ Exteriores displays (floor number, direction)\n  │               FlechasPP (exterior side)\n  │\n  └─RECV $XTL ◀── FlechasPP TX / Exteriores TX\n  </div>\n\n  <div class=\"callout callout-warning\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">🗺️</div>\n    <div class=\"callout-content\">\n      <h4>7.3 Elevator Cross-Section — Coming Soon</h4>\n      <p>A visual cross-section diagram showing physical PCB locations within the elevator installation is planned. This will be added as an image asset in a future update when the electrical schematic is available.</p>\n    </div>\n  </div>\n</div>"
+  }
+}, // end EN
+
+ES: {
+  title: "Enciclopedia del Ascensor",
+  nav: [
+  {
+    "id": "enc-overview",
+    "label": "📦  Índice General y Resumen",
+    "icon": "📦"
+  },
+  {
+    "id": "enc-anatomy",
+    "label": "🏗️  1. Anatomía y Zonas del Ascensor",
+    "icon": "🏗️"
+  },
+  {
+    "id": "enc-zone-machine",
+    "label": "  ↳ 1.1 Cuarto de Máquinas",
+    "icon": "🏭"
+  },
+  {
+    "id": "enc-zone-shaft",
+    "label": "  ↳ 1.2 Hueco del Ascensor",
+    "icon": "🕳️"
+  },
+  {
+    "id": "enc-zone-cabin",
+    "label": "  ↳ 1.3 Cabina",
+    "icon": "🚗"
+  },
+  {
+    "id": "enc-zone-landings",
+    "label": "  ↳ 1.4 Plantas / Rellanos",
+    "icon": "🏢"
+  },
+  {
+    "id": "enc-zone-pit",
+    "label": "  ↳ 1.5 Foso",
+    "icon": "⬇️"
+  },
+  {
+    "id": "enc-electrical",
+    "label": "⚡  2. Instalación Eléctrica General",
+    "icon": "⚡"
+  },
+  {
+    "id": "enc-power",
+    "label": "  ↳ 2.1 Circuitos de Potencia (Motor, Puertas)",
+    "icon": "⚡"
+  },
+  {
+    "id": "enc-control",
+    "label": "  ↳ 2.2 Circuitos de Control y Cadena de Seguridad",
+    "icon": "🛡️"
+  },
+  {
+    "id": "enc-can-bus",
+    "label": "  ↳ 2.3 Arquitectura de Bus CAN",
+    "icon": "🔌"
+  },
+  {
+    "id": "enc-3rd-points",
+    "label": "  ↳ 2.4 Puntos de Integración con Terceros",
+    "icon": "🤝"
+  },
+  {
+    "id": "enc-pcb-index",
+    "label": "🖥️  3. Módulos PCB EDEL",
+    "icon": "🖥️"
+  },
+  {
+    "id": "enc-mainboard",
+    "label": "  ↳ 3.1 Placa Principal — K2-64278",
+    "icon": "🧠"
+  },
+  {
+    "id": "enc-cabin",
+    "label": "  ↳ 3.2 Placas de Cabina",
+    "icon": "🚗"
+  },
+  {
+    "id": "enc-cabin-v1",
+    "label": "    · 3.2.1 K2-64290 CabinaFull (con audio)",
+    "icon": "🔊"
+  },
+  {
+    "id": "enc-cabin-v2",
+    "label": "    · 3.2.2 K2-64291 Cabina-v2 ADVANCED",
+    "icon": "📱"
+  },
+  {
+    "id": "enc-botcan",
+    "label": "  ↳ 3.3 Pulsadores de Planta (BotCAN)",
+    "icon": "🔘"
+  },
+  {
+    "id": "enc-botcan-v1",
+    "label": "    · 3.3.1 K2-64295 BotCAN v1",
+    "icon": "🔘"
+  },
+  {
+    "id": "enc-botcan-v2",
+    "label": "    · 3.3.2 K2-64292 BotCAN-v2 ADVANCED",
+    "icon": "🔘"
+  },
+  {
+    "id": "enc-exteriores",
+    "label": "  ↳ 3.4 Indicadores Exteriores",
+    "icon": "🏢"
+  },
+  {
+    "id": "enc-ext-v1",
+    "label": "    · 3.4.1 K2-64280 Exteriores v1",
+    "icon": "📺"
+  },
+  {
+    "id": "enc-ext-v2",
+    "label": "    · 3.4.2 K2-64281 Exteriores v2 (mCAN-12)",
+    "icon": "📺"
+  },
+  {
+    "id": "enc-encoder",
+    "label": "  ↳ 3.5 Encoder de Posición",
+    "icon": "📏"
+  },
+  {
+    "id": "enc-encoder-pcb",
+    "label": "    · 3.5.1 K2-64296 EDELEncoder",
+    "icon": "📏"
+  },
+  {
+    "id": "enc-displays",
+    "label": "  ↳ 3.6 Módulos de Visualización",
+    "icon": "🖥️"
+  },
+  {
+    "id": "enc-disp-lcd",
+    "label": "    · 3.6.1 K2-64300H/V Display LCD",
+    "icon": "📟"
+  },
+  {
+    "id": "enc-disp-drc",
+    "label": "    · 3.6.2 K2-64310 Display Rotativo (DRC)",
+    "icon": "🔄"
+  },
+  {
+    "id": "enc-disp-ddm",
+    "label": "    · 3.6.3 K2-64315 Dot Matrix (DDM)",
+    "icon": "⬛"
+  },
+  {
+    "id": "enc-disp-tft",
+    "label": "    · 3.6.4 K2-64320 Display TFT Color",
+    "icon": "🎨"
+  },
+  {
+    "id": "enc-disp-mlcd",
+    "label": "    · 3.6.5 K2-64330 miniLCD",
+    "icon": "🔡"
+  },
+  {
+    "id": "enc-disp-consolap",
+    "label": "    · 3.6.6 K2-64MdP Consola 16×4 (futuro)",
+    "icon": "⌨️"
+  },
+  {
+    "id": "enc-arrows",
+    "label": "  ↳ 3.7 Flechas Direccionales",
+    "icon": "⬆️"
+  },
+  {
+    "id": "enc-flechas",
+    "label": "    · 3.7.1 K2-64350 FlechasPP",
+    "icon": "⬆️"
+  },
+  {
+    "id": "enc-expansion",
+    "label": "  ↳ 3.8 Expansión e Interfaces",
+    "icon": "🔌"
+  },
+  {
+    "id": "enc-exp-io",
+    "label": "    · 3.8.1 K2-64297 Expansión E/S",
+    "icon": "🔌"
+  },
+  {
+    "id": "enc-icom",
+    "label": "    · 3.8.2 K2-64299 iCOM",
+    "icon": "🌐"
+  },
+  {
+    "id": "enc-mki",
+    "label": "    · 3.8.3 K2-64406 Interfaz MK (MKI-01)",
+    "icon": "🤝"
+  },
+  {
+    "id": "enc-access",
+    "label": "  ↳ 3.9 Control de Acceso",
+    "icon": "🔑"
+  },
+  {
+    "id": "enc-ca02",
+    "label": "    · 3.9.1 K2-64435 CA-02 (lector iButton)",
+    "icon": "🔑"
+  },
+  {
+    "id": "enc-keymgr",
+    "label": "    · 3.9.2 K2-64435 KeyManager",
+    "icon": "🗝️"
+  },
+  {
+    "id": "enc-third",
+    "label": "🤝  4. Componentes de Terceros",
+    "icon": "🤝"
+  },
+  {
+    "id": "enc-fuji-motor",
+    "label": "  ↳ 4.1 Fuji VFD — Motor Tracción",
+    "icon": "⚡"
+  },
+  {
+    "id": "enc-fuji-door",
+    "label": "  ↳ 4.2 VFD Puertas",
+    "icon": "🚪"
+  },
+  {
+    "id": "enc-encoders-ext",
+    "label": "  ↳ 4.3 Encoders de Posición (SSI)",
+    "icon": "📏"
+  },
+  {
+    "id": "enc-wachendorff",
+    "label": "    · 4.3.1 Wachendorff SSI",
+    "icon": "📏"
+  },
+  {
+    "id": "enc-elgo",
+    "label": "    · 4.3.2 ELGO SSI",
+    "icon": "📏"
+  },
+  {
+    "id": "enc-ibutton",
+    "label": "  ↳ 4.4 Llaves Dallas/Maxim iButton",
+    "icon": "🔑"
+  },
+  {
+    "id": "enc-variants",
+    "label": "🔀  5. Variantes de Producto",
+    "icon": "🔀"
+  },
+  {
+    "id": "enc-k2",
+    "label": "  ↳ 5.1 Serie K2 — Ascensor de Pasajeros",
+    "icon": "🛗"
+  },
+  {
+    "id": "enc-montacargas",
+    "label": "  ↳ 5.2 Serie K3 — Montacargas",
+    "icon": "🚛"
+  },
+  {
+    "id": "enc-advanced",
+    "label": "  ↳ 5.3 Serie ADVANCED — K2 Premium",
+    "icon": "⭐"
+  },
+  {
+    "id": "enc-compat",
+    "label": "🔗  6. Compatibilidad y Dependencias",
+    "icon": "🔗"
+  },
+  {
+    "id": "enc-hw-variants",
+    "label": "  ↳ 6.1 Variantes Hardware (EDEL/GENESIS/ATES)",
+    "icon": "🔧"
+  },
+  {
+    "id": "enc-can-compat",
+    "label": "  ↳ 6.2 Compatibilidad CAN",
+    "icon": "🔌"
+  },
+  {
+    "id": "enc-fw-deps",
+    "label": "  ↳ 6.3 Dependencias de Versión de Firmware",
+    "icon": "💾"
+  },
+  {
+    "id": "enc-token",
+    "label": "  ↳ 6.4 Token / Licencias de Firmware",
+    "icon": "🔐"
+  },
+  {
+    "id": "enc-maps",
+    "label": "🗺️  7. Mapas Visuales",
+    "icon": "🗺️"
+  }
+],
+  sections: {
+
+// --- enc-overview (ES) ---
+"enc-overview": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">Enciclopedia</span>\n    <h1>📦 Enciclopedia del Ascensor EDEL — Índice Completo</h1>\n    <p>Base de conocimiento técnica estructurada que cubre cada módulo de hardware, subsistema eléctrico, componente de terceros y variante de producto del ecosistema de control de ascensores EDEL.</p>\n  </div>\n  <div class=\"callout callout-human\">\n    <div class=\"callout-icon\">🎯</div>\n    <div class=\"callout-content\">\n      <h4>Cómo usar esta Enciclopedia</h4>\n      <p>Navega por el menú lateral izquierdo para acceder directamente a cualquier tema. Las secciones principales ofrecen una visión general de la arquitectura; las subsecciones (marcadas con ↳ o ·) proporcionan un análisis técnico exhaustivo de cada componente específico: funciones clave, protocolos de comunicación, interacciones entre módulos, configuraciones posibles, alternativas e impacto ante fallos.</p>\n    </div>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Sección</th><th>Contenido y Alcance Técnico</th></tr></thead>\n      <tbody>\n        <tr><td><strong>1. Anatomía del Ascensor</strong></td><td>Las 5 zonas físicas de la instalación; ubicación exacta de componentes mecánicos y electrónicos.</td></tr>\n        <tr><td><strong>2. Instalación Eléctrica</strong></td><td>Circuitos de potencia (tracción, puertas, maniobra), cadena de seguridad EN 81-20, topología de bus CAN e interfaces de terceros.</td></tr>\n        <tr><td><strong>3. Módulos PCB EDEL</strong></td><td>Catálogo integral de placas electrónicas EDEL: microcontrolador, tramas CAN, DIP switches, firmware y alternativas.</td></tr>\n        <tr><td><strong>4. Componentes de Terceros</strong></td><td>Inversores Fuji Frenic Lift, operadores de puerta, encoders absolutos SSI (Wachendorff/ELGO) y llaves Dallas iButton.</td></tr>\n        <tr><td><strong>5. Variantes de Producto</strong></td><td>Serie K2 (pasajeros), K3 (montacargas hidráulico/eléctrico) y K2 ADVANCED (gama premium sin audio).</td></tr>\n        <tr><td><strong>6. Matriz de Dependencias</strong></td><td>Compatibilidad de hardware EDEL/GENESIS/ATES, versiones mínimas de firmware, sistema de protección por Token y cascada de fallos.</td></tr>\n        <tr><td><strong>7. Mapas Visuales</strong></td><td>Diagramas de bloques del sistema, topología de conexionado de buses y corte transversal del hueco.</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-anatomy (ES) ---
+"enc-anatomy": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Sección 1</span>\n    <h1>🏗️ 1. Anatomía del Ascensor y Zonas Físicas</h1>\n    <p>Toda instalación de ascensor se estructura en 5 zonas físicas claramente delimitadas. Conocer la zona en la que se interviene acota de forma inmediata las placas electrónicas, cableados y tensiones presentes.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Zona Física</th><th>Denominación Española</th><th>Ubicación y Entorno</th><th>Componentes Principales</th></tr></thead>\n      <tbody>\n        <tr><td><strong>1.1 Machine Room</strong></td><td>Cuarto de Máquinas</td><td>Parte superior del hueco o armario en MRL</td><td>Cuadro de control (Placa Base K2-64278), Variador Fuji VFD, contactores, freno</td></tr>\n        <tr><td><strong>1.2 Shaft</strong></td><td>Hueco del Ascensor</td><td>Recorrido vertical completo</td><td>Guías, cables de tracción, manguera plana viajera, encoder de posición, finales de carrera</td></tr>\n        <tr><td><strong>1.3 Cabin</strong></td><td>Cabina</td><td>Vehículo móvil de pasajeros</td><td>Placa de cabina (K2-64290 / K2-64291), botonera COP, operador de puertas, barrera fotoeléctrica</td></tr>\n        <tr><td><strong>1.4 Landings</strong></td><td>Plantas / Rellanos</td><td>Accesos de cada nivel del edificio</td><td>Botoneras de planta BotCAN (K2-64292 / K2-64295), displays exteriores, flechas, cerraduras</td></tr>\n        <tr><td><strong>1.5 Pit</strong></td><td>Foso</td><td>Parte inferior bajo la última parada</td><td>Amortiguadores (buffers), polea tensora del limitador, seta de parada, contacto de seguridad</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-zone-machine (ES) ---
+"enc-zone-machine": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Zona 1.1</span>\n    <h1>🏭 1.1 Cuarto de Máquinas (Machine Room)</h1>\n    <p>El centro neurálgico de la instalación. Situado habitualmente sobre el hueco en instalaciones tradicionales, o integrado en un armario compacto en rellano en soluciones sin cuarto de máquinas (MRL). Aquí residen la potencia motriz y el cerebro del sistema.</p>\n  </div>\n  <h2>Equipos Presentes en Cuarto de Máquinas</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Componente</th><th>Tipo / Modelo</th><th>Función</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Cuadro de Maniobra</strong></td><td>Armario metálico EDEL</td><td>Aloja la placa principal K2-64278, transformadores, fuentes de 24Vdc y relés de seguridad.</td></tr>\n        <tr><td><strong>Placa Principal</strong></td><td><code>K2-64278</code> EDELElevatorFULL</td><td>Microcontrolador central Freescale MC9S12XDT256 / S12X. Ejecuta la lógica de maniobra y coordina los buses CAN.</td></tr>\n        <tr><td><strong>Variador de Tracción</strong></td><td>Fuji Frenic Lift (LM2)</td><td>Inversor de frecuencia vectorial en bucle cerrado/abierto para motor síncrono gearless o asíncrono.</td></tr>\n        <tr><td><strong>Máquina Tractora</strong></td><td>Motor + reductor o Gearless</td><td>Proporciona el movimiento mecánico mediante polea de tracción. Incluye freno electromecánico de doble disco.</td></tr>\n        <tr><td><strong>Limitador de Velocidad</strong></td><td>Mecánico centrífugo</td><td>Supervisa la velocidad nominal. Si supera el umbral de disparo, abre la serie de seguridad y clava el paracaídas.</td></tr>\n        <tr><td><strong>Línea de Alimentación</strong></td><td>Trifásica 400Vac / 230Vac</td><td>Filtro RFI, magnetotérmicos generales, diferencial y línea independiente de alumbrado de cabina.</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Interacción con Otras Zonas</h2>\n  <p>El cuarto de máquinas se comunica con la cabina a través de la manguera plana (alimentación 24Vdc, serie de seguridad, líneas de audio y bus CAN de cabina). Se comunica con las plantas a través del cableado del hueco (bus CAN de exteriores y serie de cerraduras de puertas batientes/telescópicas).</p>\n</div>",
+
+// --- enc-zone-shaft (ES) ---
+"enc-zone-shaft": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Zona 1.2</span>\n    <h1>🕳️ 1.2 Hueco del Ascensor (Shaft)</h1>\n    <p>El conducto vertical cerrado por el que se desplaza la cabina y su contrapeso. Contiene una electrónica mínima pero alberga los elementos electromecánicos más críticos de seguridad y posicionamiento.</p>\n  </div>\n  <h2>Elementos Instalados en el Hueco</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Elemento</th><th>Función</th><th>Conexión / Señal</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Manguera Plana (Travelling Cable)</strong></td><td>Enlace flexible móvil entre el cuadro fijo y el techo de cabina.</td><td>Transporta potencia de operador, alumbrado, serie de seguridad y par trenzado apantallado para el CAN de cabina.</td></tr>\n        <tr><td><strong>Encoder de Posición Absoluta</strong></td><td>Cabezal de lectura magnético o por cable (Wachendorff / ELGO).</td><td>Genera tramas de posición milimétrica transmitidas a la placa <code>K2-64296</code> (EDELEncoder) en techo de cabina.</td></tr>\n        <tr><td><strong>Finales de Carrera e Inspección</strong></td><td>Interruptores biestables en extremos superior e inferior.</td><td>Cortan la serie de seguridad si la cabina rebasa las paradas extremas de planta (desbordamiento).</td></tr>\n        <tr><td><strong>Cables de Tracción y Guías</strong></td><td>Soporte mecánico y guiado de cabina y contrapeso.</td><td>Guías de acero calibrado lubricadas o con rozaderas de teflón.</td></tr>\n        <tr><td><strong>Línea de Serie de Puertas</strong></td><td>Contactos de presencia y enclavamiento de puertas de piso.</td><td>Circuito cableado en serie a 110Vac / 230Vac que llega al bornero del cuadro principal.</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-zone-cabin (ES) ---
+"enc-zone-cabin": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Zona 1.3</span>\n    <h1>🚗 1.3 Cabina (Cabina)</h1>\n    <p>El habitáculo que transporta a los usuarios. Es la zona de mayor densidad electrónica después del cuarto de máquinas, concentrando las interfaces de usuario (COP), el operador de puertas y los sensores de pesaje y posición.</p>\n  </div>\n  <h2>Módulos Electrónicos en Cabina</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Ubicación</th><th>Módulo / Componente</th><th>Función</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Botonera de Cabina (COP)</strong></td><td>Pulsadores de destino + display</td><td>Pulsadores con registro luminoso, llaves de bomberos/reservado, display de posición (LCD, TFT o Matriz).</td></tr>\n        <tr><td><strong>Placa de Cabina</strong></td><td><code>K2-64290</code> (v1 con audio) o <code>K2-64291</code> (v2 ADVANCED)</td><td>Concentrador de llamadas de cabina, sintetizador de voz (v1), control de reaperturas, pesacargas y comunicación CAN.</td></tr>\n        <tr><td><strong>Techo de Cabina</strong></td><td>Botonera de Inspección</td><td>Mandos de subir/bajar a velocidad lenta, enchufe 230V, iluminación de mantenimiento y seta de parada.</td></tr>\n        <tr><td><strong>Operador de Puertas</strong></td><td>Inversor VVVF de Puertas</td><td>Control de apertura y cierre de las hojas de cabina con perfil de velocidad suave y detección de obstáculos.</td></tr>\n        <tr><td><strong>Seguridad de Puertas</strong></td><td>Cortina Fotoeléctrica (Barrera)</td><td>Haz infrarrojo continuo; si se interrumpe durante el cierre, conmuta la entrada de reapertura instantáneamente.</td></tr>\n        <tr><td><strong>Pesacargas</strong></td><td>Sensores bajo suelo o en amarre de cables</td><td>Indica a la placa principal los estados: Vacío, Carga Completa (bloquea llamadas exteriores) y Sobrecarga (bloquea movimiento).</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-zone-landings (ES) ---
+"enc-zone-landings": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Zona 1.4</span>\n    <h1>🏢 1.4 Plantas / Rellanos (Landings)</h1>\n    <p>Los accesos en cada piso del edificio. El equipamiento por planta varía según el nivel de equipamiento de la instalación, desde configuraciones mínimas con un único pulsador hasta montajes completos con displays TFT y flechas push-pull.</p>\n  </div>\n  <h2>Equipamiento por Planta (LOP)</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Componente</th><th>Referencia Electrónica</th><th>Función y Características</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Pulsadores de Llamada</strong></td><td><code>K2-64292</code> (BotCAN-v2) o <code>K2-64295</code> (v1)</td><td>Placa con microcontrolador que lee pulsador de subir/bajar, enciende el aro luminoso y transmite la llamada vía CAN.</td></tr>\n        <tr><td><strong>Indicador de Posición Exterior</strong></td><td><code>K2-64280</code> (v1) o <code>K2-64281</code> (v2 mCAN-12)</td><td>Display que muestra la planta actual del ascensor, flechas dinámicas y mensajes de estado (Fuera de Servicio, Bomberos).</td></tr>\n        <tr><td><strong>Flechas Direccionales</strong></td><td><code>K2-64350</code> (FlechasPP)</td><td>Flechas luminosas independientes con salidas push-pull directas para señalizar sentido de marcha próximo.</td></tr>\n        <tr><td><strong>Cerradura de Puerta</strong></td><td>Contacto electromecánico de seguridad</td><td>Garantiza que la puerta de piso está mecánicamente enclavada antes de autorizar el arranque del motor.</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-zone-pit (ES) ---
+"enc-zone-pit": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Zona 1.5</span>\n    <h1>⬇️ 1.5 Foso (Pit)</h1>\n    <p>El espacio situado en el fondo del hueco, por debajo del nivel de la parada inferior. Zona de seguridad crítica sujeta a estrictos requerimientos de espacio de refugio según la norma EN 81-20.</p>\n  </div>\n  <h2>Elementos en el Foso</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Elemento</th><th>Función</th><th>Integración Eléctrica</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Amortiguadores (Buffers)</strong></td><td>Dispositivos de acumulación o disipación de energía (resortes o hidráulicos).</td><td>Absorben el impacto de cabina o contrapeso en caso de rebase extremo de carrera.</td></tr>\n        <tr><td><strong>Seta de Parada de Foso</strong></td><td>Botonera de paro de emergencia para el operario de mantenimiento.</td><td>Contacto normalmente cerrado conectado directamente en la cadena de seguridad de 110V/230Vac.</td></tr>\n        <tr><td><strong>Polea Tensora del Limitador</strong></td><td>Mantiene la tensión constante del cable de acero del limitador de velocidad.</td><td>Incorpora un microrruptor de rotura o destensado de cable que abre la serie de seguridad.</td></tr>\n        <tr><td><strong>Botonera de Inspección de Foso</strong></td><td>Control de maniobra de inspección desde el fondo del hueco (norma EN 81-20).</td><td>Permite mover la cabina a velocidad de inspección garantizando la distancia de seguridad vital del técnico.</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-electrical (ES) ---
+"enc-electrical": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 2</span>\n    <h1>⚡ 2. Instalación Eléctrica General</h1>\n    <p>La arquitectura eléctrica del ascensor EDEL se divide rigurosamente en dos dominios: circuitos de alta potencia (fuerza motriz) y circuitos de control de baja tensión (seguridad y señales digitales). Comprender esta separación es indispensable para el conexionado y la resolución de averías.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Subsistema</th><th>Tensión / Naturaleza</th><th>Función Principal</th><th>Aislamiento y Protección</th></tr></thead>\n      <tbody>\n        <tr><td><strong>2.1 Circuitos de Potencia</strong></td><td>400Vac / 230Vac trifásica / monofásica</td><td>Alimentación del variador de tracción, motor, freno mecánico y operador de puertas.</td><td>Magnetotérmicos de curva D, contactores de potencia con contactos auxiliares enclavados.</td></tr>\n        <tr><td><strong>2.2 Circuito de Seguridad</strong></td><td>110Vac / 230Vac (según país/variante)</td><td>Bucle serie físico de todos los contactos de emergencia, puertas y finales de carrera.</td><td>Supervisado por relés de seguridad guiados por hardware y entradas ópticas de la placa base.</td></tr>\n        <tr><td><strong>2.3 Red de Bus CAN</strong></td><td>Diferencial ±2.5V (CANH / CANL), 50–125 kbps</td><td>Backbone digital bidireccional entre la placa base, cabina, pulsadores y displays.</td><td>Aislamiento galvánico con transceptores CAN robustos y resistencias de terminación de 120Ω.</td></tr>\n        <tr><td><strong>2.4 Interfaces con Terceros</strong></td><td>RS-232, RS-485, CANopenLift, contactos libres</td><td>Conexión con inversores Fuji, telemando 4G, sistemas de bomberos y pesacargas externos.</td><td>Optoacopladores y protocolos industriales estandarizados.</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-power (ES) ---
+"enc-power": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 2.1</span>\n    <h1>⚡ 2.1 Circuitos de Potencia (Motor, Puertas, Iluminación)</h1>\n    <p>Los circuitos de alta potencia suministran la energía necesaria a los accionamientos mecánicos de la instalación. Requieren canalizaciones independientes para evitar acoplamientos capacitivos o inductivos sobre el bus de comunicaciones.</p>\n  </div>\n  <h2>1. Circuito de Tracción Principal</h2>\n  <p>La red trifásica (3x400Vac + N + PE) entra al cuadro de maniobra a través del interruptor general de corte en carga:</p>\n  <ul>\n    <li><strong>Filtro EMI/RFI:</strong> Suprime las emisiones electromagnéticas generadas por la conmutación IGBT del variador.</li>\n    <li><strong>Inversor Fuji Frenic Lift:</strong> Rectifica la alterna a continua (bus DC ~560V) y modula en frecuencia/amplitud hacia el estator del motor.</li>\n    <li><strong>Resistencia de Frenado Dinámico:</strong> Conectada a los bornes B+/B- del variador, disipa en calor la energía regenerativa generada cuando la cabina sube vacía o baja cargada.</li>\n    <li><strong>Bobina del Freno:</strong> Alimentada en continua (típicamente 110Vdc o 190Vdc rectificada) a través de un módulo de economía (alta tensión de disparo para desbloquear, baja tensión de mantenimiento para no recalentar).</li>\n  </ul>\n  <h2 style=\"margin-top:1.5rem;\">2. Circuito del Operador de Puertas</h2>\n  <p>Alimentado normalmente a 230Vac monofásico desde el cuadro a través de la manguera plana. El variador de puertas de cabina transforma esta tensión en control trifásico hacia el micromotor síncrono que arrastra las hojas mecánicas.</p>\n  <h2 style=\"margin-top:1.5rem;\">3. Alumbrado de Cabina y Emergencia</h2>\n  <p>Línea independiente de 230Vac que no se interrumpe al desconectar el interruptor de fuerza motriz del ascensor. Incluye un cargador de batería de emergencia que garantiza 1 hora mínima de luz de emergencia y alimentación del intercomunicador de rescate.</p>\n</div>",
+
+// --- enc-control (ES) ---
+"enc-control": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 2.2</span>\n    <h1>🛡️ 2.2 Circuitos de Control y Cadena de Seguridad</h1>\n    <p>La cadena de seguridad es el circuito fundamental de protección del ascensor según la norma EN 81-20. Es un bucle eléctrico cableado físicamente en serie: si un solo contacto se abre, el cuadro desconecta de inmediato los contactores de potencia y cae el freno de tracción.</p>\n  </div>\n  <h2>Estructura Secuencial de la Serie de Seguridad</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Tramo de la Serie</th><th>Contactos Incluidos</th><th>Significado si se Abre</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Tramo 1: Seguridades Generales</strong></td><td>Seta de cuarto de máquinas, limitador de velocidad, aflojamiento de cables, paracaídas, finales de carrera superior/inferior, seta de foso.</td><td>Emergencia grave: movimiento bloqueado en cualquier modo (incluso en inspección).</td></tr>\n        <tr><td><strong>Tramo 2: Puertas de Planta (Enclavamiento)</strong></td><td>Contactos de presencia de hoja batiente y contactos de cerrojo de cada una de las plantas.</td><td>Una puerta exterior está abierta o mal cerrada. El ascensor no puede iniciar la marcha.</td></tr>\n        <tr><td><strong>Tramo 3: Puerta de Cabina</strong></td><td>Contacto de presencia de puerta de cabina cerrada.</td><td>La puerta del habitáculo no está completamente enclavada. Impide el movimiento de viaje.</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <div class=\"callout callout-danger\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">🚨</div>\n    <div class=\"callout-content\">\n      <h4>Prioridad Absoluta de la Cadena de Seguridad</h4>\n      <p>Ningún comando de software, fallo de microcontrolador o trama CAN puede puentear o forzar el movimiento del ascensor si la cadena de seguridad eléctrica está abierta. Los contactores principales de fuerza están conectados en serie física con el final de este bucle.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-can-bus (ES) ---
+"enc-can-bus": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 2.3</span>\n    <h1>🔌 2.3 Arquitectura de Bus CAN</h1>\n    <p>EDEL utiliza el estándar industrial CAN (Controller Area Network) como columna vertebral de comunicación digital entre todas las placas inteligentes del sistema. Es un bus diferencial balanceado de par trenzado altamente inmune al ruido electromagnético industrial.</p>\n  </div>\n  <h2>Topología de Doble Bus CAN Independiente</h2>\n  <p>La placa principal K2-64278 gestiona <strong>dos buses CAN físicamente aislados</strong> para garantizar que el tráfico denso de llamadas de planta no interfiera con los datos críticos de posicionamiento de cabina:</p>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Bus CAN</th><th>Tramas Clave</th><th>Nodos Conectados</th><th>Velocidad y Cableado</th></tr></thead>\n      <tbody>\n        <tr><td><strong>CAN Bus Cabina</strong></td><td><code>$XBD</code>, <code>$XBN</code>, <code>$XBL</code></td><td>Placa Base K2-64278, Placa Cabina K2-64290/64291, Encoder K2-64296, Displays de cabina, FlechasPP.</td><td>62.5 kbps / 125 kbps; viaja por la manguera plana apantallada.</td></tr>\n        <tr><td><strong>CAN Bus Exterior</strong></td><td><code>$XTR</code>, <code>$XTL</code>, <code>$XPD</code></td><td>Placa Base K2-64278, Displays exteriores K2-64280/64281, Pulsadores de planta BotCAN K2-64292.</td><td>50 kbps / 62.5 kbps; recorre el hueco de planta en planta.</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Prefijos de Identificación de Protocolo</h2>\n  <p>Los identificadores de tramas CAN se configuran por compilación según la marca de hardware:</p>\n  <ul>\n    <li><code>$X...</code> — Protocolo nativo <strong>EDEL</strong> (equipamiento estándar).</li>\n    <li><code>$Y...</code> — Variante <strong>GENESIS</strong> (marcado OEM para distribuidores autorizados).</li>\n    <li><code>$Z...</code> — Variante <strong>ATES</strong> (distribución internacional y clientes especiales).</li>\n  </ul>\n  <div class=\"callout callout-info\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">⚡</div>\n    <div class=\"callout-content\">\n      <h4>Resistencias de Terminación de 120 Ω</h4>\n      <p>Cada bus CAN debe disponer exactamente de dos resistencias de terminación de 120 Ω (una en cada extremo físico del bus) para evitar reflexiones de señal. La placa base incorpora puentes jumper para activar o desactivar la terminación según sea nodo intermedio o extremo.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-3rd-points (ES) ---
+"enc-3rd-points": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 2.4</span>\n    <h1>🤝 2.4 Puntos de Integración con Terceros</h1>\n    <p>El sistema EDEL está diseñado con puntos de interfaz normalizados que permiten integrar componentes de otros fabricantes líderes sin necesidad de modificar el firmware central.</p>\n  </div>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Dispositivo Externo</th><th>Módulo Interfaz EDEL</th><th>Protocolo / Nivel Eléctrico</th><th>Función</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Inversor Fuji Frenic Lift</strong></td><td>Módulo <code>iCOM</code> o cable directo UART</td><td>RS-485 / Modbus RTU / Consola serie</td><td>Lectura de parámetros de motor, histórico de averías del variador y comando de curvas S.</td></tr>\n        <tr><td><strong>Encoders Absolutos (Wachendorff / ELGO)</strong></td><td>Placa <code>K2-64296</code> EDELEncoder</td><td>SSI (Synchronous Serial Interface) sincrónico</td><td>Lectura milimétrica de posición física sin holgura de deslizamiento de cables.</td></tr>\n        <tr><td><strong>Botoneras MK (Microkey)</strong></td><td>Placa <code>K2-64406</code> (MKI-01)</td><td>Bus serie propietario MK ($EMI:...)</td><td>Pasarela bidireccional entre la red de pulsadores MK y el bus CAN EDEL.</td></tr>\n        <tr><td><strong>Llaves Electrónicas iButton</strong></td><td>Placa <code>K2-64435</code> CA-02</td><td>Dallas Maxim 1-Wire (DS1990A)</td><td>Control de acceso a pisos restringidos mediante pastillas de contacto magnético.</td></tr>\n        <tr><td><strong>Pasarelas Telemetría 4G</strong></td><td>Conector serie RS-232 / CANOpenLift</td><td>CANopen Lift (CiA 417) / Tramas NMEA</td><td>Monitorización remota en la nube, notificación automática de averías y mantenimiento predictivo.</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-pcb-index (ES) ---
+"enc-pcb-index": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">Sección 3</span>\n    <h1>🖥️ 3. Módulos PCB EDEL — Catálogo Completo de Hardware</h1>\n    <p>Inventario exhaustivo de todos los módulos de circuitos impresos diseñados y programados por EDEL. Cubre las generaciones tecnológicas Freescale/NXP HCS08, HCS12 y ARM Cortex-M0+.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Código PCB</th><th>Nombre Software</th><th>Versión</th><th>Familia MCU</th><th>Estado en Instalación</th><th>Función Principal</th></tr></thead>\n      <tbody>\n        <tr><td><code>K2-64278</code></td><td>EDELElevatorFULL</td><td>v4.4.0</td><td>MC9S12XDT256</td><td><span class=\"badge badge-green\">Obligatorio</span></td><td>Placa Base / Cerebro central del ascensor</td></tr>\n        <tr><td><code>K2-64290</code></td><td>EDELCabinaFull</td><td>v4.0.0</td><td>MC9S12XDT256</td><td><span class=\"badge badge-cyan\">Alternativa A</span></td><td>Placa de cabina con síntesis de voz en 5 idiomas (1.196 ficheros)</td></tr>\n        <tr><td><code>K2-64291</code></td><td>EDELCabina-v2</td><td>v1.2</td><td>MC9S08</td><td><span class=\"badge badge-cyan\">Alternativa B</span></td><td>Placa de cabina compacta ADVANCED (sin audio)</td></tr>\n        <tr><td><code>K2-64295</code></td><td>EDELBotCAN</td><td>v1.0</td><td>MC68HC908</td><td><span class=\"badge badge-amber\">Legado</span></td><td>Pulsador de llamada de planta v1 con registros de desplazamiento</td></tr>\n        <tr><td><code>K2-64292</code></td><td>EDELBotCAN-v2</td><td>v1.2</td><td>MC9S08</td><td><span class=\"badge badge-green\">Estándar Actual</span></td><td>Pulsador de llamada v2 ADVANCED protegido por Token</td></tr>\n        <tr><td><code>K2-64280</code></td><td>EDELExteriores</td><td>v2.1</td><td>MC9S08</td><td><span class=\"badge badge-cyan\">Generación 1</span></td><td>Display exterior de planta con entradas de llamada y bomberos</td></tr>\n        <tr><td><code>K2-64281</code></td><td>EDELExterioresV2</td><td>v1.0</td><td>ARM Cortex-M0+</td><td><span class=\"badge badge-cyan\">Generación 2</span></td><td>Display mCAN-12 de alta velocidad con FSL SDK</td></tr>\n        <tr><td><code>K2-64296</code></td><td>EDELEncoder</td><td>v2.8</td><td>MC9S08</td><td><span class=\"badge badge-green\">Obligatorio</span></td><td>Interfaz de encoder absoluto SSI (Wachendorff / ELGO)</td></tr>\n        <tr><td><code>K2-64300H/V</code></td><td>EDELDisplayLCD</td><td>v2.4 / v1.0</td><td>MC9S08</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>Display LCD alfanumérico horizontal o vertical</td></tr>\n        <tr><td><code>K2-64310</code></td><td>EDELDisplayRotativo</td><td>v1.0</td><td>MC9S08GT32</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>Display rotativo de caracteres dinámicos</td></tr>\n        <tr><td><code>K2-64315</code></td><td>EDELDisplayDotMatrix</td><td>v1.0</td><td>ARM Cortex-M0+</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>Display de matriz de puntos LED ultrabrillante</td></tr>\n        <tr><td><code>K2-64320</code></td><td>EDELDisplayTFT</td><td>v1.1–v2.5</td><td>ARM / Gráfico</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>Display gráfico TFT a todo color (5 subversiones)</td></tr>\n        <tr><td><code>K2-64330</code></td><td>EDELminiLCD</td><td>v2.7</td><td>ARM Cortex-M0+</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>miniLCD gráfico con imágenes de inspección vía CAN</td></tr>\n        <tr><td><code>K2-64350</code></td><td>EDELFlechasPP</td><td>v2.1</td><td>MC9S08</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>Flechas push-pull directas conectables a bus cabina o exterior</td></tr>\n        <tr><td><code>K2-64297</code></td><td>EDELExpansion</td><td>v1.0</td><td>MC9S08</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>Expansión de 4 entradas + 4 salidas digitales vía CAN</td></tr>\n        <tr><td><code>K2-64299</code></td><td>EDELiCOM-v1</td><td>v1.0</td><td>ARM Cortex-M0+</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>Módulo de telemetría CANopen, puente UART Fuji y control de sobrevelocidad</td></tr>\n        <tr><td><code>K2-64406</code></td><td>EDELMKInterface</td><td>v1.1</td><td>MC9S08</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>Pasarela serie ASCII entre botoneras MK y bus CAN EDEL</td></tr>\n        <tr><td><code>K2-64435</code></td><td>EDELControlAcceso</td><td>v2.0</td><td>RS08 / MC9S08</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>Lector de llaves iButton Dallas 1-Wire (CA-02)</td></tr>\n        <tr><td><code>K3-74278</code></td><td>EDELMontacargas</td><td>v1.2.2</td><td>MC9S12XDT256</td><td><span class=\"badge badge-indigo\">Familia K3</span></td><td>Controlador autónomo para montacargas con display LCD integrado</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-mainboard (ES) ---
+"enc-mainboard": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-green\">Obligatorio</span>\n    <h1>🧠 3.1 Placa Principal — K2-64278 (EDELElevatorFULL)</h1>\n    <p>El núcleo central y cerebro indiscutible de toda la instalación de ascensor. Sin esta placa, ningún otro módulo del ecosistema puede funcionar. Toda decisión de seguridad, comando de marcha, despacho de llamadas y control de puertas se calcula aquí.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Parámetro Técnico</th><th>Especificación</th></tr></thead>\n      <tbody>\n        <tr><td>Código de Circuito Impreso</td><td><code>K2-64278</code></td></tr>\n        <tr><td>Software / Firmware</td><td>EDELElevatorFULL v4.4.0 / v0.6.2</td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale / NXP <strong>MC9S12XDT256</strong> (16-bit, 80MHz, coprocesador XGATE)</td></tr>\n        <tr><td>Entorno de Desarrollo</td><td>CodeWarrior for HCS12(X) V5.1 / V5.2</td></tr>\n        <tr><td>Memoria de Configuración</td><td>EEPROM interna emulada (24LCxx externa de respaldo) con firma criptográfica <code>e2pfirma</code></td></tr>\n        <tr><td>Puertos de Comunicación</td><td>2x MSCAN independientes (Cabina y Exterior), 2x SCI UART (Consola RS-232 y Pesacargas)</td></tr>\n        <tr><td>Bucle Principal de Tiempo Real</td><td>Interrupción RTI de 10 ms con máquina de estados estricta determinista</td></tr>\n        <tr><td>Normativa Cumplida</td><td>EN 81-20 / EN 81-50 (contacto de seguridad con monitorización forzada)</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Interacción con el Resto de Elementos</h2>\n  <ul>\n    <li><strong>Variador de Frecuencia (Fuji Frenic Lift):</strong> Emite señales digitales directas de sentido (Subir/Bajar), aceleración/marcha y velocidad de aproximación. Recibe confirmación de RUN y supervisa el contacto de fallo del variador.</li>\n    <li><strong>Cadena de Seguridad:</strong> Monitoriza mediante entradas optoacopladas el estado de presencia de tensión en los 3 tramos de la serie eléctrica. Si cae cualquier tramo, bloquea inmediatamente la salida a los contactores principales.</li>\n    <li><strong>Bus CAN de Cabina ($XBD):</strong> Transmite cada 100 ms el estado global: planta actual, sentido de marcha, posición milimétrica exacta, apertura/cierre de puertas y códigos de mensaje de audio. Recibe las llamadas registradas en la botonera COP ($XBN) y la lectura del encoder ($XBL).</li>\n    <li><strong>Bus CAN de Exterior ($XTR):</strong> Emite tramas hacia los displays de rellano y pulsadores BotCAN ($XPD) indicando número de planta, flechas y luces de registro de llamada.</li>\n  </ul>\n  <h2 style=\"margin-top:1.5rem;\">Configuraciones y Alternativas</h2>\n  <p><strong>Configuraciones posibles:</strong> Maniobra Universal (1 pulsador por planta), Colectiva en Bajada (edificios residenciales típicos), Colectiva Completa en Subida y Bajada (2 pulsadores por planta en edificios de oficinas) y Maniobra Dúplex/Simplex.</p>\n  <p><strong>Alternativas:</strong> Ninguna dentro de la familia K2. Es la placa base insustituible. Para montacargas industriales se emplea la placa <code>K3-74278</code>.</p>\n  <h2 style=\"margin-top:1.5rem;\">Impacto de Fallo</h2>\n  <p>Cese inmediato y total de servicio. El ascensor no puede moverse ni abrir puertas de forma automática. Es el componente de mayor criticidad.</p>\n</div>",
+
+// --- enc-cabin (ES) ---
+"enc-cabin": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">Sección 3.2</span>\n    <h1>🚗 3.2 Placas de Cabina</h1>\n    <p>La placa de cabina gestiona la botonera interior (COP): registro de pulsadores de destino, botones de abrir/cerrar puertas, pulsador de alarma, entrada de pesacargas y, en la versión v1, el sintetizador vocal de avisos.</p>\n  </div>\n  <div class=\"callout callout-warning\">\n    <div class=\"callout-icon\">⚠️</div>\n    <div class=\"callout-content\">\n      <h4>Elección Excluyente: CabinaFull v1 O Cabina-v2 ADVANCED</h4>\n      <p>Son dos generaciones arquitectónicas incompatibles en una misma cabina. La selección determina si la instalación dispone de sintetizador de voz multilingüe (v1 en HC12) o un diseño ultra compacto y económico sin audio (v2 en HCS08).</p>\n    </div>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Comparativa Rápida entre Generaciones</h2>\n  <div class=\"table-container\">\n    <table>\n      <thead><tr><th>Característica</th><th>K2-64290 CabinaFull v1</th><th>K2-64291 Cabina-v2 ADVANCED</th></tr></thead>\n      <tbody>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S12XDT256</strong> (16 bits)</td><td>Freescale <strong>MC9S08</strong> (8 bits)</td></tr>\n        <tr><td>Sistema de Audio</td><td>✅ Sí: DAC ADPCM, 5 idiomas, más de 352 muestras de audio</td><td>❌ No: sin circuito ni sintetizador de audio</td></tr>\n        <tr><td>Gama Comercial</td><td>K2 Estándar con voz</td><td>K2 ADVANCED (orientada a coste y fiabilidad)</td></tr>\n        <tr><td>Complejidad del Proyecto</td><td>1.196 archivos fuente C/H</td><td>77 archivos fuente</td></tr>\n        <tr><td>Trama CAN de Recepción</td><td><code>$XBD</code> (desde placa base)</td><td><code>$XBD</code> (EDEL) o <code>$ZBD</code> (personalizada)</td></tr>\n        <tr><td>Trama CAN de Emisión</td><td><code>$XBN</code> (llamadas y estado hacia placa base)</td><td><code>$XBN</code> (EDEL) o <code>$ZBN</code> (personalizada)</td></tr>\n        <tr><td>Protección por Token</td><td>✅ Sí (firmware firmado)</td><td>✅ Sí (función <code>Cifrado()</code>)</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-cabin-v1 (ES) ---
+"enc-cabin-v1": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">3.2.1</span>\n    <h1>🔊 K2-64290 — EDELCabinaFull v4.0.0 (con Audio Multilingüe)</h1>\n    <p>La placa de cabina más completa y potente del ecosistema EDEL. Incorpora un sintetizador de voz ADPCM de alta calidad con locuciones completas en 5 idiomas independientes.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64290</code></td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S12XDT256</strong> (16-bit HCS12X)</td></tr>\n        <tr><td>Archivos de Audio Integrados</td><td>352 archivos <code>audioXX.c</code> enlazados en memoria Flash</td></tr>\n        <tr><td>Idiomas Soportados</td><td>Castellano, Inglés, Catalán, Francés y Variante de Inglés Técnico</td></tr>\n        <tr><td>Triggers de Audio por CAN</td><td>Bits dedicados en trama <code>$XBD</code>: GONG, FLECHA_SUBIR, FLECHA_BAJAR, AUDIO_PUERTASABIERTAS, SOBRECARGA, BOMBEROS</td></tr>\n        <tr><td>Entradas Digitales</td><td>Hasta 32 llamadas de cabina con registro luminoso, llaves de reserva, pesacargas completo y sobrecarga</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Interacción y Protocolo</h2>\n  <p>Escucha constantemente la trama <code>$XBD</code> procedente del cuadro principal. Cuando detecta que el bit de cambio de planta o gong se activa, su máquina de estados de audio decodifica la muestra ADPCM correspondiente y la envía hacia el amplificador de altavoz de cabina. Al pulsar un botón de piso, activa el LED de confirmación y transmite de inmediato la trama <code>$XBN</code> hacia la placa base.</p>\n  <h2 style=\"margin-top:1.5rem;\">Impacto de Fallo</h2>\n  <p>Pérdida de registro de llamadas desde el interior de la cabina y silencio del sintetizador vocal. La cabina podrá responder a llamadas registradas desde los rellanos, pero no desde el habitáculo.</p>\n</div>",
+
+// --- enc-cabin-v2 (ES) ---
+"enc-cabin-v2": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-cyan\">3.2.2</span>\n    <h1>📱 K2-64291 — EDELCabina-v2 v1.2 (ADVANCED)</h1>\n    <p>Segunda generación de placa de cabina optimizada para la gama ADVANCED. Diseñada bajo la premisa de máxima robustez, reducción de componentes y eliminación de partes mecánicas o circuitos analógicos de audio.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64291</code></td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S08</strong> (8-bit)</td></tr>\n        <tr><td>Dimensiones Físicas</td><td>Aproximadamente 40% más compacta que la K2-64290 v1</td></tr>\n        <tr><td>Protocolo CAN</td><td>Soporta trama EDEL estándar (<code>$XBD</code>/<code>$XBN</code>) y modo OEM ATES (<code>$ZBD</code>/<code>$ZBN</code>)</td></tr>\n        <tr><td>Circuito de Voz</td><td>Ninguno. Los avisos acústicos se limitan a un zumbador piezoeléctrico en placa</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Cuándo Elegir Cabina-v2</h2>\n  <p>Recomendada en instalaciones residenciales estándar o proyectos con presupuesto ajustado donde no se requiera anunciador de voz por normativa o pliego de condiciones. Reduce el consumo energético y agiliza el tiempo de diagnóstico.</p>\n</div>",
+
+// --- enc-botcan (ES) ---
+"enc-botcan": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 3.3</span>\n    <h1>🔘 3.3 Pulsadores de Planta (BotCAN)</h1>\n    <p>La placa BotCAN (\"Botonera CAN\") se instala en la botonera de rellano (LOP) de cada planta del edificio. Convierte la pulsación física del usuario en una trama digital de red y gestiona la iluminación de confirmación.</p>\n  </div>\n  <div class=\"callout callout-human\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>Un Módulo BotCAN por Cada Nivel de Parada</h4>\n      <p>Cada planta debe equipar exactamente una placa BotCAN configurada con su número de planta único mediante microinterruptores DIP switches. Dos placas con la misma dirección causarán colisión de arbitraje en el bus CAN de exteriores.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-botcan-v1 (ES) ---
+"enc-botcan-v1": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.3.1</span>\n    <h1>🔘 K2-64295 — EDELBotCAN v1</h1>\n    <p>Primera generación de placa de pulsador de planta. Emplea un microcontrolador clásico Freescale HC08 y registros de desplazamiento en cascada para la lectura de entradas.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64295</code></td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC68HC908GZ8</strong></td></tr>\n        <tr><td>Lógica de Entrada</td><td>Líneas <code>CLK</code>, <code>DATA</code> y <code>STROBE</code> hacia registros serie tipo 74HC165</td></tr>\n        <tr><td>Firmware Clave</td><td>Funciones <code>RegistroLlamadas()</code> y <code>ReadLlamadas()</code></td></tr>\n        <tr><td>Protección Token</td><td>No implementada en v1</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <p style=\"margin-top:1rem;\"><strong>Estado:</strong> Mantenimiento y repuesto. En nuevas obras se reemplaza sistemáticamente por el modelo K2-64292 BotCAN-v2.</p>\n</div>",
+
+// --- enc-botcan-v2 (ES) ---
+"enc-botcan-v2": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.3.2</span>\n    <h1>🔘 K2-64292 — EDELBotCAN-v2 v1.2 (ADVANCED)</h1>\n    <p>Módulo de pulsador de planta estándar en producción actual. Incorpora microcontrolador HCS08 moderno, licenciamiento criptográfico por Token y soporte para pulsador doble (subir y bajar).</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64292</code></td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S08</strong> (HCS08)</td></tr>\n        <tr><td>Tramas CAN</td><td>Recibe <code>$XBD</code> (estado de ascensor), transmite <code>$XPD</code> (llamada registrada de planta)</td></tr>\n        <tr><td>Configuración de Planta</td><td>Banco de 5 DIP switches (paradas 0 a 31)</td></tr>\n        <tr><td>Variantes de Fabricante</td><td>Compilación condicional para perfiles <strong>EDEL</strong>, <strong>GENESIS</strong> y <strong>ATES</strong></td></tr>\n        <tr><td>Licenciamiento de Firmware</td><td>Módulo <code>Token.c</code> integrado con validación de firma en EEPROM</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Impacto de Fallo</h2>\n  <p>Si una placa BotCAN se avería, los usuarios no podrán llamar al ascensor desde esa planta concreta. El resto de las plantas y las llamadas de cabina continuarán operando con normalidad.</p>\n</div>",
+
+// --- enc-exteriores (ES) ---
+"enc-exteriores": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 3.4</span>\n    <h1>🏢 3.4 Indicadores Exteriores de Planta (Exteriores)</h1>\n    <p>La placa de Exteriores gestiona la señalización visual hacia los usuarios en los rellanos de piso: posición actual de la cabina, sentido de avance y avisos prioritarios de servicio (Bomberos, Completo, Fuera de Servicio).</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Característica</th><th>K2-64280 Exteriores v1</th><th>K2-64281 Exteriores v2 (mCAN-12)</th></tr></thead>\n      <tbody>\n        <tr><td>Microcontrolador</td><td>Freescale HCS08 (8 bits)</td><td>NXP ARM <strong>Cortex-M0+</strong> (MKE16Z4)</td></tr>\n        <tr><td>Entradas de Señal Directas</td><td>Hasta 16 llamadas cableadas, COMPLETO, REAPERTURA, BOMB_CABINA</td><td>Comunicaciones concentradas vía CAN sin cableado discreto masivo</td></tr>\n        <tr><td>Protocolo CAN</td><td><code>$XBD</code> / <code>$XPD</code> / Bomberos Trama Tipo 2</td><td>MSCAN optimizado bajo FSL SDK para redes de hasta 12 zonas</td></tr>\n        <tr><td>Token Criptográfico</td><td>✅ Sí (Token.c)</td><td>✅ Sí (firmware con clave de seguridad interna)</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-ext-v1 (ES) ---
+"enc-ext-v1": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.4.1</span>\n    <h1>📺 K2-64280 — EDELExteriores v2.1</h1>\n    <p>Módulo de visualización exterior clásico basado en HCS08. Capaz de gestionar simultáneamente el display de piso y entradas físicas de planta.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64280</code></td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S08</strong></td></tr>\n        <tr><td>Señales Especiales</td><td>Entradas optoacopladas para servicio de Bomberos (trama tipo 2 v2.1), reapertura exterior y estado de cabina completa</td></tr>\n        <tr><td>Bus de Conexión</td><td>Bus CAN de Exteriores (tramas <code>$XTR</code> y <code>$XPD</code>)</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-ext-v2 (ES) ---
+"enc-ext-v2": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.4.2</span>\n    <h1>📺 K2-64281 — EDELExterioresV2 v1.0 (mCAN-12)</h1>\n    <p>Módulo de visualización de planta de segunda generación migrado a arquitectura ARM Cortex-M0+ de alto rendimiento con pila FSL SDK.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64281</code></td></tr>\n        <tr><td>Microcontrolador</td><td>NXP <strong>MKE16Z4</strong> (ARM Cortex-M0+ a 48MHz)</td></tr>\n        <tr><td>Capacidad de Red</td><td>Soporte para segmentación en hasta 12 zonas lógicas independientes</td></tr>\n        <tr><td>Ventajas</td><td>Arranque instantáneo, tasa de refresco ultra fluida en displays dinámicos y total inmunidad ante transitorios inductivos</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-encoder (ES) ---
+"enc-encoder": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-green\">Sección 3.5</span>\n    <h1>📏 3.5 Encoder de Posición Absoluta</h1>\n    <p>El subsistema de posicionado es el responsable de medir la cota milimétrica exacta de la cabina dentro del hueco. A diferencia de los sistemas antiguos basados en imanes o pantallas magnéticas, EDEL utiliza lectura digital absoluta continua.</p>\n  </div>\n  <p>La placa <strong>K2-64296 EDELEncoder</strong> actúa como transductor inteligente entre el sensor industrial físico (Wachendorff o ELGO) y el bus CAN de cabina del ascensor.</p>\n</div>",
+
+// --- enc-encoder-pcb (ES) ---
+"enc-encoder-pcb": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-green\">3.5.1</span>\n    <h1>📏 K2-64296 — EDELEncoder v2.8 (Filtro SSI)</h1>\n    <p>Placa de interfaz de encoder montada en el techo de cabina. Lee el sensor de posición por bus síncrono SSI y emite la posición en tiempo real hacia la placa principal.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Parámetro Técnico</th><th>Especificación</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64296</code></td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S08</strong> (HCS08)</td></tr>\n        <tr><td>Protocolo del Sensor</td><td>SSI (Synchronous Serial Interface) a 100–250 kHz</td></tr>\n        <tr><td>Modelos de Encoder Compatibles</td><td><strong>Wachendorff</strong> (vuelta única 12 bits) o <strong>ELGO</strong> (cinta magnética absoluta)</td></tr>\n        <tr><td>Selección de Sensor</td><td>DIP switches SW2 y SW3 en placa: SW2/SW3 OFF=Wachendorff, SW2 ON=ELGO</td></tr>\n        <tr><td>Tramas CAN</td><td>Recibe <code>$XBD</code> (sincronismo), emite <code>$XBL</code> (cota milimétrica en milímetros reales)</td></tr>\n        <tr><td>Algoritmo de Filtrado v2.7</td><td>Descarta automáticamente lecturas con salto mayor a 100 mm entre ciclos consecutivos</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">El Filtro de 100 mm (Corrección de Apertura Falsa de Puertas)</h2>\n  <p>En versiones de firmware previas a la v2.7, un pico de ruido eléctrico en la línea SSI podía falsear una lectura puntual de posición durante unos milisegundos cuando la cabina estaba detenida en planta, haciendo creer al sistema que se había salido de zona de desenclavamiento y ordenando una maniobra de renivelación indebida. La versión v2.8 filtra estrictamente cualquier salto superior a 100 mm sin aceleración previa, garantizando estabilidad absoluta.</p>\n  <h2 style=\"margin-top:1.5rem;\">Impacto de Fallo</h2>\n  <p>Avería crítica. Si la placa base deja de recibir la trama <code>$XBL</code> o detecta incongruencia de posición, el ascensor se detiene inmediatamente con fallo de posicionamiento y queda bloqueado.</p>\n</div>",
+
+// --- enc-displays (ES) ---
+"enc-displays": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 3.6</span>\n    <h1>🖥️ 3.6 Módulos de Visualización</h1>\n    <p>La gama de indicadores de EDEL permite equipar la cabina y las plantas con diversas tecnologías de visualización según las necesidades estéticas y el presupuesto de cada edificio.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Módulo</th><th>Tecnología</th><th>Microcontrolador</th><th>Gama y Aplicación</th></tr></thead>\n      <tbody>\n        <tr><td><code>K2-64300H/V</code></td><td>LCD Alfanumérico</td><td>HCS08</td><td>Económica / Estándar: caracteres alfanuméricos monocromos</td></tr>\n        <tr><td><code>K2-64310 DRC</code></td><td>Display Rotativo</td><td>MC9S08GT32</td><td>Especial: texto rotativo en desplazamiento horizontal continuo</td></tr>\n        <tr><td><code>K2-64315 DDM</code></td><td>Matriz de Puntos LED</td><td>ARM Cortex-M0+</td><td>Alta visibilidad: puntos LED ultrabrillantes para luz solar directa</td></tr>\n        <tr><td><code>K2-64320 TFT</code></td><td>TFT Color Gráfico</td><td>ARM / Controlador TFT</td><td>Premium: gráficos a todo color, animaciones, logotipos e imágenes personalizables</td></tr>\n        <tr><td><code>K2-64330 miniLCD</code></td><td>miniLCD Gráfico</td><td>ARM Cortex-M0+</td><td>Compacto: gráficos vectoriales y pictogramas de inspección vía CAN</td></tr>\n        <tr><td><code>K2-64MdPConsola</code></td><td>LCD 16x4</td><td>HCS08</td><td>Terminal de programación: pantalla ampliada para parametrización técnica</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-disp-lcd (ES) ---
+"enc-disp-lcd": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.1</span>\n    <h1>📟 K2-64300H-B / K2-64300V — EDELDisplayLCD (Horizontal / Vertical)</h1>\n    <p>Módulos de visualización LCD alfanumérico monocromo. Representan la solución más extendida y económica para la señalización de posición y sentido de marcha.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64300H-B</code> (Horizontal v2.4) / <code>K2-64300V</code> (Vertical v1.0)</td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S08</strong></td></tr>\n        <tr><td>Bus de Datos</td><td>Conexión directa al bus CAN de cabina o al bus CAN exterior</td></tr>\n        <tr><td>Caracteres</td><td>2 dígitos de posición (00–99, -1, -2, PB, S1, etc.) más flecha de sentido</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-disp-drc (ES) ---
+"enc-disp-drc": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.2</span>\n    <h1>🔄 K2-64310 — EDELDisplayRotativo (DRC)</h1>\n    <p>Display dinámico de caracteres rotativos. Permite mostrar mensajes informativos extensos en desplazamiento horizontal (scroll), como nombre de empresa o avisos de mantenimiento.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64310</code></td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S08GT32</strong></td></tr>\n        <tr><td>Arquitectura de Código</td><td>Módulos <code>LCD.c</code>, <code>I2C.c</code>, <code>Menu.c</code> y generador de fuentes <code>Caracteres.c</code></td></tr>\n        <tr><td>Configuración</td><td>Menú de parametrización mediante pulsadores integrados en placa</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-disp-ddm (ES) ---
+"enc-disp-ddm": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.3</span>\n    <h1>⬛ K2-64315 — EDELDisplayDotMatrix (DDM)</h1>\n    <p>Indicador de matriz de puntos LED ultrabrillante. Especialmente recomendado en rellanos con iluminación ambiental intensa o huecos acristalados.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64315</code></td></tr>\n        <tr><td>Microcontrolador</td><td>NXP <strong>ARM Cortex-M0+</strong></td></tr>\n        <tr><td>Visualización</td><td>Matriz LED de alta intensidad roja o ámbar con flechas animadas fluidas</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-disp-tft (ES) ---
+"enc-disp-tft": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.4</span>\n    <h1>🎨 K2-64320 — EDELDisplayTFT Color (5 Versiones)</h1>\n    <p>La opción de mayor nivel estético de la gama EDEL. Pantalla TFT a todo color de alta resolución que admite personalización gráfica completa.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Subversión</th><th>Fecha / Rango</th><th>Características Principales</th></tr></thead>\n      <tbody>\n        <tr><td><code>v1.1</code></td><td>Primera generación</td><td>Gráficos estáticos básicos y flechas de dirección estándar</td></tr>\n        <tr><td><code>v1.2</code></td><td>Optimización bus</td><td>Mejora en la tasa de refresco bajo tráfico intenso de red CAN</td></tr>\n        <tr><td><code>v2.0</code></td><td>Salto de plataforma</td><td>Controlador gráfico acelerado y soporte para logotipos de cliente</td></tr>\n        <tr><td><code>v2.2</code></td><td>Modo dual</td><td>Orientación automática horizontal/vertical por configuración software</td></tr>\n        <tr><td><code>v2.5</code></td><td>Estándar actual</td><td>Soporte para mensajes dinámicos de sobrecarga, bomberos y avisos OCA</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-disp-mlcd (ES) ---
+"enc-disp-mlcd": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.5</span>\n    <h1>🔡 K2-64330 — EDELminiLCD v2.7</h1>\n    <p>Display LCD gráfico compacto de bajo perfil basado en microcontrolador ARM Cortex-M0+. Combina dimensiones mínimas con versatilidad gráfica avanzada.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64330</code></td></tr>\n        <tr><td>Microcontrolador</td><td>NXP <strong>MKE16Z4</strong> (ARM Cortex-M0+)</td></tr>\n        <tr><td>Novedades v2.7</td><td>Recepción de pictogramas de Inspección vía CAN, cambio de idioma en caliente y perfil OEM ATES</td></tr>\n        <tr><td>Memoria</td><td>EEPROM I2C dedicada para almacenamiento de configuración local de planta</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-disp-consolap (ES) ---
+"enc-disp-consolap": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.6.6</span>\n    <h1>⌨️ K2-64MdP — Consola 16×4 (Módulo de Programación)</h1>\n    <p>Terminal de diagnóstico y parametrización con pantalla LCD alfanumérica de 4 líneas por 16 columnas y teclado numérico integrado.</p>\n  </div>\n  <p>Permite navegar cómodamente por los 8 menús de configuración del controlador sin depender de un ordenador portátil ni de software externo.</p>\n</div>",
+
+// --- enc-arrows (ES) ---
+"enc-arrows": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 3.7</span>\n    <h1>⬆️ 3.7 Flechas Direccionales Independientes</h1>\n    <p>Las flechas direccionales señalizan de forma inequívoca el sentido de desplazamiento del ascensor (Subida o Bajada) antes de la llegada de la cabina a planta, permitiendo a los usuarios anticipar el embarque.</p>\n  </div>\n  <div class=\"callout callout-info\" style=\"margin-top:1.5rem;\">\n    <div class=\"callout-icon\">💡</div>\n    <div class=\"callout-content\">\n      <h4>Conexión Híbrida Exclusiva: Cabina o Rellano</h4>\n      <p>A diferencia de la mayoría de placas del mercado, la placa <code>K2-64350 FlechasPP</code> puede instalarse indistintamente en el bus CAN de cabina o en el bus CAN de planta. Su firmware detecta automáticamente el bus en el que está conectada.</p>\n    </div>\n  </div>\n</div>",
+
+// --- enc-flechas (ES) ---
+"enc-flechas": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.7.1</span>\n    <h1>⬆️ K2-64350 — EDELFlechasPP v2.1 (Flechas Push-Pull)</h1>\n    <p>Módulo electrónico para el control de flechas luminosas de alta potencia con salidas Push-Pull simétricas que eliminan la necesidad de relés o etapas intermedias de amplificación.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Parámetro</th><th>Especificación</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64350</code></td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S08</strong> (HCS08)</td></tr>\n        <tr><td>Topología de Bus CAN</td><td>Compatible con Bus Cabina (<code>$XBD</code> / <code>$XBN</code>) y Bus Exterior (<code>$XTR</code> / <code>$XTL</code>)</td></tr>\n        <tr><td>Configuración DIP Switches</td><td>5 switches para número de planta (0–31) + 2 switches para ID de módulo</td></tr>\n        <tr><td>Etapa de Salida</td><td>Driver Push-Pull de alta corriente para iluminación LED directa a 24Vdc</td></tr>\n        <tr><td>Protección Token</td><td>Módulo <code>Token.c</code> activo con validación de autenticidad</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-expansion (ES) ---
+"enc-expansion": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 3.8</span>\n    <h1>🔌 3.8 Módulos de Expansión e Interfaces</h1>\n    <p>Módulos complementarios que amplían la capacidad de entradas/salidas digitales, posibilitan la monitorización remota e integran protocolos industriales de terceros en la red CAN de EDEL.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Módulo</th><th>Denominación</th><th>Tecnología</th><th>Función Principal</th></tr></thead>\n      <tbody>\n        <tr><td><code>K2-64297</code></td><td>EDELExpansion</td><td>HCS08</td><td>Añade 4 entradas y 4 salidas digitales auxiliares en cualquier punto del bus CAN</td></tr>\n        <tr><td><code>K2-64299</code></td><td>EDELiCOM-v1</td><td>ARM Cortex-M0+</td><td>Telemetría avanzada, CANopen Lift (CiA 417), puente serie UART a Fuji y radar de velocidad</td></tr>\n        <tr><td><code>K2-64406</code></td><td>EDELMKInterface</td><td>HCS08</td><td>Pasarela bidireccional entre el bus propietario MK y el bus CAN EDEL</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-exp-io (ES) ---
+"enc-exp-io": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.8.1</span>\n    <h1>🔌 K2-64297 — EDELExpansion (Módulo de E/S Digitales)</h1>\n    <p>Placa de ampliación de entradas y salidas optoacopladas para instalaciones con requerimientos especiales que superan las bornas físicas de la placa principal o de cabina.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64297</code></td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S08</strong></td></tr>\n        <tr><td>Canales de Entrada</td><td>4 entradas digitales optoaisladas (24Vdc activo a positivo o masa)</td></tr>\n        <tr><td>Canales de Salida</td><td>4 salidas de transistor con protección contra cortocircuito</td></tr>\n        <tr><td>Escucha de Bus</td><td>Monitoriza simultáneamente tramas de cabina (<code>$XBD</code>) y de pulsadores (<code>$XPD</code>)</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Aplicaciones Típicas</h2>\n  <p>Control de llaves de preferencia de planta, habilitación de plantas VIP mediante interruptores externos, control de barreras de infrarrojos accesorias o activación de sirenas y balizas luminosas de aviso.</p>\n</div>",
+
+// --- enc-icom (ES) ---
+"enc-icom": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.8.2</span>\n    <h1>🌐 K2-64299 — EDELiCOM-v1 (Módulo Remoto y Pasarela Inteligente)</h1>\n    <p>El módulo periférico más potente y avanzado de la plataforma. Actúa como pasarela de comunicaciones multiprotocolo, concentrador de telemetría y supervisor redundante de seguridad de velocidad.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Parámetro</th><th>Especificación</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64299</code></td></tr>\n        <tr><td>Microcontrolador</td><td>NXP <strong>MKE16Z4</strong> (ARM Cortex-M0+ a 48 MHz)</td></tr>\n        <tr><td>Controlador CAN Secundario</td><td>Microchip <strong>MCP2515</strong> comunicado por bus SPI dedicado</td></tr>\n        <tr><td>Protocolo Industrial Soportado</td><td><strong>CANopen Lift</strong> (estándar internacional CiA 417)</td></tr>\n        <tr><td>Interfaz con Inversor</td><td>Puerto serie UART bidireccional hacia variador Fuji Frenic Lift</td></tr>\n        <tr><td>Consola Virtual</td><td>Emulación de terminal técnico vía enlace inalámbrico o módem</td></tr>\n        <tr><td>Supervisión de Sobrevelocidad</td><td>Doble umbral configurado por hardware: 12 m/min (baja) y 18 m/min (alta)</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Modo Pasarela UART a CAN</h2>\n  <p>Permite interrogar y reprogramar los parámetros internos del variador de frecuencia Fuji desde el cuadro de control o de forma remota, leyendo en tiempo real corrientes de motor, temperaturas del disipador térmico y códigos de error del inversor sin necesidad de conectar la consola de mano al variador.</p>\n</div>",
+
+// --- enc-mki (ES) ---
+"enc-mki": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.8.3</span>\n    <h1>🤝 K2-64406 — EDELMKInterface v1.1 (MKI-01)</h1>\n    <p>Placa pasarela entre el bus CAN nativo de EDEL y el bus serie de dos hilos propietario de Microkey (MK). Permite montar botoneras e indicadores de la marca MK conservando el cuadro de maniobra EDEL.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Código PCB</td><td><code>K2-64406</code></td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S08</strong></td></tr>\n        <tr><td>Protocolo MK Bus</td><td>Tramas ASCII estructuradas: <code>$EMI:FPPDASKK\\r\\n</code></td></tr>\n        <tr><td>Conversión</td><td>Traduce las pulsaciones de botón MK a tramas CAN estándar EDEL y viceversa</td></tr>\n        <tr><td>Protección Token</td><td>Firmware protegido con cifrado de autenticidad</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-access (ES) ---
+"enc-access": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">Sección 3.9</span>\n    <h1>🔑 3.9 Control de Acceso (Sistema iButton)</h1>\n    <p>Subsistema de seguridad diseñado para restringir el uso del ascensor o el acceso a plantas concretas exclusivamente a personas autorizadas mediante llaves electrónicas de contacto Dallas/Maxim iButton.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Componente</th><th>Código PCB</th><th>Función</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Lector de Llaves CA-02</strong></td><td><code>K2-64435</code></td><td>Lee la llave iButton, valida contra su EEPROM y activa la salida de autorización</td></tr>\n        <tr><td><strong>Consola KeyManager</strong></td><td><code>K2-64435 KM</code></td><td>Terminal portátil de alta, baja y gestión de permisos de llaves</td></tr>\n        <tr><td><strong>Llave Electrónica iButton</strong></td><td>Dallas DS1990A</td><td>Chip de silicio con número de serie único mundial grabado por láser</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-ca02 (ES) ---
+"enc-ca02": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.9.1</span>\n    <h1>🔑 K2-64435 — EDELControlAcceso v2.0 (Módulo CA-02)</h1>\n    <p>Placa controladora de acceso por contacto. Incorpora una memoria EEPROM I2C donde almacena la base de datos de identificadores autorizados.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Modo de Operación</th><th>Comportamiento</th><th>Aplicación Típica</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Modo 1: Estándar (Pulso)</strong></td><td>Emite un pulso de 24Vdc de 3 segundos al presentar una llave autorizada.</td><td>Habilita el teclado de cabina durante 3 segundos para que el usuario registre su destino.</td></tr>\n        <tr><td><strong>Modo 2: Biestable (Bistable)</strong></td><td>Conmuta el relé permanentemente (ON con una lectura, OFF con la siguiente).</td><td>Bloqueo permanente del ascensor para mudanzas o servicio exclusivo de limpieza.</td></tr>\n        <tr><td><strong>Modo 3: Maestro / Esclavo</strong></td><td>Admite llaves maestras que abren el modo de programación de llaves locales.</td><td>Gestión por parte del conserje sin necesidad de conectar la consola de programación.</td></tr>\n        <tr><td><strong>Modo 4: Habilitación de Planta</strong></td><td>Decodifica llaves asignadas a pisos específicos y activa solo el relé correspondiente.</td><td>Áticos privados y oficinas donde cada llave solo autoriza su propia planta.</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-keymgr (ES) ---
+"enc-keymgr": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">3.9.2</span>\n    <h1>🗝️ K2-64435 — Consola KeyManager v1.0</h1>\n    <p>Consola de programación complementaria para el módulo de control de acceso CA-02. Permite a los técnicos y responsables de mantenimiento gestionar el parque de llaves en campo sin requerir PC.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Función</th><th>Descripción</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Alta de Llaves</strong></td><td>Lectura y registro de una nueva llave iButton asignándole un número de usuario y planta</td></tr>\n        <tr><td><strong>Baja Selectiva</strong></td><td>Eliminación de una llave perdida conociendo el número de usuario asignado</td></tr>\n        <tr><td><strong>Copia de Seguridad</strong></td><td>Clonado completo de la memoria EEPROM de una placa CA-02 hacia otra de repuesto</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-third (ES) ---
+"enc-third": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">Sección 4</span>\n    <h1>🤝 4. Componentes de Terceros — Fijos vs Intercambiables</h1>\n    <p>Guía de selección e integración de componentes electromecánicos y sensores no fabricados directamente por EDEL que forman parte fundamental de la maniobra.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Componente</th><th>Fabricante</th><th>Carácter en Sistema</th><th>Protocolo / Interfaz</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Inversor de Tracción</strong></td><td>Fuji Electric (Frenic Lift)</td><td><span class=\"badge badge-rose\">Fijo / Obligatorio</span></td><td>Control digital por E/S directas + comunicación UART / CANopen</td></tr>\n        <tr><td><strong>Inversor de Puertas</strong></td><td>Fuji / Fermator / Wittur</td><td><span class=\"badge badge-rose\">Fijo por Cabina</span></td><td>Señales de abrir/cerrar, reapertura y final de carrera</td></tr>\n        <tr><td><strong>Encoder Absoluto SSI</strong></td><td>Wachendorff o ELGO</td><td><span class=\"badge badge-green\">Intercambiable</span></td><td>Bus SSI síncrono conectado a placa K2-64296 (selección por DIP switch)</td></tr>\n        <tr><td><strong>Llaves Electrónicas</strong></td><td>Dallas / Maxim (iButton)</td><td><span class=\"badge badge-amber\">Opcional</span></td><td>Bus 1-Wire conectado al lector CA-02 K2-64435</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-fuji-motor (ES) ---
+"enc-fuji-motor": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">4.1</span>\n    <h1>⚡ 4.1 Inversor Fuji VFD — Motor de Tracción (Obligatorio)</h1>\n    <p>El variador de frecuencia de la serie <strong>Fuji Frenic Lift</strong> (LM2A / LM2C) controla el motor eléctrico de tracción del ascensor. Es el componente electromecánico de mayor potencia y criticidad dinámica de la instalación.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Especificación</th></tr></thead>\n      <tbody>\n        <tr><td>Fabricante</td><td>Fuji Electric Co., Ltd. (Japón)</td></tr>\n        <tr><td>Tipo de Control</td><td>Control vectorial de flujo con o sin sensor (lazo cerrado con encoder de motor o lazo abierto)</td></tr>\n        <tr><td>Tipos de Motor</td><td>Síncrono de imanes permanentes (Gearless) o Asíncrono trifásico con reductor</td></tr>\n        <tr><td>Integración con Placa Base</td><td>Comandos digitales de marcha por bornas: Subir (FWD), Bajar (REV), Velocidades V1/V2/V3</td></tr>\n        <tr><td>Respuesta de Seguridad</td><td>Salida de relé 30A/30B/30C (Fallo Variador) conectada a la supervisión de la placa base</td></tr>\n      </tbody>\n    </table>\n  </div>\n  <h2 style=\"margin-top:1.5rem;\">Por Qué Fuji es Obligatorio</h2>\n  <p>El firmware de la placa base K2-64278 incorpora perfiles de temporización, curvas en S, secuencias de apertura/cierre de freno electromecánico y gestión de contactores dimensionados milisegundo a milisegundo para la curva de respuesta específica del Fuji Frenic Lift. No se puede sustituir por otra marca sin reprogramar la máquina de estados del firmware central.</p>\n</div>",
+
+// --- enc-fuji-door (ES) ---
+"enc-fuji-door": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">4.2</span>\n    <h1>🚪 4.2 Inversor VFD de Operador de Puertas</h1>\n    <p>Controlador electrónico de frecuencia variable montado sobre el techo de cabina para gobernar el movimiento mecánico de las hojas de la puerta del habitáculo.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Característica</th><th>Descripción</th></tr></thead>\n      <tbody>\n        <tr><td>Función</td><td>Apertura y cierre suave con rampa de deceleración y presión constante de retención</td></tr>\n        <tr><td>Señales de Entrada</td><td>Comando Abrir Puerta (AP), Comando Cerrar Puerta (CP), Reducción de Fuerza</td></tr>\n        <tr><td>Señales de Retorno</td><td>Puerta Totalmente Abierta (FCA), Puerta Totalmente Cerrada (FCC), Obstáculo Mecánico</td></tr>\n        <tr><td>Seguridad Activa</td><td>Inversión instantánea ante accionamiento de la cortina fotoeléctrica o sobreesfuerzo motor</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-encoders-ext (ES) ---
+"enc-encoders-ext": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-green\">4.3</span>\n    <h1>📏 4.3 Encoders de Posición Absoluta (SSI)</h1>\n    <p>EDEL soporta dos familias de sensores de posición absoluta líderes en el sector industrial de elevación. Ambos comunican mediante el protocolo síncrono SSI hacia la placa K2-64296.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Fabricante</th><th>Modelo / Tipo</th><th>Principio de Medida</th><th>Configuración DIP SW2/SW3</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Wachendorff</strong></td><td>Encoder rotativo absoluto SSI de vuelta única (12 bits)</td><td>Polea con cable dentado o cinta perforada que gira el eje del encoder</td><td><code>SW2 = OFF</code>, <code>SW3 = OFF</code></td></tr>\n        <tr><td><strong>ELGO</strong></td><td>Sensor magnético absoluto de lectura sin contacto</td><td>Cabezal de lectura que lee una banda magnética codificada pegada a la guía</td><td><code>SW2 = ON</code>, <code>SW3 = OFF</code></td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-wachendorff (ES) ---
+"enc-wachendorff": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-green\">4.3.1</span>\n    <h1>📏 4.3.1 Wachendorff SSI — Encoder de Posición</h1>\n    <p>Encoder rotativo industrial alemán de alta precisión. Ofrece una resolución absoluta de 12 bits por vuelta comunicada por bus serie SSI balanceado RS-422.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Interfaz Físico</td><td>4 hilos diferenciales: CLK+ / CLK- y DATA+ / DATA-</td></tr>\n        <tr><td>Resolución</td><td>4.096 pasos por revolución (12 bits monovuelta)</td></tr>\n        <tr><td>Ventajas</td><td>Larga vida útil, excelente robustez mecánica ante vibraciones y montaje estándar universal</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-elgo (ES) ---
+"enc-elgo": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-green\">4.3.2</span>\n    <h1>📏 4.3.2 ELGO SSI — Sensor de Banda Magnética</h1>\n    <p>Sistema de posicionado sin contacto directo mediante cabezal sensor que desliza a lo largo de una banda magnética flexible adherida a las guías del ascensor.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Principio</td><td>Efecto Hall matricial que lee los polos magnéticos impresos en la cinta</td></tr>\n        <tr><td>Ventajas</td><td>Medida milimétrica directa sin piezas móviles, sin desgaste por rozamiento y sin ruido acústico de poleas</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-ibutton (ES) ---
+"enc-ibutton": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-amber\">4.4</span>\n    <h1>🔑 4.4 Llaves Electrónicas Dallas / Maxim iButton</h1>\n    <p>Pastillas electrónicas blindadas de acero inoxidable que contienen un microchip de silicio con un número de identificación de 64 bits único en el mundo grabado por láser en fábrica.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>\n      <tbody>\n        <tr><td>Modelo Típico</td><td>Dallas / Maxim <strong>DS1990A</strong></td></tr>\n        <tr><td>Comunicación</td><td>Protocolo 1-Wire (1 hilo de datos + 1 hilo de retorno a masa)</td></tr>\n        <tr><td>Seguridad</td><td>Imposible de duplicar o alterar; resistencia extrema a golpes, agua y cargas electrostáticas</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-variants (ES) ---
+"enc-variants": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Sección 5</span>\n    <h1>🔀 5. Variantes de Producto — Familias EDEL</h1>\n    <p>Clasificación de las distintas líneas de maniobra producidas por EDEL para cubrir desde ascensores unifamiliares y residenciales hasta montacargas industriales pesados.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Gama</th><th>Controlador</th><th>Destino Comercial</th><th>Características Clave</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Serie K2</strong></td><td><code>K2-64278</code></td><td>Ascensores de pasajeros estándar</td><td>Doble bus CAN, opción de voz multilingüe v1, maniobras colectivas completas</td></tr>\n        <tr><td><strong>Serie K3</strong></td><td><code>K3-74278</code></td><td>Montacargas y plataformas de carga</td><td>Controlador autónomo con display LCD propio, soporte hidráulico con reenvío de aceite</td></tr>\n        <tr><td><strong>Serie ADVANCED</strong></td><td><code>K2-64278</code> + v2</td><td>Ascensores optimizados en coste</td><td>Cabina v2 y pulsadores v2 en HCS08, máxima compacidad sin periféricos superfluos</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-k2 (ES) ---
+"enc-k2": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">5.1</span>\n    <h1>🛗 5.1 Serie K2 — Ascensor de Pasajeros Estándar</h1>\n    <p>La línea troncal de EDEL para transporte vertical de personas en edificios residenciales, hospitales, hoteles y oficinas.</p>\n  </div>\n  <p>Cumple estrictamente la norma EN 81-20/50 y ofrece el abanico completo de accesorios de confort: sintetizador vocal de 5 idiomas, pantallas TFT en cabina y rellanos, y monitorización remota.</p>\n</div>",
+
+// --- enc-montacargas (ES) ---
+"enc-montacargas": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">5.2</span>\n    <h1>🚛 5.2 Serie K3 — Montacargas y Elevadores de Carga</h1>\n    <p>Familia de controladores completamente independiente de la serie K2. Diseñada específicamente para montacargas industriales, montaplatos y montacoches donde no viajan personas.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Parámetro</th><th>Especificación</th></tr></thead>\n      <tbody>\n        <tr><td>Código de Placa Base</td><td><code>K3-74278</code> (EDELMontacargas)</td></tr>\n        <tr><td>Versión de Firmware</td><td>v1.2.2 (Actualizado Mayo 2026)</td></tr>\n        <tr><td>Microcontrolador</td><td>Freescale <strong>MC9S12XDT256</strong> (plataforma HCS12)</td></tr>\n        <tr><td>Display Integrado</td><td>Pantalla LCD y pulsadores de menú soldados directamente en la placa base</td></tr>\n        <tr><td>Accionamiento Hidráulico</td><td>Gestión avanzada de válvulas de bajada y ciclo de reenvío automático de aceite</td></tr>\n        <tr><td>Novedad v1.2.2</td><td>Optimización del tiempo de espera y enclavamiento de puertas en paradas prolongadas</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-advanced (ES) ---
+"enc-advanced": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">5.3</span>\n    <h1>⭐ 5.3 Serie ADVANCED — Gama K2 Optimizada</h1>\n    <p>Versión optimizada de la plataforma K2. Emplea la misma placa base central K2-64278 pero estandariza los periféricos de segunda generación basados en microcontroladores Freescale HCS08.</p>\n  </div>\n  <p>Elimina el sintetizador de audio analógico y simplifica los cableados de cabina y planta, ofreciendo una tasa de averías extraordinariamente reducida y una excelente relación coste/prestaciones.</p>\n</div>",
+
+// --- enc-compat (ES) ---
+"enc-compat": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">Sección 6</span>\n    <h1>🔗 6. Matriz de Dependencias y Compatibilidad</h1>\n    <p>Análisis de interdependencias entre módulos hardware, comportamiento del sistema ante averías aisladas y reglas de compatibilidad de firmware.</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Módulo Afectado</th><th>Impacto en el Ascensor</th><th>Nivel de Severidad</th><th>Comportamiento de la Maniobra</th></tr></thead>\n      <tbody>\n        <tr><td><strong>Placa Base K2-64278</strong></td><td>Parada total inmediata</td><td><span class=\"badge badge-rose\">Crítico Total</span></td><td>El ascensor queda fuera de servicio; freno activado</td></tr>\n        <tr><td><strong>Encoder K2-64296</strong></td><td>Bloqueo por falta de posición</td><td><span class=\"badge badge-rose\">Crítico</span></td><td>Detención con error de posicionado en planta próxima</td></tr>\n        <tr><td><strong>Placa Cabina K2-64290/291</strong></td><td>Pérdida de llamadas de cabina</td><td><span class=\"badge badge-amber\">Medio</span></td><td>El ascensor atiende llamadas de planta pero no de cabina</td></tr>\n        <tr><td><strong>Un Pulsador BotCAN K2-64292</strong></td><td>Pérdida de llamada en esa planta</td><td><span class=\"badge badge-cyan\">Bajo</span></td><td>El resto de plantas y cabina operan con total normalidad</td></tr>\n        <tr><td><strong>Un Display Exterior K2-64280</strong></td><td>Pantalla apagada en ese piso</td><td><span class=\"badge badge-cyan\">Mínimo</span></td><td>El ascensor viaja y abre puertas perfectamente en esa parada</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-hw-variants (ES) ---
+"enc-hw-variants": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">6.1</span>\n    <h1>🔧 6.1 Variantes Hardware (EDEL / GENESIS / ATES)</h1>\n    <p>El código fuente de EDEL incluye directivas del preprocesador que permiten compilar el firmware para tres marcas comerciales diferenciadas:</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Marca / Perfil</th><th>Prefijo Tramas CAN</th><th>Constante de Compilación</th><th>Mercado y Distribución</th></tr></thead>\n      <tbody>\n        <tr><td><strong>EDEL</strong></td><td><code>$X...</code> (ej. $XBD, $XTR)</td><td><code>#define MARCA_EDEL</code></td><td>Gama estándar corporativa para el mercado nacional e internacional</td></tr>\n        <tr><td><strong>GENESIS</strong></td><td><code>$Y...</code> (ej. $YBD, $YTR)</td><td><code>#define MARCA_GENESIS</code></td><td>Fabricación OEM para distribuidores mayoristas homologados</td></tr>\n        <tr><td><strong>ATES</strong></td><td><code>$Z...</code> (ej. $ZBD, $ZTR)</td><td><code>#define MARCA_ATES</code></td><td>Variante personalizada para el mercado francés y exportación especializada</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-can-compat (ES) ---
+"enc-can-compat": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">6.2</span>\n    <h1>🔌 6.2 Compatibilidad de Protocolo CAN</h1>\n    <p>Reglas estrictas de coexistencia en la red de comunicaciones CAN para evitar caídas de red o tramas no reconocidas.</p>\n  </div>\n  <ul>\n    <li><strong>Coexistencia de Marcas:</strong> No se pueden mezclar placas con prefijo <code>$X</code> y <code>$Z</code> en el mismo bus; la placa base descartará las tramas con ID de otra marca.</li>\n    <li><strong>Velocidad de Red:</strong> Todos los nodos de un bus deben operar a la misma velocidad de baudios (habitualmente 62.5 kbps en exterior y 125 kbps en cabina).</li>\n  </ul>\n</div>",
+
+// --- enc-fw-deps (ES) ---
+"enc-fw-deps": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">6.3</span>\n    <h1>💾 6.3 Dependencias de Versión de Firmware</h1>\n    <p>Requisitos de versión mínima en periféricos para trabajar con las funciones avanzadas de la placa base v4.4.0:</p>\n  </div>\n  <div class=\"table-container\" style=\"margin-top:1.5rem;\">\n    <table>\n      <thead><tr><th>Periférico</th><th>Versión Mínima Requerida</th><th>Motivo Técnico</th></tr></thead>\n      <tbody>\n        <tr><td><strong>EDELEncoder</strong></td><td>v2.7 o superior</td><td>Filtro de rechazo a saltos bruscos mayores de 100 mm</td></tr>\n        <tr><td><strong>EDELExteriores</strong></td><td>v2.1 o superior</td><td>Soporte para trama de Bomberos tipo 2</td></tr>\n        <tr><td><strong>EDELminiLCD</strong></td><td>v2.7 o superior</td><td>Decodificación de tramas de idioma en caliente vía CAN</td></tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+
+// --- enc-token (ES) ---
+"enc-token": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-rose\">6.4</span>\n    <h1>🔐 6.4 Token y Licenciamiento de Firmware</h1>\n    <p>El sistema de Token (también denominado firma digital en código: <code>e2pfirma</code>) es un mecanismo de autenticación criptográfica de bajo nivel integrado en los módulos EDEL.</p>\n  </div>\n  <p>Emplea un algoritmo propio basado en tablas de dispersión (lookup tables) y rotación XOR (función <code>Cifrado()</code>) que vincula el microcontrolador con la memoria EEPROM no volátil, impidiendo la copia no autorizada o el flasheo de firmware en placas clonadas.</p>\n  <p><strong>Módulos con Token activo:</strong> K2-64280, K2-64292, K2-64296, K2-64350 y K2-64406.</p>\n</div>",
+
+// --- enc-maps (ES) ---
+"enc-maps": "<div class=\"doc-section\">\n  <div class=\"doc-header\">\n    <span class=\"badge badge-indigo\">Sección 7</span>\n    <h1>🗺️ 7. Mapas Visuales y Diagramas de Arquitectura</h1>\n    <p>Diagramas de bloques y esquemas topológicos de interconexión del ecosistema de elevación EDEL.</p>\n  </div>\n  <h2>7.1 Diagrama de Bloques General del Sistema</h2>\n  <div class=\"code-block\" style=\"background:#0f172a;color:#38bdf8;padding:1.5rem;border-radius:8px;font-family:monospace;white-space:pre;overflow-x:auto;\">\n+-----------------------------------------------------------------------------------+\n|                            CUARTO DE MÁQUINAS (ZONA 1.1)                          |\n|                                                                                   |\n|  [Red Trifásica 400Vac] ---> [Filtro RFI] ---> [Variador Fuji Frenic Lift]        |\n|                                                     |                             |\n|  [Cadena de Seguridad EN 81-20] ----------------+   +---> [Motor de Tracción]     |\n|                                                 |   +---> [Freno Electromecánico] |\n|                                                 v                                 |\n|  +-----------------------------------------------------------------------------+  |\n|  |             PLACA PRINCIPAL K2-64278 (EDELElevatorFULL v4.4.0)               |  |\n|  |                   Microcontrolador MC9S12XDT256 (HCS12X)                    |  |\n|  +-----------------------------------------------------------------------------+  |\n|           |                                                      |                |\n+-----------|------------------------------------------------------|----------------+\n            | CAN BUS CABINA ($XBD / $XBN / $XBL)                  | CAN BUS EXTERIOR ($XTR / $XPD)\n            | (Viaja por Manguera Plana Apantallada)               | (Recorre el Hueco de Planta en Planta)\n            v                                                      v\n+----------------------------------------+     +----------------------------------------+\n|           CABINA (ZONA 1.3)            |     |        PLANTAS / RELLANOS (ZONA 1.4)   |\n|                                        |     |                                        |\n|  +----------------------------------+  |     |  PLANTA N:                             |\n|  | PLACA CABINA K2-64290 (con audio)|  |     |  +----------------------------------+  |\n|  |   o K2-64291 Cabina-v2 ADVANCED  |  |     |  | BotCAN K2-64292 (Pulsador Planta)|  |\n|  +----------------------------------+  |     |  +----------------------------------+  |\n|      |                                 |     |  | Display Exterior K2-64280/64281 |  |\n|      +---> [Pulsadores COP / Pesacargas|     |  +----------------------------------+  |\n|      +---> [Operador VVVF de Puertas]  |     |  | FlechasPP K2-64350 (Push-Pull)   |  |\n|                                        |     |  +----------------------------------+  |\n|  +----------------------------------+  |     |                                        |\n|  | EDELEncoder K2-64296 (Filtro SSI)|  |     |  PLANTA 1:                             |\n|  +----------------------------------+  |     |  [BotCAN K2-64292] + [Display Exterior]|\n|      |                                 |     |                                        |\n|      +---> [Encoder Wachendorff/ELGO]  |     |  PLANTA 0 (BAJA):                      |\n|                                        |     |  [BotCAN K2-64292] + [Lector CA-02]    |\n+----------------------------------------+     +----------------------------------------+\n  </div>\n\n  <h2 style=\"margin-top:2rem;\">7.2 Topología de Cableado de Buses CAN</h2>\n  <div class=\"code-block\" style=\"background:#0f172a;color:#a78bfa;padding:1.5rem;border-radius:8px;font-family:monospace;white-space:pre;overflow-x:auto;\">\n[Terminador 120Ω Placa Base]\n           |\n           +=== BUS CABINA ===> [Manguera] ===> [Techo Cabina K2-64296] ---> [COP K2-64290] === [Terminador 120Ω]\n           |\n           +=== BUS EXTERIOR => [Rellano 0] ===> [Rellano 1] ===> ... ===> [Rellano N] === [Terminador 120Ω]\n  </div>\n</div>"
+  }
+} // end ES
 
 }; // end encyclopediaData

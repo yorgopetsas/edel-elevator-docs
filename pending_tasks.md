@@ -16,6 +16,7 @@ This document tracks all active and upcoming engineering tasks for the **EDEL El
 | **TASK-06** | **Programming Console — Complete Interaction Guide (Section 29)** | Technical Documentation | ✅ Completed & Integrated | New Developer Section 29 added. Covers full 8-menu tree, all serial protocols ($PS/$CC/$DC/$AC/$EE/$MP/$MA), PIN & Token security system, CicloBloqueo enforcement, iCOM Drive Virtual Console, EEPROM backup, and multi-language engine. Based on R13 + direct `Consola.c` / `Consola.h` analysis. |
 | **TASK-07** | **Fuji Frenic Lift VFD Engineering & Pre-Built Installation Matrix (Section 30)** | Technical Documentation / Drive Systems | ✅ Completed & Integrated | New Developer Section 30 added. Comprehensive guide on Fuji Frenic Lift/Lift2 inverter setup, parameter dictionary (F03-F44, E01-E99, C01-C43, P01-P12, L01-L119), anti-rollback zero-speed loop, internal PLC logic blocks (U00-U87), emergency gravity rescue (descompensación) / UPS rescue, and full system elements & variations matrix across K2, K3, ADVANCED K2, and Premontadas installations. |
 | **TASK-08** | **Complete Spanish Version of Entire Documentation Portal (Fuentes Originales)** | Technical Documentation / Localization | ✅ Completed & Integrated | Full authentic Spanish version (`data_es.js`) built directly from original Spanish source documentation (`P:\Documentación\DOCUMENTACIÓN INTERNA`, `P:\IT\DATA\DLJ`, and firmware `Idioma.h`, `main.c`). Includes all 32 Dev sections (with all 99 faults and Fuji VFD), all 9 In-House Tech sections (with interactive Spanish LCD simulator), all 9 Client Installer sections, top navbar language switcher `[ 🇪🇸 ES | 🇬🇧 EN ]`, search query localization, and local persistence. |
+| **TASK-09** | **Complete 58-Subsection Bilingual Elevator Encyclopedia (All PCBs, Zones, & Protocols)** | Technical Documentation / Knowledge Base | ✅ Completed & Integrated | Full systematic taxonomy covering all 58 subsections across 7 major architectural domains (1. Anatomy & Zones, 2. Electrical Installation, 3. EDEL PCB Modules, 4. Third-Party Components, 5. Product Variants, 6. Dependencies & Compatibility Matrix, 7. Visual Maps). 100% bilingual in English and authentic Spanish (`encyclopedia.js`), fully integrated into instant search, top bar role switcher, and mobile-responsive layout. |
 
 ---
 
@@ -71,5 +72,21 @@ This document tracks all active and upcoming engineering tasks for the **EDEL El
   - Complete Spanish Matrix of all 99 Fault Codes (Fallo 01 al 99) in Developer Section 25 and Client Section 6.
   - Interactive LCD Console Simulator operating in Spanish with 4-button navigation.
   - Top navigation bar bilingual pill switcher (`[ 🇪🇸 ES | 🇬🇧 EN ]`) with instant dynamic updates of role cards, sidebar nav, active section, search placeholder, and `localStorage` persistence.
+
+### TASK-09: Complete 58-Subsection Bilingual Elevator Encyclopedia (All PCBs, Zones, & Protocols)
+- **Status**: ✅ Completed & Integrated live at [http://localhost:3000](http://localhost:3000) and GitHub Pages.
+- **Objective**: Build a systematic, deep internal knowledge base and taxonomy covering every physical zone, PCB module, third-party interface, and product variant across the entire EDEL ecosystem.
+- **Delivered Content**:
+  - `Documentation_Web/encyclopedia.js` (227 KB) containing all 58 subsections structured across 7 key architectural domains:
+    1. *Elevator Anatomy (Physical Zones)*: Machine Room (1.1), Shaft (1.2), Cabin (1.3), Landings (1.4), Pit (1.5).
+    2. *Electrical Installation Overview*: Power circuits (2.1), Safety chain loops under EN 81-20 (2.2), Dual CAN bus architecture ($XBD / $XTR) (2.3), Third-party integration points (2.4).
+    3. *EDEL PCB Modules*: Complete catalog of all 18 board families including Mainboard K2-64278, Cabin boards (v1 K2-64290 with 5-language ADPCM audio vs v2 ADVANCED K2-64291), BotCAN floor buttons (v1 K2-64295 vs v2 K2-64292), Exterior displays (K2-64280 vs ARM mCAN-12 K2-64281), Position Encoder K2-64296 (SSI Wachendorff/ELGO with 100mm false door jump filter), Display modules (LCD, DRC rotating, DDM dot matrix, TFT color with 5 subversions, miniLCD v2.7), FlechasPP K2-64350 (dual-bus push-pull arrows), Expansion I/O K2-64297, iCOM Remote module K2-64299 (CANopen Lift CiA 417, UART Fuji bridge, 12/18 m/min overspeed supervision), MK Interface K2-64406 ($EMI ASCII bridge), and Access Control CA-02 K2-64435 (iButton Dallas DS1990A reader + KeyManager console).
+    4. *Third-Party Components*: Fixed Fuji Frenic Lift motor VFD, door VFDs, interchangeable SSI encoders, and Dallas iButton keys.
+    5. *Product Variants*: K2 Passenger, K3 Goods Lift (K3-74278 autonomous controller with hydraulic reenvío de aceite), and ADVANCED K2.
+    6. *Dependencies & Compatibility*: Hardware brand variants (EDEL $X / GENESIS $Y / ATES $Z), CAN frame rules, minimum firmware dependencies, cryptographic Token signature system (`Cifrado()`), and failure cascades.
+    7. *Visual Maps*: ASCII system block diagrams and CAN bus wiring topology.
+  - 100% authentic bilingual parity across all 58 sections in English and Spanish.
+  - Seamless integration into role switcher (Role 4), sidebar navigation, dynamic breadcrumbs, and real-time Ctrl+K search engine.
+
 
 
