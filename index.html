@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
@@ -8,8 +8,73 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <style id="authBlockStyle">
+    html.auth-locked-html, body.auth-locked {
+      overflow: hidden !important;
+      height: 100vh !important;
+    }
+    body.auth-locked > *:not(#authOverlay) {
+      display: none !important;
+    }
+  </style>
+  <script>
+    (function() {
+      const pin = "458923";
+      const token = sessionStorage.getItem('edel_auth_token') || localStorage.getItem('edel_auth_token');
+      if (token !== 'authorized_' + pin) {
+        document.documentElement.classList.add('auth-locked-html');
+      }
+    })();
+  </script>
 </head>
-<body>
+<body class="auth-locked">
+
+  <!-- Security Access Gate Overlay (Protected with PIN 458923) -->
+  <div id="authOverlay" class="auth-overlay">
+    <div class="auth-card">
+      <div class="auth-badge">
+        <span class="auth-lock-icon">🔒</span>
+        <span>RESTRICTED ACCESS • ACCESO RESTRINGIDO</span>
+      </div>
+      <div class="auth-logo">K2 / EDEL</div>
+      <h2 class="auth-title">EDEL Elevator Systems</h2>
+      <p class="auth-subtitle">Technical Engineering Portal &amp; Documentation Database</p>
+      
+      <p class="auth-prompt">
+        Please enter the authorized 6-digit access PIN to view engineering documentation, schematics, and codebases:<br>
+        <span style="font-size:0.85em;color:var(--text-secondary,#94a3b8);">(Introduzca el PIN de seguridad de 6 dígitos para acceder al portal)</span>
+      </p>
+
+      <form id="authForm" class="auth-form" onsubmit="event.preventDefault(); verifyPin();">
+        <div class="pin-input-container">
+          <input 
+            type="password" 
+            id="pinInput" 
+            class="pin-input" 
+            placeholder="••••••" 
+            maxlength="6" 
+            inputmode="numeric" 
+            pattern="[0-9]*" 
+            autocomplete="current-password"
+            autofocus 
+            required 
+          />
+          <button type="button" class="pin-toggle-visibility" id="pinToggleVisibility" title="Show/Hide PIN" onclick="togglePinVisibility()">👁️</button>
+        </div>
+        <div id="authErrorMsg" class="auth-error-msg hidden">
+          ⚠️ Incorrect PIN. Access denied. / PIN incorrecto. Acceso denegado.
+        </div>
+        <button type="submit" class="auth-submit-btn" id="authSubmitBtn">
+          <span>Desbloquear / Unlock Portal</span> ➔
+        </button>
+      </form>
+
+      <div class="auth-footer-notice">
+        <span>Confidential &amp; Proprietary Engineering Information</span>
+        <span>© EDEL K2 Elevator Control Solutions</span>
+      </div>
+    </div>
+  </div>
 
   <!-- Top Navbar -->
   <header class="navbar">
@@ -46,6 +111,9 @@
       </a>
       <button class="theme-toggle" id="themeToggleBtn" title="Toggle Light/Dark Theme">
         <span class="theme-icon">🌙</span>
+      </button>
+      <button class="lock-btn" id="lockPortalBtn" title="Bloquear Portal / Lock Portal" onclick="lockPortal()">
+        <span>🔒</span>
       </button>
     </div>
   </header>
@@ -124,5 +192,89 @@
   <script src="data_es.js"></script>
   <script src="encyclopedia.js"></script>
   <script src="app.js"></script>
+
+  <!-- Security Access Verification Logic (PIN 458923) -->
+  <script>
+    const ACCESS_PIN = "458923";
+
+    function checkAuthOnLoad() {
+      const token = sessionStorage.getItem('edel_auth_token') || localStorage.getItem('edel_auth_token');
+      if (token === 'authorized_' + ACCESS_PIN) {
+        document.body.classList.remove('auth-locked');
+        document.documentElement.classList.remove('auth-locked-html');
+        const overlay = document.getElementById('authOverlay');
+        if (overlay) overlay.remove();
+      } else {
+        document.body.classList.add('auth-locked');
+        setTimeout(() => {
+          const pinInput = document.getElementById('pinInput');
+          if (pinInput) pinInput.focus();
+        }, 80);
+      }
+    }
+
+    function verifyPin() {
+      const input = document.getElementById('pinInput');
+      const errorMsg = document.getElementById('authErrorMsg');
+      const card = document.querySelector('.auth-card');
+      const entered = input ? input.value.trim() : '';
+
+      if (entered === ACCESS_PIN) {
+        sessionStorage.setItem('edel_auth_token', 'authorized_' + ACCESS_PIN);
+        localStorage.setItem('edel_auth_token', 'authorized_' + ACCESS_PIN);
+        if (card) {
+          card.style.transform = 'scale(0.96)';
+          card.style.opacity = '0';
+          card.style.transition = 'all 0.3s ease';
+        }
+        const overlay = document.getElementById('authOverlay');
+        if (overlay) {
+          overlay.style.opacity = '0';
+          overlay.style.transition = 'opacity 0.35s ease';
+          setTimeout(() => {
+            overlay.remove();
+            document.body.classList.remove('auth-locked');
+            document.documentElement.classList.remove('auth-locked-html');
+          }, 350);
+        } else {
+          document.body.classList.remove('auth-locked');
+          document.documentElement.classList.remove('auth-locked-html');
+        }
+      } else {
+        if (errorMsg) errorMsg.classList.remove('hidden');
+        if (input) {
+          input.value = '';
+          input.focus();
+        }
+        if (card) {
+          card.classList.add('shake');
+          setTimeout(() => card.classList.remove('shake'), 450);
+        }
+      }
+    }
+
+    function togglePinVisibility() {
+      const input = document.getElementById('pinInput');
+      const btn = document.getElementById('pinToggleVisibility');
+      if (input) {
+        if (input.type === 'password') {
+          input.type = 'text';
+          if (btn) btn.textContent = '🔒';
+        } else {
+          input.type = 'password';
+          if (btn) btn.textContent = '👁️';
+        }
+      }
+    }
+
+    function lockPortal() {
+      sessionStorage.removeItem('edel_auth_token');
+      localStorage.removeItem('edel_auth_token');
+      location.reload();
+    }
+
+    // Initialize check immediately
+    checkAuthOnLoad();
+  </script>
 </body>
 </html>
