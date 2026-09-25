@@ -27,6 +27,13 @@ The documentation is organized into three specialized portals with instant role 
    - Complete Field Fault Code Matrix (Faults 01 to 99) with root causes and immediate field recovery actions.
    - EDELConnect 4G telemetry gateway setup (Microkey Track MK875 / MK775).
 
+4. **📚 Elevator Encyclopedia (Taxonomy & PCB Catalog)**:
+   - Deep knowledge base covering all 58 subsections across 7 structural domains.
+   - Anatomy & 5 physical elevator zones (Machine room, Shaft, Cabin, Landings, Pit).
+   - Electrical power, EN 81-20 safety loop, and dual CAN bus ($XBD / $XTR) architecture.
+   - Comprehensive catalog of all 18 EDEL PCB hardware families (Mainboard K2-64278, Cabin boards v1/v2, BotCAN v1/v2, Exterior displays, Encoders, LCD/TFT displays, FlechasPP, Expansion, iCOM, MK Interface, Access Control).
+   - Third-party components, product variants (K2, K3 Montacargas, ADVANCED), compatibility matrix, and visual ASCII architecture maps.
+
 ---
 
 ## 🇪🇸 🇬🇧 Bilingual Engine
