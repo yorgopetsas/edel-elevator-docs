@@ -4791,6 +4791,21 @@ function getActiveDocsData() {
   return (typeof window !== 'undefined' && window.docsData_EN) ? window.docsData_EN : docsData;
 }
 
+function getEncyclopediaData() {
+  if (typeof window !== 'undefined' && window.encyclopediaData) {
+    const lang = currentLang === 'ES' ? 'ES' : 'EN';
+    const base = window.encyclopediaData[lang] || window.encyclopediaData['EN'];
+    // Merge: use EN sections as fallback for any missing ES sections
+    if (lang === 'ES') {
+      const enSections = window.encyclopediaData['EN'] ? window.encyclopediaData['EN'].sections : {};
+      const merged = Object.assign({}, enSections, base.sections || {});
+      return Object.assign({}, base, { sections: merged });
+    }
+    return base;
+  }
+  return null;
+}
+
 // Role titles and descriptions localized
 const roleLocalization = {
   ES: {
@@ -4808,6 +4823,11 @@ const roleLocalization = {
       title: "3. Instaladores y Mantenimiento",
       desc: "Puesta en Marcha, Conexionado, Configuración y Averías",
       sidebar: "Manual de Instaladores y Mantenimiento"
+    },
+    encyclopedia: {
+      title: "4. Enciclopedia del Ascensor",
+      desc: "Componentes, PCBs, Dependencias y Mapa del Sistema",
+      sidebar: "Enciclopedia del Ascensor"
     },
     searchPlaceholder: "Buscar módulos C, máquinas de estado, parámetros, averías, tramas CAN...",
     pendingTasks: "Tareas Pendientes",
@@ -4828,6 +4848,11 @@ const roleLocalization = {
       title: "3. Client Installers & Maintenance",
       desc: "Commissioning, Wiring, Configuration & Troubleshooting",
       sidebar: "Client Installer Documentation"
+    },
+    encyclopedia: {
+      title: "4. Elevator Encyclopedia",
+      desc: "All Components, PCBs, Dependencies & System Map",
+      sidebar: "Elevator Encyclopedia"
     },
     searchPlaceholder: "Search C modules, state machines, parameters, fault codes, CAN frames...",
     pendingTasks: "Pending Tasks",
@@ -4912,9 +4937,20 @@ function setupRoleSwitchers() {
 
 function loadRole(role, preserveSectionId = null) {
   currentRole = role;
-  const activeData = getActiveDocsData();
-  const roleData = activeData[role] || docsData[role];
   const loc = roleLocalization[currentLang] || roleLocalization['ES'];
+
+  // Encyclopedia is a separate data source
+  let roleData;
+  if (role === 'encyclopedia') {
+    roleData = getEncyclopediaData();
+    if (!roleData) {
+      document.getElementById('docBody').innerHTML = '<div class="callout callout-warning"><h4>Encyclopedia data not loaded.</h4></div>';
+      return;
+    }
+  } else {
+    const activeData = getActiveDocsData();
+    roleData = activeData[role] || docsData[role];
+  }
 
   const sidebarTitleEl = document.getElementById('sidebarRoleTitle');
   if (sidebarTitleEl) {
@@ -4953,16 +4989,26 @@ function renderSection(role, sectionId) {
   document.getElementById('searchResultsArea').classList.add('hidden');
   contentBody.classList.remove('hidden');
 
-  const activeData = getActiveDocsData();
-  const fallbackData = (typeof window !== 'undefined' && window.docsData_EN) ? window.docsData_EN : docsData;
-
   let html = '';
-  if (activeData[role] && activeData[role].sections && activeData[role].sections[sectionId]) {
-    html = activeData[role].sections[sectionId];
-  } else if (fallbackData[role] && fallbackData[role].sections && fallbackData[role].sections[sectionId]) {
-    html = fallbackData[role].sections[sectionId];
+
+  if (role === 'encyclopedia') {
+    const encData = getEncyclopediaData();
+    if (encData && encData.sections && encData.sections[sectionId]) {
+      html = encData.sections[sectionId];
+    } else {
+      html = '<div class="callout callout-warning"><h4>En Construcción / Under Construction</h4><p>Esta sección de la enciclopedia se está ampliando con más información técnica.</p></div>';
+    }
   } else {
-    html = '<div class="callout callout-warning"><h4>En Construcción / Under Construction</h4><p>Esta sección se está actualizando con la documentación técnica oficial.</p></div>';
+    const activeData = getActiveDocsData();
+    const fallbackData = (typeof window !== 'undefined' && window.docsData_EN) ? window.docsData_EN : docsData;
+
+    if (activeData[role] && activeData[role].sections && activeData[role].sections[sectionId]) {
+      html = activeData[role].sections[sectionId];
+    } else if (fallbackData[role] && fallbackData[role].sections && fallbackData[role].sections[sectionId]) {
+      html = fallbackData[role].sections[sectionId];
+    } else {
+      html = '<div class="callout callout-warning"><h4>En Construcción / Under Construction</h4><p>Esta sección se está actualizando con la documentación técnica oficial.</p></div>';
+    }
   }
 
   contentBody.innerHTML = html;
