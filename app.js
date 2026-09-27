@@ -4831,6 +4831,9 @@ const roleLocalization = {
     },
     searchPlaceholder: "Buscar módulos C, máquinas de estado, parámetros, averías, tramas CAN...",
     pendingTasks: "Tareas Pendientes",
+    dataWishlist: "Datos Requeridos",
+    expandAll: "▾ Desplegar Todo",
+    collapseAll: "▸ Contraer",
     noResults: "No se encontraron resultados de documentación."
   },
   EN: {
@@ -4856,6 +4859,9 @@ const roleLocalization = {
     },
     searchPlaceholder: "Search C modules, state machines, parameters, fault codes, CAN frames...",
     pendingTasks: "Pending Tasks",
+    dataWishlist: "Needed Data",
+    expandAll: "▾ Expand All",
+    collapseAll: "▸ Collapse",
     noResults: "No matching documentation found."
   }
 };
@@ -4866,8 +4872,82 @@ document.addEventListener('DOMContentLoaded', () => {
   setupRoleSwitchers();
   setupThemeToggle();
   setupSearch();
+  setupMobileMenu();
+  setupTreeActions();
+  setupWishlistButton();
   setLanguage(currentLang, false);
 });
+
+// --- MOBILE HAMBURGER DRAWER ---
+function setupMobileMenu() {
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+  const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+  const sidebar = document.getElementById('sidebarElement');
+
+  if (mobileMenuBtn && sidebar && sidebarBackdrop) {
+    mobileMenuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('mobile-open');
+      sidebarBackdrop.classList.toggle('active');
+    });
+  }
+
+  if (sidebarCloseBtn && sidebar && sidebarBackdrop) {
+    sidebarCloseBtn.addEventListener('click', () => {
+      sidebar.classList.remove('mobile-open');
+      sidebarBackdrop.classList.remove('active');
+    });
+  }
+
+  if (sidebarBackdrop && sidebar) {
+    sidebarBackdrop.addEventListener('click', () => {
+      sidebar.classList.remove('mobile-open');
+      sidebarBackdrop.classList.remove('active');
+    });
+  }
+}
+
+function closeMobileSidebar() {
+  const sidebar = document.getElementById('sidebarElement');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  if (sidebar) sidebar.classList.remove('mobile-open');
+  if (backdrop) backdrop.classList.remove('active');
+}
+
+// --- TREE ACTIONS (EXPAND / COLLAPSE ALL) ---
+function setupTreeActions() {
+  const expandBtn = document.getElementById('expandAllNavBtn');
+  const collapseBtn = document.getElementById('collapseAllNavBtn');
+
+  if (expandBtn) {
+    expandBtn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-group').forEach(group => group.classList.add('open'));
+    });
+  }
+
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-group').forEach(group => {
+        // Keep group open if it contains the currently active nav item
+        if (!group.querySelector('.active')) {
+          group.classList.remove('open');
+        }
+      });
+    });
+  }
+}
+
+// --- DATA WISHLIST QUICK BUTTON ---
+function setupWishlistButton() {
+  const btn = document.getElementById('dataWishlistBtn');
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadRole('encyclopedia', 'enc-data-wishlist');
+      closeMobileSidebar();
+    });
+  }
+}
 
 // --- LANGUAGE SWITCHING ---
 function setupLanguageSwitchers() {
@@ -4905,6 +4985,16 @@ function setLanguage(lang, reloadContent = true) {
   const pendingTasksText = document.getElementById('pendingTasksText');
   if (pendingTasksText) pendingTasksText.textContent = loc.pendingTasks;
 
+  // Data wishlist text
+  const dataWishlistText = document.getElementById('dataWishlistText');
+  if (dataWishlistText) dataWishlistText.textContent = loc.dataWishlist;
+
+  // Tree action buttons
+  const expandBtn = document.getElementById('expandAllNavBtn');
+  if (expandBtn) expandBtn.textContent = loc.expandAll;
+  const collapseBtn = document.getElementById('collapseAllNavBtn');
+  if (collapseBtn) collapseBtn.textContent = loc.collapseAll;
+
   // Role button labels
   document.querySelectorAll('.role-btn').forEach(btn => {
     const roleKey = btn.getAttribute('data-role');
@@ -4931,6 +5021,7 @@ function setupRoleSwitchers() {
       btn.classList.add('active');
       const role = btn.getAttribute('data-role');
       loadRole(role);
+      closeMobileSidebar();
     });
   });
 }
@@ -4964,7 +5055,7 @@ function loadRole(role, preserveSectionId = null) {
     sidebarTitleEl.textContent = (loc[role] && loc[role].sidebar) ? loc[role].sidebar : roleData.title;
   }
 
-  // Render Sidebar Navigation
+  // Render Sidebar Navigation with Hierarchical Collapsible Groups
   const navContainer = document.getElementById('sidebarNav');
   navContainer.innerHTML = '';
   
@@ -4974,18 +5065,137 @@ function loadRole(role, preserveSectionId = null) {
     targetSection = roleData.nav[0].id;
   }
 
-  roleData.nav.forEach((item) => {
-    const navEl = document.createElement('a');
-    navEl.className = `nav-item ${item.id === targetSection ? 'active' : ''}`;
-    navEl.innerHTML = `<span class="nav-item-icon">${item.icon}</span> <span>${item.label}</span>`;
-    navEl.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      navEl.classList.add('active');
-      renderSection(role, item.id);
+  // Detect hierarchy: does nav contain sub-item markers (↳ or ·)
+  const hasHierarchy = roleData.nav.some(item => item.label.includes('↳') || item.label.includes('·'));
+
+  if (!hasHierarchy) {
+    // Hide tree action buttons if flat
+    const treeActions = document.getElementById('sidebarTreeActions');
+    if (treeActions) treeActions.style.display = 'none';
+
+    // Flat navigation list
+    roleData.nav.forEach((item) => {
+      const navEl = document.createElement('a');
+      navEl.className = `nav-item ${item.id === targetSection ? 'active' : ''}`;
+      navEl.innerHTML = `<span class="nav-item-icon">${item.icon}</span> <span>${item.label}</span>`;
+      navEl.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item, .nav-group-header').forEach(n => n.classList.remove('active'));
+        navEl.classList.add('active');
+        renderSection(role, item.id);
+        closeMobileSidebar();
+      });
+      navContainer.appendChild(navEl);
     });
-    navContainer.appendChild(navEl);
-  });
+  } else {
+    // Show tree action buttons
+    const treeActions = document.getElementById('sidebarTreeActions');
+    if (treeActions) treeActions.style.display = 'flex';
+
+    // Build hierarchical collapsible tree
+    let currentGroupEl = null;
+    let currentSubList = null;
+
+    roleData.nav.forEach((item, index) => {
+      const isSub = item.label.includes('↳');
+      const isSubSub = item.label.includes('·');
+      const cleanLabel = item.label.replace(/^[\s↳·]+/, '').trim();
+
+      // Check if this item is a group root (has subsequent children with ↳)
+      const nextItem = roleData.nav[index + 1];
+      const isGroupRoot = !isSub && !isSubSub && nextItem && (nextItem.label.includes('↳') || nextItem.label.includes('·'));
+
+      if (isGroupRoot) {
+        // Create collapsible group
+        const groupEl = document.createElement('div');
+        groupEl.className = 'nav-group open';
+
+        const headerEl = document.createElement('div');
+        headerEl.className = `nav-group-header ${item.id === targetSection ? 'active' : ''}`;
+        headerEl.innerHTML = `
+          <span class="nav-group-title">
+            <span class="nav-item-icon">${item.icon}</span>
+            <span>${cleanLabel}</span>
+          </span>
+          <span class="nav-group-chevron" title="Expand/Collapse">▶</span>
+        `;
+
+        headerEl.addEventListener('click', (e) => {
+          e.preventDefault();
+          // If clicked chevron specifically, toggle group
+          if (e.target.classList.contains('nav-group-chevron')) {
+            groupEl.classList.toggle('open');
+            return;
+          }
+          // If clicked header title, toggle open and activate section
+          groupEl.classList.add('open');
+          document.querySelectorAll('.nav-item, .nav-group-header').forEach(n => n.classList.remove('active'));
+          headerEl.classList.add('active');
+          renderSection(role, item.id);
+          closeMobileSidebar();
+        });
+
+        // Chevron click handler
+        const chevron = headerEl.querySelector('.nav-group-chevron');
+        if (chevron) {
+          chevron.addEventListener('click', (e) => {
+            e.stopPropagation();
+            groupEl.classList.toggle('open');
+          });
+        }
+
+        const subList = document.createElement('div');
+        subList.className = 'nav-sub-list';
+
+        groupEl.appendChild(headerEl);
+        groupEl.appendChild(subList);
+        navContainer.appendChild(groupEl);
+
+        currentGroupEl = groupEl;
+        currentSubList = subList;
+      } else if (isSub || isSubSub) {
+        // Child or grandchild item
+        const navEl = document.createElement('a');
+        const levelClass = isSubSub ? 'level-2' : 'level-1';
+        navEl.className = `nav-item ${levelClass} ${item.id === targetSection ? 'active' : ''}`;
+        navEl.innerHTML = `<span class="nav-item-icon">${item.icon}</span> <span>${cleanLabel}</span>`;
+        navEl.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.nav-item, .nav-group-header').forEach(n => n.classList.remove('active'));
+          navEl.classList.add('active');
+          if (currentGroupEl) currentGroupEl.classList.add('open');
+          renderSection(role, item.id);
+          closeMobileSidebar();
+        });
+
+        if (item.id === targetSection && currentGroupEl) {
+          currentGroupEl.classList.add('open');
+        }
+
+        if (currentSubList) {
+          currentSubList.appendChild(navEl);
+        } else {
+          navContainer.appendChild(navEl);
+        }
+      } else {
+        // Standalone root item without children (e.g., enc-overview or enc-data-wishlist)
+        currentGroupEl = null;
+        currentSubList = null;
+
+        const navEl = document.createElement('a');
+        navEl.className = `nav-item ${item.id === targetSection ? 'active' : ''}`;
+        navEl.innerHTML = `<span class="nav-item-icon">${item.icon}</span> <span>${cleanLabel}</span>`;
+        navEl.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.nav-item, .nav-group-header').forEach(n => n.classList.remove('active'));
+          navEl.classList.add('active');
+          renderSection(role, item.id);
+          closeMobileSidebar();
+        });
+        navContainer.appendChild(navEl);
+      }
+    });
+  }
 
   renderSection(role, targetSection);
 }
@@ -5023,6 +5233,16 @@ function renderSection(role, sectionId) {
   // Re-bind LCD simulator if loaded
   if (sectionId === 'tech-simulator') {
     initLcdSimulator();
+  }
+
+  // Scroll content to top immediately while keeping sidebar scroll position completely intact
+  const contentArea = document.getElementById('contentArea');
+  if (contentArea) {
+    contentArea.scrollTop = 0;
+  }
+  const mainContainer = document.querySelector('.main-container');
+  if (mainContainer && window.scrollY > mainContainer.offsetTop - 130) {
+    window.scrollTo({ top: mainContainer.offsetTop - 130, behavior: 'instant' });
   }
 }
 

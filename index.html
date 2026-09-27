@@ -79,6 +79,11 @@
   <!-- Top Navbar -->
   <header class="navbar">
     <div class="nav-brand">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu" title="Menú">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
       <div class="logo-badge">K2 / EDEL</div>
       <div class="brand-titles">
         <span class="brand-name">EDELElevator Controller System</span>
@@ -105,6 +110,10 @@
           <span>🇬🇧</span> EN
         </button>
       </div>
+
+      <a href="#data-wishlist" class="tasks-badge-btn wishlist-badge-btn" id="dataWishlistBtn" title="Ver Hoja de Ruta y Datos Requeridos / View Needed Data Roadmap">
+        <span class="wishlist-icon">📥</span> <span id="dataWishlistText">Datos Requeridos</span>
+      </a>
 
       <a href="pending_tasks.md" target="_blank" class="tasks-badge-btn" id="pendingTasksLink" title="Ver Tareas de Ingeniería Pendientes">
         <span class="tasks-icon">📋</span> <span id="pendingTasksText">Tareas Pendientes</span>
@@ -157,11 +166,17 @@
 
   <!-- Main Workspace Layout -->
   <div class="main-container">
+    <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
     
     <!-- Sidebar Navigation -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebarElement">
       <div class="sidebar-header">
         <span class="sidebar-title" id="sidebarRoleTitle">Developer Documentation</span>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close Sidebar" title="Cerrar / Close">✕</button>
+      </div>
+      <div class="sidebar-tree-actions" id="sidebarTreeActions">
+        <button class="tree-action-btn" id="expandAllNavBtn" title="Desplegar todo / Expand all">▾ Expand All</button>
+        <button class="tree-action-btn" id="collapseAllNavBtn" title="Contraer todo / Collapse all">▸ Collapse</button>
       </div>
       <nav class="sidebar-nav" id="sidebarNav">
         <!-- Injected dynamically based on selected role -->
