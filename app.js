@@ -3,7 +3,7 @@
    ========================================================================== */
 
 // --- MENU DATA ENGINE FOR LCD SIMULATOR ---
-const menuTree = {
+const menuTree = (typeof window !== 'undefined' && window.fullMenuTree) ? window.fullMenuTree : {
   ES: [
     { title: "1 ESTADO ASC.", sub: [
       { title: "Firmware v0.6.2", detail: "Firmware Version: EDEL v0.6.2\nE2P Version: 0x0020\nTarget MCU: MC9S12XDT512" },
@@ -5233,6 +5233,9 @@ function renderSection(role, sectionId) {
   // Re-bind LCD simulator if loaded
   if (sectionId === 'tech-simulator') {
     initLcdSimulator();
+  }
+  if (role === 'tools' && typeof window.initInteractiveTools === 'function') {
+    window.initInteractiveTools(role, sectionId);
   }
 
   // Scroll content to top immediately while keeping sidebar scroll position completely intact
