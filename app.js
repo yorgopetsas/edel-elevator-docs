@@ -3530,6 +3530,258 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
           </div>
         </div>
       `,
+      "dev-can-matrix-crypto": `
+        <div class="doc-section">
+          <div class="doc-header">
+            <span class="badge badge-purple">Section 31</span>
+            <h1>31. Multi-Device CAN Frame Matrix, TokenCustom Cryptography & Server Deployment</h1>
+            <p>Comprehensive R&D engineering documentation detailing the complete CAN bus frame specifications across all 8 peripheral devices, the mathematical implementation of <code>Cifrado()</code> and polynomial CRC-8 (<code>0x1D</code>) licensing security, and the server validation and continuous deployment pipeline.</p>
+          
+            <div style="display:flex;gap:10px;margin-top:14px;">
+              <button onclick="window.openInteractiveTool('tool-can-checker')" class="action-btn-primary" style="background:linear-gradient(135deg,#0284c7,#06b6d4);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(2,132,199,0.35);">
+                <span>🔬</span> Open Interactive Frame Decoder & Topology Tool 5.10
+              </button>
+            </div>
+          </div>
+
+          <div class="callout callout-human">
+            <div class="callout-icon">🛰️</div>
+            <div class="callout-content">
+              <h4>System-Wide CAN Bus Telemetry & Cryptographic Verification Overview</h4>
+              <p>The EDEL elevator controller functions as a distributed real-time network. The central Mainboard (K2-64278 / K3-74278) coordinates multiple microcontrollers across the elevator car, landing floors, motor drive, and shaft encoder via isolated 250 kbps MSCAN buses. Every transmitted packet is verified cryptographically using rolling challenge-response counters and a CRC-8 polynomial engine (<code>TOKEN_POLY = 0x1D</code>) to guarantee safety certification compliance (EN 81-20/50) and completely prevent unauthorized board cloning or firmware tampering.</p>
+            </div>
+          </div>
+
+          <h2>1. Matriz Completa de Tramas por Dispositivo (All 8 Devices)</h2>
+          <p>The table below consolidates the exact message identifiers, frame types, and byte-by-byte payload architectures extracted directly from the authentic C firmware source codes in <code>P:\I+D\SOFTWARE\</code>:</p>
+
+          <div class="table-container">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th style="min-width:140px;">Device & Model</th>
+                  <th style="min-width:100px;">PCB Part #</th>
+                  <th style="min-width:160px;">Firmware Path</th>
+                  <th style="min-width:130px;">CAN ID & Direction</th>
+                  <th style="min-width:100px;">Type (Byte 0)</th>
+                  <th style="min-width:320px;">8-Byte Payload Structural Breakdown (DATA[0..7])</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Mainboard Master Controller</b></td>
+                  <td>K2-64278<br>K3-74278</td>
+                  <td><code>K2-64278\...\Sources\Cabina.c</code><br><code>Sources\Exterior.c</code></td>
+                  <td><code>$XBD</code> (0x24584244)<br><span class="badge" style="background:#0284c7;color:#fff;">Downlink TX</span><br><code>$XTR</code> (Landing TX)</td>
+                  <td>
+                    <code>0</code> = Normal<br>
+                    <code>1</code> = Special/Firma<br>
+                    <code>3</code> = Challenge<br>
+                    <code>7</code> = TokenCustom
+                  </td>
+                  <td>
+                    <b>Type 0 (Normal Status):</b> D0=<code>0</code> | D1=Door commands (A1/A2/CP/PP/TelOut) | D2=Floor index 0..31 + Arrows ⬆️⬇️ + Gong 🔔 | D3..D6=32-bit Car Call mask | D7=Audio triggers (Voice PA/CP/Reap/Mute).<br>
+                    <b>Type 1 (Special Modes):</b> D0=<code>1</code> | D1=Special flags (Retractable cam, Firefighters, Inspection, VIP) | D2=Target floor | D3=Speed (Fast/Slow) | D4=Level zone | D5..D6=Virtual Console.<br>
+                    <b>Type 3 (Challenge):</b> Dynamic rolling seed <code>TCNT</code> and <code>Cifrado()</code> verification.<br>
+                    <b>Type 7 (TokenCustom):</b> D0=<code>7</code> | D1=<code>ContadorCab ^ 0x5A</code> | D2..D3=<code>ContadorCab ^ TokenID</code> | D4=<code>CRC(0x1D, KSecretaCab, D1^D2^D3)</code>.
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Full Cabin Board</b></td>
+                  <td>K2-64290<br>(KRN / 64411C)</td>
+                  <td><code>K2-64290 (CABINA)\...\Sources\MSCan.c</code></td>
+                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
+                  <td><code>0</code> = Cabin Inputs</td>
+                  <td>
+                    <b>D0:</b> <code>0x00</code> (Frame Type 0).<br>
+                    <b>D1:</b> Digital inputs bitmask: Overload 110% (Borna 23), Inspection (26), Full Load 80% (28), Limit switch Close FCC (29), Limit switch Open FCA (30), Reopening button (31), Firefighter key (33), Close Door PB (34).<br>
+                    <b>D2:</b> Apron safety edge (35), Photocell light curtain 1, Photocell 2, Emergency phone button.<br>
+                    <b>D3..D6:</b> 32-bit registered car call buttons bitmask.<br>
+                    <b>D7:</b> TokenCustom rolling CRC byte <code>CRC(0x1D, KSecretaCab, 0x00 ^ ContadorCab)</code>.
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Cabin v2 ADVANCED</b></td>
+                  <td>K2-64291<br>(ADVANCED)</td>
+                  <td><code>K2-64291 (CABINA v2)\...\Sources\MSCAN.c</code></td>
+                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
+                  <td><code>5</code> = ADVANCED I/O</td>
+                  <td>
+                    <b>D0:</b> <code>0x05</code>.<br>
+                    <b>D1..D2:</b> High-density safety interlocks, car top inspection station switches, and safety gear status.<br>
+                    <b>D3..D6:</b> COP car call pushbuttons.<br>
+                    <b>D7:</b> Dynamic TokenCustom CRC byte.
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Modular COP BotCAN</b></td>
+                  <td>K2-64292<br>K2-64295</td>
+                  <td><code>K2-64292 (BOTCAN v2)\...\Sources\MSCAN.c</code></td>
+                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
+                  <td><code>4</code> = BotCAN Fixture</td>
+                  <td>
+                    <b>D0:</b> <code>0x04</code>.<br>
+                    <b>D1:</b> Bit 7=Master (1) / Slave (0) | Bit 0=Full load 80% | Bit 1=Reopening | Bit 2=Close Door PB | Bit 3=Firefighter key.<br>
+                    <b>D2:</b> Sub-ID index (<code>0x01</code>).<br>
+                    <b>D3..D4:</b> Decimal pushbuttons <code>PulsadoresDC</code> (floors P00..P15).<br>
+                    <b>D5..D6:</b> Decimal pushbuttons (floors P16..P31).<br>
+                    <b>D7:</b> Dynamic TokenCustom CRC byte <code>CRC(0x1D, KSecretaCab, 0x04 ^ Contador)</code>.
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Shaft Tape Position Encoder</b></td>
+                  <td>K2-64296<br>(EDELEncoder)</td>
+                  <td><code>K2-64296 (ENCODER)\...\Sources\MSCAN.c</code></td>
+                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
+                  <td>
+                    <code>2</code> = Position<br>
+                    <code>3</code> = Challenge Resp<br>
+                    <code>250</code> = Save Token ID
+                  </td>
+                  <td>
+                    <b>Type 2 (Telemetry):</b> D0=<code>0x02</code> | D1..D4=<b>32-bit signed absolute height in mm</b> (Byte 1 LSB .. Byte 4 MSB | sign) | D5..D6=<b>16-bit signed car speed in mm/s</b> (Byte 5 LSB, Byte 6 MSB) | D7=Discrete inputs (Zero zone FZP, FNI, FNS).<br>
+                    <b>Type 3:</b> Challenge-response signature verification status (<code>respFirma</code>).<br>
+                    <b>Type 250:</b> Token ID registration (D2..D3 = TokenID).
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Landing Indicator & Call Boards</b></td>
+                  <td>K2-64280<br>K2-64281 (mCAN-12)</td>
+                  <td><code>K2-64280 (EXTERIORES)\...\Sources\MSCAN.c</code></td>
+                  <td><code>$XTR</code> (Downlink)<br><code>$X01..$X3F</code> (Uplink)</td>
+                  <td>
+                    <code>$XTR</code> Types 0..3<br>
+                    <code>$Xnn</code> Call frames
+                  </td>
+                  <td>
+                    <b>Downlink $XTR:</b> D0=<code>(id_CAN&lt;&lt;3)|type</code> | D1..D4=32-bit landing call registration LEDs | D5=Floor index display | D6=Operating, Open door, Up, Down, Gong | D7=Display fault, Revision, Audio mute.<br>
+                    <b>Uplink $X01..$X3F:</b> D0=Bit 7 Firefighters | Bit 6 Up Call | Bit 5 Down Call | Bits 0..4 Floor number (0..31) | D7=TokenCustom CRC.
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Inverter Telemetry Gateway</b></td>
+                  <td>K2-64299<br>(iCOM)</td>
+                  <td><code>K2-64299 (iCOM)\...\source\MSCAN.c</code><br><code>CANOpenLift.c</code></td>
+                  <td>
+                    <code>$XBD</code> (RX)<br>
+                    <code>$XBN</code> / <code>$XBV</code> (TX)<br>
+                    <code>0x501/502/602</code> (Fuji)
+                  </td>
+                  <td>
+                    EDEL & CANopen Lift CiA 417
+                  </td>
+                  <td>
+                    <b>EDEL CAN Side:</b> RX <code>$XBD</code> (drive commands & Virtual Console keystrokes); TX <code>$XBN</code> (Fuji alarm code & drive status); TX <code>$XBV</code> (VT100 Virtual Console character matrix stream).<br>
+                    <b>Fuji CANopen Lift Side:</b> COB-ID <code>0x501</code> (Keystrokes: UP/DOWN/LEFT/RIGHT/OK); COB-ID <code>0x502</code> (Virtual Console character matrix <code>ESC E</code> Clear, <code>ESC Y</code> Cursor); COB-ID <code>0x602</code> (SDO: S14 reset, M14 status, X00 alarm, W10 detected speed).
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Multiplex Group Dispatcher</b></td>
+                  <td>K2-64275MX<br>(Duplex/Triplex)</td>
+                  <td><code>K2-64278\...\Sources\Multiple.c</code></td>
+                  <td><code>$M00..$M03</code><br><span class="badge" style="background:#8b5cf6;color:#fff;">Peer-to-Peer</span></td>
+                  <td><code>0..2</code> = Dispatch</td>
+                  <td>
+                    <b>Type 0:</b> D0=<code>0</code> | D1=Car current floor | D2=Next stopping floor | D3=Active fault code | D4=Car availability flag (0x80) | D5=Landing down call mask | D6..D7=Arbitration token.<br>
+                    <b>Type 1:</b> Up call mask, target assignment, motion direction.<br>
+                    <b>Type 2:</b> Asymmetric floor call mask.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>2. Especificación Criptográfica: TokenCustom, Cifrado() y CRC Polinómico</h2>
+          <p>The controller incorporates a multi-tier cryptographic hardware protection engine across the Mainboard and all CAN peripherals to enforce firmware licensing and prevent circuit board cloning:</p>
+
+          <h3>2.1. Mathematical Specification of Cifrado()</h3>
+          <p>Located in <code>Sources/LCD.c:2291</code> and <code>Sources/E2PROM.c</code>:</p>
+          <div class="code-block">
+unsigned short Cifrado(unsigned short inFirma, unsigned short inAleat, unsigned char inTipo)
+{	
+    const unsigned short RDM[8] = { 0, 7562, 57, 6555, 6433, 8990, 7803, 3113 };
+    unsigned char key;
+    unsigned short cifrado = 0;
+
+    if(!inTipo)	// Mode 0: PIN 1 / Current Signature Verification (Bits 3, 7, 11)
+    {
+        key = ((inAleat & 0x0008) >> 3) | ((inAleat & 0x0080) >> 6) | ((inAleat & 0x0800) >> 9);
+        inAleat = (inAleat & 0x0007) | ((inAleat & 0x0070) >> 1) | ((inAleat & 0x0700) >> 2) | ((inAleat & 0xF000) >> 3);
+    }
+    else        // Mode 1: PIN 2 / New Signature Generation (Bits 0, 4, 8)
+    {
+        key = (inAleat & 0x0001) | ((inAleat & 0x0010) >> 3) | ((inAleat & 0x0100) >> 6);
+        inAleat = ((inAleat & 0x000E) >> 1) | ((inAleat & 0x00E0) >> 2) | ((inAleat & 0xFE00) >> 3);
+    }
+    cifrado = inFirma ^ inAleat ^ RDM[key]; 	
+    return cifrado;
+}
+          </div>
+          <p><b>Non-Linear Permutation Mechanics:</b> In Mode 0, bits 3, 7, and 11 are isolated to form a 3-bit index <code>key ∈ [0..7]</code> into the pseudo-random matrix <code>RDM[8]</code>. The remaining bits of <code>inAleat</code> are shifted and compacted to eliminate linear algebraic predictability, before performing the 3-way XOR operation.</p>
+
+          <h3>2.2. The Polynomial CRC-8 Algorithm & Key Hierarchy</h3>
+          <p>Defined in <code>Sources/Defines.h:343</code> and executed in <code>Sources/Remote.c:82</code>:</p>
+          <div class="code-block">
+#define TOKEN_POLY          0x1D    // CRC-8-SAE J1850 ($x^8 + x^4 + x^3 + x^2 + 1$)
+#define TOKEN_KMASTER_CAB   0x6D    // Master Root Key for Cabin Bus
+#define TOKEN_KMASTER_EXT   0x3B    // Master Root Key for Landing Bus
+#define TOKEN_KAUX_CAB      0x5A    // Alternating synchronization XOR pattern
+#define TOKEN_KAUX_EXT      0xA5    // Complementary synchronization XOR pattern
+#define TOKEN_RxWINDOW      5       // Anti-replay sliding window tolerance
+
+unsigned char CRC(unsigned char inPoly, unsigned char inInit, unsigned char inData)
+{
+    unsigned char i, poly;
+    for(i=0; i<8; i++) {
+        poly = ((inData ^ inInit) & 0x80) ? inPoly : 0;
+        inInit <<= 1;
+        inInit = (inInit ^ poly);
+        inData <<= 1;
+    }
+    return inInit;
+}
+          </div>
+
+          <h3>2.3. Secret Key Derivation & Live Dynamic Challenge</h3>
+          <p>During MCU startup (<code>Sources/main.c:10827</code>), the unique 16-bit installation identifier (<code>TOKEN_ID</code>) is hashed against the master root keys:</p>
+          <div class="code-block">
+TokenCustom.KSecretaCab = CRC(TOKEN_POLY, TOKEN_KMASTER_CAB, (TOKEN_ID >> 8) ^ (TOKEN_ID & 0xFF));
+TokenCustom.KSecretaExt = CRC(TOKEN_POLY, TOKEN_KMASTER_EXT, (TOKEN_ID >> 8) ^ (TOKEN_ID & 0xFF));
+          </div>
+          <p><b>Live CAN Handshake:</b> The Master broadcasts Downlink Frame 7 every 500ms with <code>DATA[1] = Contador ^ 0x5A</code>, <code>DATA[2..3] = Contador ^ TOKEN_ID</code>, and <code>DATA[4] = CRC(...)</code>. Every peripheral node seals its uplink transmission with <code>DATA[7] = CRC(0x1D, KSecreta, TipoTrama ^ Contador)</code>. The Master verifies this within a 5-frame sliding window (<code>TOKEN_RxWINDOW = 5</code>), rejecting unauthorized boards with <code>INCOMPATIBILIDAD FIRMA</code>.</p>
+
+          <h2>3. Validación y Despliegue en Servidor (CI/CD Pipeline)</h2>
+          <p>To ensure 100% technical accuracy, continuous availability, and rapid deployment of documentation updates, the portal operates under an automated 5-stage deployment pipeline:</p>
+
+          <div class="card-grid">
+            <div class="card">
+              <h3>1. Pre-Commit Syntax Validation</h3>
+              <p>Every JavaScript and Python file undergoes automated syntax verification before staging using <code>node -c app.js</code>, <code>node -c data_es.js</code>, <code>node -c encyclopedia.js</code>, and <code>node -c interactive_tools.js</code>, guaranteeing zero syntax errors.</p>
+            </div>
+            <div class="card">
+              <h3>2. Mirror Synchronization</h3>
+              <p>Source files in the primary repository are synchronized to the local standalone deployment repository (<code>C:\Users\ecommerce\envz\elevator-encyclopedia\</code>) via automated PowerShell scripts, maintaining directory structure and binary asset integrity.</p>
+            </div>
+            <div class="card">
+              <h3>3. Git Commit & Push Pipeline</h3>
+              <p>Changes are committed with descriptive, atomic commit messages and pushed upstream to the official GitHub Pages remote repository (<code>https://github.com/yorgopetsas/edel-elevator-docs.git</code>) on branch <code>main</code>.</p>
+            </div>
+            <div class="card">
+              <h3>4. GitHub Pages Static Build</h3>
+              <p>GitHub Actions automatically triggers a static deployment build. The web portal is hosted globally on GitHub's CDN at <code>https://yorgopetsas.github.io/edel-elevator-docs/</code> with SSL encryption and HTTP/2 acceleration.</p>
+            </div>
+            <div class="card">
+              <h3>5. Local Static Server (server.js)</h3>
+              <p>For factory bench computers and offline field laptops, a local Node.js static server (<code>server.js</code>) serves the entire application at <code>http://localhost:3000</code> with zero external internet dependencies.</p>
+            </div>
+            <div class="card">
+              <h3>6. Browser Subagent Verification</h3>
+              <p>Autonomous browser subagents execute live end-to-end testing with cache-busting query strings (<code>?v=commit_hash</code>), confirming DOM rendering, interactive tools, search indexing, and mobile responsiveness.</p>
+            </div>
+          </div>
+        </div>
+
+      `
     }
   },
   tech: {
@@ -4815,259 +5067,7 @@ const roleLocalization = {
     dev: {
       title: "1. Portal de Desarrollo e I+D",
       desc: "Arquitectura del Código, Módulos y Máquinas de Estado",
-      sidebar: "Documentación para Desarrolladores",
-      "dev-can-matrix-crypto": `
-        <div class="doc-section">
-          <div class="doc-header">
-            <span class="badge badge-purple">Section 31</span>
-            <h1>31. Multi-Device CAN Frame Matrix, TokenCustom Cryptography & Server Deployment</h1>
-            <p>Comprehensive R&D engineering documentation detailing the complete CAN bus frame specifications across all 8 peripheral devices, the mathematical implementation of <code>Cifrado()</code> and polynomial CRC-8 (<code>0x1D</code>) licensing security, and the server validation and continuous deployment pipeline.</p>
-          
-            <div style="display:flex;gap:10px;margin-top:14px;">
-              <button onclick="window.openInteractiveTool('tool-can-checker')" class="action-btn-primary" style="background:linear-gradient(135deg,#0284c7,#06b6d4);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(2,132,199,0.35);">
-                <span>🔬</span> Open Interactive Frame Decoder & Topology Tool 5.10
-              </button>
-            </div>
-          </div>
-
-          <div class="callout callout-human">
-            <div class="callout-icon">🛰️</div>
-            <div class="callout-content">
-              <h4>System-Wide CAN Bus Telemetry & Cryptographic Verification Overview</h4>
-              <p>The EDEL elevator controller functions as a distributed real-time network. The central Mainboard (K2-64278 / K3-74278) coordinates multiple microcontrollers across the elevator car, landing floors, motor drive, and shaft encoder via isolated 250 kbps MSCAN buses. Every transmitted packet is verified cryptographically using rolling challenge-response counters and a CRC-8 polynomial engine (<code>TOKEN_POLY = 0x1D</code>) to guarantee safety certification compliance (EN 81-20/50) and completely prevent unauthorized board cloning or firmware tampering.</p>
-            </div>
-          </div>
-
-          <h2>1. Matriz Completa de Tramas por Dispositivo (All 8 Devices)</h2>
-          <p>The table below consolidates the exact message identifiers, frame types, and byte-by-byte payload architectures extracted directly from the authentic C firmware source codes in <code>P:\I+D\SOFTWARE\</code>:</p>
-
-          <div class="table-container">
-            <table class="doc-table">
-              <thead>
-                <tr>
-                  <th style="min-width:140px;">Device & Model</th>
-                  <th style="min-width:100px;">PCB Part #</th>
-                  <th style="min-width:160px;">Firmware Path</th>
-                  <th style="min-width:130px;">CAN ID & Direction</th>
-                  <th style="min-width:100px;">Type (Byte 0)</th>
-                  <th style="min-width:320px;">8-Byte Payload Structural Breakdown (DATA[0..7])</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><b>Mainboard Master Controller</b></td>
-                  <td>K2-64278<br>K3-74278</td>
-                  <td><code>K2-64278\...\Sources\Cabina.c</code><br><code>Sources\Exterior.c</code></td>
-                  <td><code>$XBD</code> (0x24584244)<br><span class="badge" style="background:#0284c7;color:#fff;">Downlink TX</span><br><code>$XTR</code> (Landing TX)</td>
-                  <td>
-                    <code>0</code> = Normal<br>
-                    <code>1</code> = Special/Firma<br>
-                    <code>3</code> = Challenge<br>
-                    <code>7</code> = TokenCustom
-                  </td>
-                  <td>
-                    <b>Type 0 (Normal Status):</b> D0=<code>0</code> | D1=Door commands (A1/A2/CP/PP/TelOut) | D2=Floor index 0..31 + Arrows ⬆️⬇️ + Gong 🔔 | D3..D6=32-bit Car Call mask | D7=Audio triggers (Voice PA/CP/Reap/Mute).<br>
-                    <b>Type 1 (Special Modes):</b> D0=<code>1</code> | D1=Special flags (Retractable cam, Firefighters, Inspection, VIP) | D2=Target floor | D3=Speed (Fast/Slow) | D4=Level zone | D5..D6=Virtual Console.<br>
-                    <b>Type 3 (Challenge):</b> Dynamic rolling seed <code>TCNT</code> and <code>Cifrado()</code> verification.<br>
-                    <b>Type 7 (TokenCustom):</b> D0=<code>7</code> | D1=<code>ContadorCab ^ 0x5A</code> | D2..D3=<code>ContadorCab ^ TokenID</code> | D4=<code>CRC(0x1D, KSecretaCab, D1^D2^D3)</code>.
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Full Cabin Board</b></td>
-                  <td>K2-64290<br>(KRN / 64411C)</td>
-                  <td><code>K2-64290 (CABINA)\...\Sources\MSCan.c</code></td>
-                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
-                  <td><code>0</code> = Cabin Inputs</td>
-                  <td>
-                    <b>D0:</b> <code>0x00</code> (Frame Type 0).<br>
-                    <b>D1:</b> Digital inputs bitmask: Overload 110% (Borna 23), Inspection (26), Full Load 80% (28), Limit switch Close FCC (29), Limit switch Open FCA (30), Reopening button (31), Firefighter key (33), Close Door PB (34).<br>
-                    <b>D2:</b> Apron safety edge (35), Photocell light curtain 1, Photocell 2, Emergency phone button.<br>
-                    <b>D3..D6:</b> 32-bit registered car call buttons bitmask.<br>
-                    <b>D7:</b> TokenCustom rolling CRC byte <code>CRC(0x1D, KSecretaCab, 0x00 ^ ContadorCab)</code>.
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Cabin v2 ADVANCED</b></td>
-                  <td>K2-64291<br>(ADVANCED)</td>
-                  <td><code>K2-64291 (CABINA v2)\...\Sources\MSCAN.c</code></td>
-                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
-                  <td><code>5</code> = ADVANCED I/O</td>
-                  <td>
-                    <b>D0:</b> <code>0x05</code>.<br>
-                    <b>D1..D2:</b> High-density safety interlocks, car top inspection station switches, and safety gear status.<br>
-                    <b>D3..D6:</b> COP car call pushbuttons.<br>
-                    <b>D7:</b> Dynamic TokenCustom CRC byte.
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Modular COP BotCAN</b></td>
-                  <td>K2-64292<br>K2-64295</td>
-                  <td><code>K2-64292 (BOTCAN v2)\...\Sources\MSCAN.c</code></td>
-                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
-                  <td><code>4</code> = BotCAN Fixture</td>
-                  <td>
-                    <b>D0:</b> <code>0x04</code>.<br>
-                    <b>D1:</b> Bit 7=Master (1) / Slave (0) | Bit 0=Full load 80% | Bit 1=Reopening | Bit 2=Close Door PB | Bit 3=Firefighter key.<br>
-                    <b>D2:</b> Sub-ID index (<code>0x01</code>).<br>
-                    <b>D3..D4:</b> Decimal pushbuttons <code>PulsadoresDC</code> (floors P00..P15).<br>
-                    <b>D5..D6:</b> Decimal pushbuttons (floors P16..P31).<br>
-                    <b>D7:</b> Dynamic TokenCustom CRC byte <code>CRC(0x1D, KSecretaCab, 0x04 ^ Contador)</code>.
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Shaft Tape Position Encoder</b></td>
-                  <td>K2-64296<br>(EDELEncoder)</td>
-                  <td><code>K2-64296 (ENCODER)\...\Sources\MSCAN.c</code></td>
-                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
-                  <td>
-                    <code>2</code> = Position<br>
-                    <code>3</code> = Challenge Resp<br>
-                    <code>250</code> = Save Token ID
-                  </td>
-                  <td>
-                    <b>Type 2 (Telemetry):</b> D0=<code>0x02</code> | D1..D4=<b>32-bit signed absolute height in mm</b> (Byte 1 LSB .. Byte 4 MSB | sign) | D5..D6=<b>16-bit signed car speed in mm/s</b> (Byte 5 LSB, Byte 6 MSB) | D7=Discrete inputs (Zero zone FZP, FNI, FNS).<br>
-                    <b>Type 3:</b> Challenge-response signature verification status (<code>respFirma</code>).<br>
-                    <b>Type 250:</b> Token ID registration (D2..D3 = TokenID).
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Landing Indicator & Call Boards</b></td>
-                  <td>K2-64280<br>K2-64281 (mCAN-12)</td>
-                  <td><code>K2-64280 (EXTERIORES)\...\Sources\MSCAN.c</code></td>
-                  <td><code>$XTR</code> (Downlink)<br><code>$X01..$X3F</code> (Uplink)</td>
-                  <td>
-                    <code>$XTR</code> Types 0..3<br>
-                    <code>$Xnn</code> Call frames
-                  </td>
-                  <td>
-                    <b>Downlink $XTR:</b> D0=<code>(id_CAN&lt;&lt;3)|type</code> | D1..D4=32-bit landing call registration LEDs | D5=Floor index display | D6=Operating, Open door, Up, Down, Gong | D7=Display fault, Revision, Audio mute.<br>
-                    <b>Uplink $X01..$X3F:</b> D0=Bit 7 Firefighters | Bit 6 Up Call | Bit 5 Down Call | Bits 0..4 Floor number (0..31) | D7=TokenCustom CRC.
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Inverter Telemetry Gateway</b></td>
-                  <td>K2-64299<br>(iCOM)</td>
-                  <td><code>K2-64299 (iCOM)\...\source\MSCAN.c</code><br><code>CANOpenLift.c</code></td>
-                  <td>
-                    <code>$XBD</code> (RX)<br>
-                    <code>$XBN</code> / <code>$XBV</code> (TX)<br>
-                    <code>0x501/502/602</code> (Fuji)
-                  </td>
-                  <td>
-                    EDEL & CANopen Lift CiA 417
-                  </td>
-                  <td>
-                    <b>EDEL CAN Side:</b> RX <code>$XBD</code> (drive commands & Virtual Console keystrokes); TX <code>$XBN</code> (Fuji alarm code & drive status); TX <code>$XBV</code> (VT100 Virtual Console character matrix stream).<br>
-                    <b>Fuji CANopen Lift Side:</b> COB-ID <code>0x501</code> (Keystrokes: UP/DOWN/LEFT/RIGHT/OK); COB-ID <code>0x502</code> (Virtual Console character matrix <code>ESC E</code> Clear, <code>ESC Y</code> Cursor); COB-ID <code>0x602</code> (SDO: S14 reset, M14 status, X00 alarm, W10 detected speed).
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Multiplex Group Dispatcher</b></td>
-                  <td>K2-64275MX<br>(Duplex/Triplex)</td>
-                  <td><code>K2-64278\...\Sources\Multiple.c</code></td>
-                  <td><code>$M00..$M03</code><br><span class="badge" style="background:#8b5cf6;color:#fff;">Peer-to-Peer</span></td>
-                  <td><code>0..2</code> = Dispatch</td>
-                  <td>
-                    <b>Type 0:</b> D0=<code>0</code> | D1=Car current floor | D2=Next stopping floor | D3=Active fault code | D4=Car availability flag (0x80) | D5=Landing down call mask | D6..D7=Arbitration token.<br>
-                    <b>Type 1:</b> Up call mask, target assignment, motion direction.<br>
-                    <b>Type 2:</b> Asymmetric floor call mask.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h2>2. Especificación Criptográfica: TokenCustom, Cifrado() y CRC Polinómico</h2>
-          <p>The controller incorporates a multi-tier cryptographic hardware protection engine across the Mainboard and all CAN peripherals to enforce firmware licensing and prevent circuit board cloning:</p>
-
-          <h3>2.1. Mathematical Specification of Cifrado()</h3>
-          <p>Located in <code>Sources/LCD.c:2291</code> and <code>Sources/E2PROM.c</code>:</p>
-          <div class="code-block">
-unsigned short Cifrado(unsigned short inFirma, unsigned short inAleat, unsigned char inTipo)
-{	
-    const unsigned short RDM[8] = { 0, 7562, 57, 6555, 6433, 8990, 7803, 3113 };
-    unsigned char key;
-    unsigned short cifrado = 0;
-
-    if(!inTipo)	// Mode 0: PIN 1 / Current Signature Verification (Bits 3, 7, 11)
-    {
-        key = ((inAleat & 0x0008) >> 3) | ((inAleat & 0x0080) >> 6) | ((inAleat & 0x0800) >> 9);
-        inAleat = (inAleat & 0x0007) | ((inAleat & 0x0070) >> 1) | ((inAleat & 0x0700) >> 2) | ((inAleat & 0xF000) >> 3);
-    }
-    else        // Mode 1: PIN 2 / New Signature Generation (Bits 0, 4, 8)
-    {
-        key = (inAleat & 0x0001) | ((inAleat & 0x0010) >> 3) | ((inAleat & 0x0100) >> 6);
-        inAleat = ((inAleat & 0x000E) >> 1) | ((inAleat & 0x00E0) >> 2) | ((inAleat & 0xFE00) >> 3);
-    }
-    cifrado = inFirma ^ inAleat ^ RDM[key]; 	
-    return cifrado;
-}
-          </div>
-          <p><b>Non-Linear Permutation Mechanics:</b> In Mode 0, bits 3, 7, and 11 are isolated to form a 3-bit index <code>key ∈ [0..7]</code> into the pseudo-random matrix <code>RDM[8]</code>. The remaining bits of <code>inAleat</code> are shifted and compacted to eliminate linear algebraic predictability, before performing the 3-way XOR operation.</p>
-
-          <h3>2.2. The Polynomial CRC-8 Algorithm & Key Hierarchy</h3>
-          <p>Defined in <code>Sources/Defines.h:343</code> and executed in <code>Sources/Remote.c:82</code>:</p>
-          <div class="code-block">
-#define TOKEN_POLY          0x1D    // CRC-8-SAE J1850 ($x^8 + x^4 + x^3 + x^2 + 1$)
-#define TOKEN_KMASTER_CAB   0x6D    // Master Root Key for Cabin Bus
-#define TOKEN_KMASTER_EXT   0x3B    // Master Root Key for Landing Bus
-#define TOKEN_KAUX_CAB      0x5A    // Alternating synchronization XOR pattern
-#define TOKEN_KAUX_EXT      0xA5    // Complementary synchronization XOR pattern
-#define TOKEN_RxWINDOW      5       // Anti-replay sliding window tolerance
-
-unsigned char CRC(unsigned char inPoly, unsigned char inInit, unsigned char inData)
-{
-    unsigned char i, poly;
-    for(i=0; i<8; i++) {
-        poly = ((inData ^ inInit) & 0x80) ? inPoly : 0;
-        inInit <<= 1;
-        inInit = (inInit ^ poly);
-        inData <<= 1;
-    }
-    return inInit;
-}
-          </div>
-
-          <h3>2.3. Secret Key Derivation & Live Dynamic Challenge</h3>
-          <p>During MCU startup (<code>Sources/main.c:10827</code>), the unique 16-bit installation identifier (<code>TOKEN_ID</code>) is hashed against the master root keys:</p>
-          <div class="code-block">
-TokenCustom.KSecretaCab = CRC(TOKEN_POLY, TOKEN_KMASTER_CAB, (TOKEN_ID >> 8) ^ (TOKEN_ID & 0xFF));
-TokenCustom.KSecretaExt = CRC(TOKEN_POLY, TOKEN_KMASTER_EXT, (TOKEN_ID >> 8) ^ (TOKEN_ID & 0xFF));
-          </div>
-          <p><b>Live CAN Handshake:</b> The Master broadcasts Downlink Frame 7 every 500ms with <code>DATA[1] = Contador ^ 0x5A</code>, <code>DATA[2..3] = Contador ^ TOKEN_ID</code>, and <code>DATA[4] = CRC(...)</code>. Every peripheral node seals its uplink transmission with <code>DATA[7] = CRC(0x1D, KSecreta, TipoTrama ^ Contador)</code>. The Master verifies this within a 5-frame sliding window (<code>TOKEN_RxWINDOW = 5</code>), rejecting unauthorized boards with <code>INCOMPATIBILIDAD FIRMA</code>.</p>
-
-          <h2>3. Validación y Despliegue en Servidor (CI/CD Pipeline)</h2>
-          <p>To ensure 100% technical accuracy, continuous availability, and rapid deployment of documentation updates, the portal operates under an automated 5-stage deployment pipeline:</p>
-
-          <div class="card-grid">
-            <div class="card">
-              <h3>1. Pre-Commit Syntax Validation</h3>
-              <p>Every JavaScript and Python file undergoes automated syntax verification before staging using <code>node -c app.js</code>, <code>node -c data_es.js</code>, <code>node -c encyclopedia.js</code>, and <code>node -c interactive_tools.js</code>, guaranteeing zero syntax errors.</p>
-            </div>
-            <div class="card">
-              <h3>2. Mirror Synchronization</h3>
-              <p>Source files in the primary repository are synchronized to the local standalone deployment repository (<code>C:\Users\ecommerce\envz\elevator-encyclopedia\</code>) via automated PowerShell scripts, maintaining directory structure and binary asset integrity.</p>
-            </div>
-            <div class="card">
-              <h3>3. Git Commit & Push Pipeline</h3>
-              <p>Changes are committed with descriptive, atomic commit messages and pushed upstream to the official GitHub Pages remote repository (<code>https://github.com/yorgopetsas/edel-elevator-docs.git</code>) on branch <code>main</code>.</p>
-            </div>
-            <div class="card">
-              <h3>4. GitHub Pages Static Build</h3>
-              <p>GitHub Actions automatically triggers a static deployment build. The web portal is hosted globally on GitHub's CDN at <code>https://yorgopetsas.github.io/edel-elevator-docs/</code> with SSL encryption and HTTP/2 acceleration.</p>
-            </div>
-            <div class="card">
-              <h3>5. Local Static Server (server.js)</h3>
-              <p>For factory bench computers and offline field laptops, a local Node.js static server (<code>server.js</code>) serves the entire application at <code>http://localhost:3000</code> with zero external internet dependencies.</p>
-            </div>
-            <div class="card">
-              <h3>6. Browser Subagent Verification</h3>
-              <p>Autonomous browser subagents execute live end-to-end testing with cache-busting query strings (<code>?v=commit_hash</code>), confirming DOM rendering, interactive tools, search indexing, and mobile responsiveness.</p>
-            </div>
-          </div>
-        </div>
-
-      `
+      sidebar: "Documentación para Desarrolladores"
     },
     tech: {
       title: "2. Soporte Técnico Interno EDEL",
