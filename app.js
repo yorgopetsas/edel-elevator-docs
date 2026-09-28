@@ -4870,6 +4870,7 @@ const roleLocalization = {
 document.addEventListener('DOMContentLoaded', () => {
   setupLanguageSwitchers();
   setupRoleSwitchers();
+  setupWishlistIntegration();
   setupThemeToggle();
   setupSearch();
   setupMobileMenu();
@@ -5014,6 +5015,31 @@ function setLanguage(lang, reloadContent = true) {
 }
 
 // --- ROLE SWITCHING ---
+
+// --- WISHLIST BUTTON & HASH LISTENER ---
+function setupWishlistIntegration() {
+  const btn = document.getElementById('dataWishlistBtn');
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadRole('encyclopedia', 'enc-data-wishlist');
+      closeMobileSidebar();
+      const contentArea = document.getElementById('contentArea');
+      if (contentArea) contentArea.scrollTop = 0;
+    });
+  }
+
+  // Handle hash change or direct hash on load
+  const handleWishlistHash = () => {
+    if (window.location.hash === '#data-wishlist' || window.location.hash === '#enc-data-wishlist') {
+      loadRole('encyclopedia', 'enc-data-wishlist');
+    }
+  };
+
+  window.addEventListener('hashchange', handleWishlistHash);
+  setTimeout(handleWishlistHash, 300);
+}
+
 function setupRoleSwitchers() {
   document.querySelectorAll('.role-btn').forEach(btn => {
     btn.addEventListener('click', () => {

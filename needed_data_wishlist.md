@@ -76,7 +76,21 @@ To achieve **100% engineering completeness, field troubleshooting depth, and fac
 
 ---
 
-## 7. Submission Instructions & Integration Workflow
+## 7. Interactive Field Engineering Tools Data Wishlist (*Datos Específicos para Herramientas Interactivas*)
+
+| Item Code | Interactive Tool Target | Requested Engineering Data / Files | Field Utility & Planned Enhancement |
+| :--- | :--- | :--- | :--- |
+| **DOC-I01** | **Tool 5.6: Calculador de Banderas y Deceleración** | Official mechanical drawings of EDEL magnetic sensor brackets; reed switch vs. bistable sensor datasheets (`PSUP`, `PINF`, `FZP`); standard magnet lengths (150mm, 200mm, 250mm). | Automatically displays exact mounting bracket screw offsets, part numbers, and overlap margins for door pre-opening compliance under EN 81-20 / A3. |
+| **DOC-I02** | **Tool 5.7: Generador de Parámetros Fuji Frenic-Lift** | Factory `.fnc` or `.prm` parameter backup files from real EDEL commissioning jobs with Montanari (e.g. MGV25), Alberto Sassi (MF48), and Ziehl-Abegg machines, including encoder auto-tuning results. | Adds 1-click machine presets to instantly populate motor inertia, rated slip, no-load current, and verified zero-speed anti-rollback gains (`L65`–`L73`). |
+| **DOC-I03** | **Tool 5.8: Rastreador de Serie de Seguridad EN 81-20** | Detailed multi-wire schematics for the K2 Door/Landing Lock Bypass Unit (*Bypass de Puertas / Cerrojos de Rellano para Mantenimiento*) according to EN 81-20 §5.12.1.8. | Implements interactive bypass switch simulation mode for field technicians performing pit or roof maintenance. |
+| **DOC-I04** | **Tool 5.9: Optimizador de Tiempos Hidráulicos K3** | Factory tuning guideline sheets and valve block adjustment screw tables (screws 1 to 5) for **GMV 3010** and **Blain EV100** hydraulic units. | Injects screw-by-screw adjustment steps and bypass valve flow regulation directly into the live chronogram troubleshooting tab. |
+| **DOC-I05** | **Tool 5.10: Comprobador de Red CAN Bus e Impedancia** | CAN baud rate and message ID mapping tables for third-party landing indicators and Car Operating Panels (COP) such as **DMG, Vega, and Avire**. | Injects third-party pinout guides and baud rate mismatch warnings to prevent `Avería F53/F54` on retrofit installations. |
+| **DOC-I06** | **Tool 5.11: Asistente de Calibración de Pesacargas** | Installation manuals, wire color codes, and internal DIP switch tables for EDEL-supplied load weighing units (**Dinacell OMEGA**, **MICELECT LM-3D**, and **K2-64296**). | Displays exact wire terminal colors (Excitation, Signal, Shield) and sensor zero-drift compensation instructions. |
+| **DOC-I07** | **Tool 5.12: Protocolo de Primera Puesta en Marcha** | Official EDEL internal Quality Assurance (QA) and Field Commissioning sign-off template (*Acta Oficial de Puesta en Marcha y Entrega de Obra*). | Customizes the printable PDF checklist layout to match the official company paperwork with installer, building inspector, and supervisor signature fields. |
+
+---
+
+## 8. Submission Instructions & Integration Workflow
 
 When you have any of the above materials available:
 1. **File Locations**: Place documents, parameter sheets, or photos directly in the project folder or provide the file paths (e.g., in `P:\I+D\...` or local folders).
@@ -84,4 +98,4 @@ When you have any of the above materials available:
    * Parse parameters, schematics, and pinouts.
    * Generate interactive comparison tables and high-resolution visual diagrams.
    * Update both English and Spanish documentation datasets in real-time.
-   * Link all fault codes and console menus directly to the newly provided schematics.
+   * Link all fault codes, console menus, and interactive engineering tools directly to the newly provided schematics.
