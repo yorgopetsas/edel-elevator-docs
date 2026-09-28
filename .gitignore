@@ -5,3 +5,13 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+dump_*
+scratch_*
+apply_matrix*.js
+expand_en_matrix.js
+add_norm*.py
+append_norm*.py
+build_full_interactive_tools.py
+check_tools.py
+run_apply.py
+
