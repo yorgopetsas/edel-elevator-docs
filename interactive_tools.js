@@ -177,7 +177,8 @@
       { id: "tool-k3-hydraulic", label: "🛗 5.9 Optimizador de Válvulas Hidráulicas K3", icon: "🛗" },
       { id: "tool-can-checker", label: "🔌 5.10 Comprobador de Red CAN e Impedancia", icon: "🔌" },
       { id: "tool-load-weigher", label: "⚖️ 5.11 Asistente de Calibración de Pesacargas", icon: "⚖️" },
-      { id: "tool-commissioning", label: "📋 5.12 Protocolo de Primera Puesta en Marcha", icon: "📋" }
+      { id: "tool-commissioning", label: "📋 5.12 Protocolo de Primera Puesta en Marcha", icon: "📋" },
+      { id: "tool-norm-checker", label: "⚖️ 5.13 Selector de Normativa y Verificador de Conformidad (EN 81-20 / A3 / Legacy)", icon: "⚖️" }
     ],
     EN: [
       { id: "tool-dip", label: "🎛️ 5.1 Interactive DIP Switch Addressing Calculator", icon: "🎛️" },
@@ -191,7 +192,8 @@
       { id: "tool-k3-hydraulic", label: "🛗 5.9 K3 Hydraulic Valve & Timing Optimizer", icon: "🛗" },
       { id: "tool-can-checker", label: "🔌 5.10 CAN Bus Topology & Impedance Checker", icon: "🔌" },
       { id: "tool-load-weigher", label: "⚖️ 5.11 Load Weigher Calibration Wizard", icon: "⚖️" },
-      { id: "tool-commissioning", label: "📋 5.12 First-Power-On Commissioning Wizard", icon: "📋" }
+      { id: "tool-commissioning", label: "📋 5.12 First-Power-On Commissioning Wizard", icon: "📋" },
+      { id: "tool-norm-checker", label: "⚖️ 5.13 Normative Selector & Compliance Checker (EN 81-20 / A3 / Legacy)", icon: "⚖️" }
     ]
   };
 
@@ -1168,6 +1170,152 @@
 </div>`;
   }
 
+
+  // --- 3.13 TOOL 5.13: NORMATIVE SELECTOR & COMPLIANCE CHECKER HTML ---
+  function getNormativeCheckerHtml(lang) {
+    const isEs = lang === 'ES';
+    return `
+<div class="doc-section" id="tool-norm-checker-app">
+  <div class="doc-header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+      <div>
+        <span class="badge badge-purple">${isEs ? 'Herramienta Interactiva 5.13' : 'Interactive Tool 5.13'}</span>
+        <h1 style="margin:8px 0 6px 0;font-size:1.85rem;color:var(--text-primary);">⚖️ ${isEs ? 'Selector de Normativa y Verificador de Conformidad' : 'Normative Selector & Regulatory Compliance Checker'}</h1>
+        <p style="color:var(--text-secondary);font-size:0.95rem;max-width:880px;margin:0;">
+          ${isEs
+            ? 'Herramienta técnica para seleccionar el estándar aplicable (EN 81-20, EN 81-2+A3, Clásico o Industrial), el tipo de máquina y el mercado del cliente. Calcula instantáneamente la lista de componentes hardware obligatorios, los parámetros K2 en consola y los 9 protocolos oficiales de test para la inspección.'
+            : 'Engineering tool to select the applicable standard (EN 81-20, EN 81-2+A3, Legacy, or Industrial), drive type, and client market scope. Instantly computes mandatory safety hardware, K2 console parameters, and generates the 9 official factory test procedures for certification.'}
+        </p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="dip-preset-btn" onclick="openEncyclopediaNormMatrix()">
+          <span>📖</span> ${isEs ? 'Ver Matriz Teórica Completa' : 'View Full Regulation Matrix'}
+        </button>
+        <button class="print-btn-field" onclick="printNormAuditReport()" style="padding:8px 16px;font-size:0.85rem;">
+          <span>🖨️</span> ${isEs ? 'Imprimir Acta de Inspección' : 'Print Inspection Protocol'}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selector Panel (4 Dropdowns) -->
+  <div class="tool-controls-panel" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;padding:20px;margin:22px 0;">
+    <h3 style="margin:0 0 16px 0;color:var(--accent-cyan);font-size:1.1rem;display:flex;align-items:center;gap:8px;">
+      <span>🎛️</span> ${isEs ? 'Parámetros de Entrada de la Instalación' : 'Installation Configuration Inputs'}
+    </h3>
+    
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
+      <!-- Input 1: Directive / Tier -->
+      <div class="tool-input-group">
+        <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);display:block;margin-bottom:6px;">
+          ${isEs ? '1. Directiva / Normativa Objetivo' : '1. Target Directive / Standard'}
+        </label>
+        <select id="normDirectiveSelect" class="tool-select" onchange="handleNormativeChange()" style="width:100%;padding:10px;background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-color);border-radius:6px;font-size:0.88rem;">
+          <option value="tier3" selected>${isEs ? 'UNE-EN 81-20:2014+ / EN 81-50 (Obra Nueva UE)' : 'EN 81-20:2014+ / EN 81-50 (New EU Lifts - CE)'}</option>
+          <option value="tier2">${isEs ? 'UNE-EN 81-1/2 + A3:2010 (UCM / Modernización)' : 'EN 81-1/2 + Amendment A3:2010 (UCM Modernization)'}</option>
+          <option value="tier1">${isEs ? 'UNE-EN 81-1:1998 / EN 81-2:2001 (Clásico Pre-A3)' : 'EN 81-1:1998 / EN 81-2:2001 (Legacy Pre-A3)'}</option>
+          <option value="tier0">${isEs ? 'Sin Norma Específica / Directiva Máquinas 2006/42/CE' : 'Non-Normative / Machinery Directive 2006/42/EC'}</option>
+          <option value="tier_fire">${isEs ? 'UNE-EN 81-72 / EN 81-73 (Ascensor Bomberos)' : 'EN 81-72 / EN 81-73 (Firefighters Lift Standard)'}</option>
+        </select>
+      </div>
+
+      <!-- Input 2: Drive / Traction -->
+      <div class="tool-input-group">
+        <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);display:block;margin-bottom:6px;">
+          ${isEs ? '2. Tipo de Tracción y Accionamiento' : '2. Drive & Elevator Type'}
+        </label>
+        <select id="normDriveSelect" class="tool-select" onchange="handleNormativeChange()" style="width:100%;padding:10px;background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-color);border-radius:6px;font-size:0.88rem;">
+          <option value="trac_fuji" selected>${isEs ? 'Eléctrico 3VF Gearless / Síncrono (Fuji Lift2)' : 'Electric 3VF Gearless / PM Synchronous (Fuji Lift2)'}</option>
+          <option value="trac_ccm">${isEs ? 'Eléctrico 2V / Asíncrono con Reductor (CCM + UCM-100)' : 'Electric Geared / Asynchronous (CCM + UCM-100 Module)'}</option>
+          <option value="oleo_dir">${isEs ? 'Hidráulico Óleo Arranque Directo (Doble Válvula Serie)' : 'Hydraulic Direct-On-Line (Series Dual Down Valves)'}</option>
+          <option value="oleo_et">${isEs ? 'Hidráulico Óleo Estrella-Triángulo (Doble Válvula Serie)' : 'Hydraulic Star-Delta (Series Dual Down Valves)'}</option>
+          <option value="oleo_ngv">${isEs ? 'Hidráulico con Bloque Electrónico (GMV NGV / Blain / Bucher)' : 'Hydraulic Electronic Valve Block (GMV NGV / Blain)'}</option>
+        </select>
+      </div>
+
+      <!-- Input 3: Client Market -->
+      <div class="tool-input-group">
+        <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);display:block;margin-bottom:6px;">
+          ${isEs ? '3. Requisito de Cliente / Mercado' : '3. Client / Market Scope'}
+        </label>
+        <select id="normMarketSelect" class="tool-select" onchange="handleNormativeChange()" style="width:100%;padding:10px;background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-color);border-radius:6px;font-size:0.88rem;">
+          <option value="mkt_eu_new" selected>${isEs ? 'Obra Nueva Unión Europea (Marcado CE Obligatorio)' : 'EU New Installation (Mandatory CE Marking)'}</option>
+          <option value="mkt_modern">${isEs ? 'Modernización Existente (RD 355/2024 - ITC AEM 1 España)' : 'Existing Lift Modernization (National Retrofit Decree)'}</option>
+          <option value="mkt_export">${isEs ? 'Exportación Fuera de UE (Según Pliego de Cliente)' : 'Export Outside EU (Per Customer Specification)'}</option>
+          <option value="mkt_special">${isEs ? 'Licitación Especial / Especificación Restringida' : 'Special Public Tender / Custom Requirements'}</option>
+        </select>
+      </div>
+
+      <!-- Input 4: Door Type -->
+      <div class="tool-input-group">
+        <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);display:block;margin-bottom:6px;">
+          ${isEs ? '4. Tipo de Puertas y Embarque' : '4. Landing & Car Door Type'}
+        </label>
+        <select id="normDoorSelect" class="tool-select" onchange="handleNormativeChange()" style="width:100%;padding:10px;background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-color);border-radius:6px;font-size:0.88rem;">
+          <option value="door_auto" selected>${isEs ? 'Puertas Automáticas (Piso y Cabina)' : 'Full Automatic (Landing & Car Doors)'}</option>
+          <option value="door_semi">${isEs ? 'Semiautomática Rellano + Automática Cabina' : 'Semiautomatic Landing + Automatic Car Door'}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Verdict Banner -->
+  <div id="normVerdictBanner" style="margin:20px 0;padding:18px 22px;border-radius:10px;transition:all 0.3s ease;"></div>
+
+  <!-- 3 Output Sections Tabs -->
+  <div style="display:flex;gap:8px;border-bottom:2px solid var(--border-color);margin:24px 0 18px 0;overflow-x:auto;">
+    <button class="norm-tab-btn active" id="normTabBtnHw" onclick="switchNormTab('hw')" style="padding:10px 18px;background:none;border:none;border-bottom:3px solid var(--accent-cyan);color:var(--accent-cyan);font-weight:600;font-size:0.92rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;">
+      <span>🔧</span> ${isEs ? '1. Hardware de Seguridad Requerido' : '1. Mandatory Safety Hardware'}
+    </button>
+    <button class="norm-tab-btn" id="normTabBtnParams" onclick="switchNormTab('params')" style="padding:10px 18px;background:none;border:none;border-bottom:3px solid transparent;color:var(--text-secondary);font-weight:600;font-size:0.92rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;">
+      <span>📟</span> ${isEs ? '2. Parámetros Consola K2 y Variador' : '2. K2 Console & Drive Parameters'}
+    </button>
+    <button class="norm-tab-btn" id="normTabBtnTests" onclick="switchNormTab('tests')" style="padding:10px 18px;background:none;border:none;border-bottom:3px solid transparent;color:var(--text-secondary);font-weight:600;font-size:0.92rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;">
+      <span>📋</span> ${isEs ? '3. Protocolos Oficiales de Ensayo (Los 9 Tests)' : '3. Official Inspection Test Suite'}
+    </button>
+  </div>
+
+  <!-- Tab Content 1: Safety Hardware -->
+  <div id="normTabContentHw" class="norm-tab-pane">
+    <div id="normHwListContainer"></div>
+  </div>
+
+  <!-- Tab Content 2: K2 Parameters -->
+  <div id="normTabContentParams" class="norm-tab-pane" style="display:none;">
+    <div id="normParamsContainer"></div>
+  </div>
+
+  <!-- Tab Content 3: Inspection Test Suite -->
+  <div id="normTabContentTests" class="norm-tab-pane" style="display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+      <div>
+        <h3 style="margin:0;color:var(--text-primary);font-size:1.1rem;">
+          ${isEs ? 'Ensayos Obligatorios para Organismo de Control (OCA) / Inspector' : 'Mandatory Certification Test Suite for Field Inspector'}
+        </h3>
+        <p style="margin:4px 0 0 0;font-size:0.85rem;color:var(--text-secondary);" id="normAuditProgressText">
+          0 ${isEs ? 'de 9 ensayos verificados (0%)' : 'of 9 tests verified (0%)'}
+        </p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="dip-preset-btn" onclick="resetNormAudit()">
+          🔄 ${isEs ? 'Reiniciar Ensayos' : 'Reset Audit'}
+        </button>
+        <button class="action-btn-primary" onclick="printNormAuditReport()" style="padding:8px 16px;font-size:0.85rem;">
+          🖨️ ${isEs ? 'Imprimir Certificado' : 'Print Certificate'}
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Fill -->
+    <div class="commission-progress-track" style="margin-bottom:20px;">
+      <div class="commission-progress-fill" id="normAuditProgressFill"></div>
+    </div>
+
+    <div id="normTestsListContainer"></div>
+  </div>
+</div>`;
+  }
+
   // --- 8. INITIALIZE LOGIC FUNCTIONS ---
   window.initInteractiveTools = function(role, sectionId) {
     if (role !== 'tools') return;
@@ -1194,6 +1342,8 @@
       initLoadWeigher();
     } else if (sectionId === 'tool-commissioning') {
       initCommissioningWizard();
+    } else if (sectionId === 'tool-norm-checker') {
+      initNormativeChecker();
     }
   };
 
@@ -1525,7 +1675,8 @@
       "tool-k3-hydraulic": getHydraulicOptimizerHtml(lang),
       "tool-can-checker": getCanCheckerHtml(lang),
       "tool-load-weigher": getLoadWeigherHtml(lang),
-      "tool-commissioning": getCommissioningWizardHtml(lang)
+      "tool-commissioning": getCommissioningWizardHtml(lang),
+      "tool-norm-checker": getNormativeCheckerHtml(lang)
     });
 
     // In docsData_ES
@@ -1550,12 +1701,12 @@
     if (typeof roleLocalization !== 'undefined') {
       roleLocalization.ES.tools = {
         title: "5. Herramientas Interactivas",
-        desc: "12 Herramientas: DIP, Averías, Bornas, Consola, Banderas, Fuji, Series 110V, Óleo K3, CAN y Puesta en Marcha",
+        desc: "13 Herramientas: Selector Normativa EN 81-20/A3, DIP, Averías, Bornas, Consola, Fuji, Series 110V, Óleo K3, CAN y Puesta en Marcha",
         sidebar: "Herramientas de Ingeniería Interactivas"
       };
       roleLocalization.EN.tools = {
         title: "5. Interactive Tools",
-        desc: "12 Engineering Tools: DIP, Live Faults, Terminals, Console, Shaft Decel, Fuji, Safety Series, K3, CAN & Commissioning",
+        desc: "13 Engineering Tools: EN 81-20/A3 Normative Checker, DIP, Faults, Terminals, Console, Fuji, Safety Series, K3, CAN & Commissioning",
         sidebar: "Interactive Engineering Tools"
       };
     }
@@ -2226,6 +2377,543 @@
       commissionState = {};
     }
     renderCommissionChecklist();
+  }
+
+
+  // --- 9. NORMATIVE SELECTOR & COMPLIANCE CHECKER ENGINE (TOOL 5.13) ---
+  let normAuditState = {};
+
+  window.openEncyclopediaNormMatrix = function() {
+    if (typeof loadRole === 'function') {
+      loadRole('encyclopedia', 'enc-normative-matrix');
+    }
+    setTimeout(() => {
+      const el = document.getElementById('enc-normative-matrix') || document.getElementById('docBody');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  window.switchNormTab = function(tabName) {
+    document.querySelectorAll('.norm-tab-btn').forEach(btn => {
+      btn.classList.remove('active');
+      btn.style.borderBottomColor = 'transparent';
+      btn.style.color = 'var(--text-secondary)';
+    });
+    document.querySelectorAll('.norm-tab-pane').forEach(p => p.style.display = 'none');
+
+    const btn = document.getElementById('normTabBtn' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
+    const pane = document.getElementById('normTabContent' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
+    if (btn) {
+      btn.classList.add('active');
+      btn.style.borderBottomColor = 'var(--accent-cyan)';
+      btn.style.color = 'var(--accent-cyan)';
+    }
+    if (pane) pane.style.display = 'block';
+  };
+
+  window.handleNormativeChange = function() {
+    updateNormativeCheckerUI();
+  };
+
+  window.toggleNormAuditTest = function(testId, status) {
+    normAuditState[testId] = status;
+    try {
+      localStorage.setItem('edel_norm_audit_state', JSON.stringify(normAuditState));
+    } catch(e) {}
+    renderNormAuditTests();
+  };
+
+  window.resetNormAudit = function() {
+    const isEs = currentLang === 'ES';
+    if (confirm(isEs ? '¿Desea restablecer el estado de todos los ensayos de la lista?' : 'Reset status of all inspection audit tests?')) {
+      normAuditState = {};
+      try {
+        localStorage.removeItem('edel_norm_audit_state');
+      } catch(e) {}
+      renderNormAuditTests();
+    }
+  };
+
+  window.printNormAuditReport = function() {
+    window.print();
+  };
+
+  function initNormativeChecker() {
+    try {
+      const saved = localStorage.getItem('edel_norm_audit_state');
+      normAuditState = saved ? JSON.parse(saved) : {};
+    } catch(e) {
+      normAuditState = {};
+    }
+    updateNormativeCheckerUI();
+  }
+
+  function updateNormativeCheckerUI() {
+    const directiveEl = document.getElementById('normDirectiveSelect');
+    const driveEl = document.getElementById('normDriveSelect');
+    const marketEl = document.getElementById('normMarketSelect');
+    const doorEl = document.getElementById('normDoorSelect');
+
+    const directive = directiveEl ? directiveEl.value : 'tier3';
+    const drive = driveEl ? driveEl.value : 'trac_fuji';
+    const market = marketEl ? marketEl.value : 'mkt_eu_new';
+    const door = doorEl ? doorEl.value : 'door_auto';
+    const isEs = currentLang === 'ES';
+
+    const isHydraulic = drive.startsWith('oleo');
+    const isTraction = !isHydraulic;
+    const isTier3 = directive === 'tier3';
+    const isTier2 = directive === 'tier2';
+    const isTier1 = directive === 'tier1';
+    const isTier0 = directive === 'tier0';
+    const isFire = directive === 'tier_fire';
+
+    // 1. Render Verdict Banner
+    const verdictBanner = document.getElementById('normVerdictBanner');
+    if (verdictBanner) {
+      let badgeColor = '#10b981';
+      let title = '';
+      let desc = '';
+      let directiveBadge = '';
+
+      if (isTier3) {
+        badgeColor = '#10b981';
+        title = isEs ? 'Nivel 3: CUMPLIMIENTO ÍNTEGRO UNE-EN 81-20:2014+ / EN 81-50' : 'Tier 3: FULL COMPLIANCE EN 81-20:2014+ / EN 81-50';
+        directiveBadge = isEs ? 'Directiva de Ascensores 2014/33/UE • Marcado CE' : 'Lifts Directive 2014/33/EU • CE Marking';
+        desc = isEs
+          ? 'Obligatorio para obra nueva en la Unión Europea. Requiere examen de tipo CE de la maniobra (Certificado CM 038 19), sistema UCM con autocontrol independiente, conmutador rotativo de puenteo de puertas P0..P3 en cuadro, doble inspección (techo y foso con prioridad foso) y faldón de cabina ≥ 750mm.'
+          : 'Mandatory for new installations in the EU. Requires EC type-examination certificate for K2 (CM 038 19), UCM self-monitoring system, P0..P3 cabinet door bypass rotary switch with under-car acoustic alarm, dual inspection stations (car roof & pit), and ≥ 750mm toe guard.';
+      } else if (isTier2) {
+        badgeColor = '#3b82f6';
+        title = isEs ? 'Nivel 2: CUMPLIMIENTO UNE-EN 81-1/2 + ENMIENDA A3:2010' : 'Tier 2: COMPLIANCE EN 81-1/2 + AMENDMENT A3:2010';
+        directiveBadge = isEs ? 'Enmienda A3 • Protección UCM Obligatoria' : 'Amendment A3 • Mandatory UCM Protection';
+        desc = isEs
+          ? 'Aplicable en modernizaciones y sustituciones existentes. Exige obligatoriamente el sistema de protección contra movimiento incontrolado (UCM §9.13) con autocontrol dinámico y bloqueo permanente con rearme manual (Avería 53), precisión de nivelación ±10 mm. No requiere dispositivo de puenteo P0..P3 ni faldón de 750 mm si la estructura existente no lo permite.'
+          : 'Applicable in modernizations and retrofits. Mandates Uncontrolled Car Movement protection (§9.13) with electrical self-monitoring and hard manual lockout (Fault 53), and ±10 mm leveling accuracy. Does not require P0..P3 bypass device or 750mm toe guard if shaft geometry precludes it.';
+      } else if (isTier1) {
+        badgeColor = '#f59e0b';
+        title = isEs ? 'Nivel 1: NORMA CLÁSICA UNE-EN 81-1:1998 / UNE-EN 81-2:2001 (PRE-A3)' : 'Tier 1: LEGACY STANDARD EN 81-1:1998 / EN 81-2:2001 (PRE-A3)';
+        directiveBadge = isEs ? 'Norma Histórica Pre-2010' : 'Historic Pre-2010 Standard';
+        desc = isEs
+          ? 'Aplica en mantenimiento y reposición de componentes sobre instalaciones anteriores a 2010, o mercados de exportación que no han adoptado la enmienda A3. No requiere microrruptores de monitorización de freno ni doble válvula serie con test dinámico de estanqueidad.'
+          : 'Applies to maintenance and partial replacement on pre-2010 installations or non-A3 export markets. Operates without machine brake microswitch checks or hydraulic dynamic seal tests.';
+      } else if (isTier0) {
+        badgeColor = '#64748b';
+        title = isEs ? 'Nivel 0: SIN NORMA ESPECÍFICA / DIRECTIVA DE MÁQUINAS 2006/42/CE' : 'Tier 0: NON-NORMATIVE / MACHINERY DIRECTIVE 2006/42/EC';
+        directiveBadge = isEs ? 'Directiva de Máquinas 2006/42/CE • Montacargas' : 'Machinery Directive 2006/42/EC • Freight Lifts';
+        desc = isEs
+          ? 'Instalaciones industriales, montacargas puros (K3) sin personas o proyectos especiales de exportación. Funciones de seguridad estándar activas, pero sin autocontrol UCM ni requisitos de habitabilidad EN 81-20.'
+          : 'Industrial freight lifts, goods elevators (K3) without passenger transport or non-EU export projects. Standard safety interlocks active, but without UCM self-monitoring or EN 81-20 pit clearances.';
+      } else if (isFire) {
+        badgeColor = '#ef4444';
+        title = isEs ? 'ESPECIAL: ASCENSOR DE BOMBEROS UNE-EN 81-72 / EN 81-73' : 'SPECIAL: FIREFIGHTERS LIFT STANDARD EN 81-72 / EN 81-73';
+        directiveBadge = isEs ? 'Servicio de Bomberos e Incendios' : 'Firefighters & Fire Operation';
+        desc = isEs
+          ? 'Aplica a ascensores de emergencia para bomberos. Requiere maniobra de retorno de Fase 1 (evacuación prioritaria a planta designada) y Fase 2 (control exclusivo desde cabina con llave de bomberos), sirena acústica SAE800 EN 81-72 y trampilla de socorro en techo.'
+          : 'Applies to firefighters emergency lifts. Requires Phase 1 recall (priority evacuation to designated exit landing) and Phase 2 firefighter car control, SAE800 acoustic chime, and car roof emergency trapdoor.';
+      }
+
+      verdictBanner.style.background = `${badgeColor}15`;
+      verdictBanner.style.border = `1px solid ${badgeColor}40`;
+      verdictBanner.style.borderLeft = `6px solid ${badgeColor}`;
+      verdictBanner.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+          <span style="font-weight:700;color:${badgeColor};font-size:1.1rem;">${title}</span>
+          <span class="badge" style="background:${badgeColor}25;color:${badgeColor};font-weight:600;font-size:0.78rem;">${directiveBadge}</span>
+        </div>
+        <p style="margin:0;font-size:0.9rem;line-height:1.55;color:var(--text-primary);">${desc}</p>
+      `;
+    }
+
+    // 2. Render Safety Hardware Checklist (Tab 1)
+    const hwContainer = document.getElementById('normHwListContainer');
+    if (hwContainer) {
+      const hwItems = [
+        {
+          title: isHydraulic ? (isEs ? 'Doble Válvula de Bajada Serie (EB y EB2)' : 'Dual Series Down Valves (EB & EB2)') : (isEs ? 'Mordazas de Freno con Microinterruptores NC' : 'Brake Shoes with NC Microswitches'),
+          req: (isTier3 || isTier2) ? 'mandatory' : 'optional',
+          detail: isHydraulic 
+            ? (isEs ? 'Válvulas comandadas por salidas independientes de CPU (Bornas 91 y 97) con lectura de contactos auxiliares.' : 'Valves commanded by independent CPU outputs (Terminals 91 & 97) with contactor auxiliary feedback.')
+            : (drive === 'trac_fuji' 
+                ? (isEs ? 'Micros NC en bornas MF1/MF2 a entradas X5/X6 en variador Fuji Lift2 con corte por contacto 30C-30B.' : 'NC switches on MF1/MF2 to X5/X6 on Fuji Lift2 with series trip contact 30C-30B.')
+                : (isEs ? 'Módulo de seguridad UCM-100 para reductor asíncrono CCM.' : 'UCM-100 type-tested safety module for asynchronous geared CCM.')),
+          article: isEs ? 'EN 81-20 §5.6.7 / EN 81-2 §9.13' : 'EN 81-20 §5.6.7 / EN 81-2 §9.13'
+        },
+        {
+          title: isEs ? 'Dispositivo de Puenteo de Puertas (P0, P1, P2, P3)' : 'Door Bypass Device (P0, P1, P2, P3)',
+          req: isTier3 ? 'mandatory' : 'none',
+          detail: isEs 
+            ? 'Conmutador rotativo de 4 posiciones en cuadro. Posiciones P1 (37-39), P2 (39-40), P3 (40-41) cortan la serie con Error 53.' 
+            : '4-Position cabinet rotary switch. Positions P1 (37-39), P2 (39-40), P3 (40-41) open safety chain with Fault 53.',
+          article: 'EN 81-20 §5.12.1.8'
+        },
+        {
+          title: isEs ? 'Avisador Óptico y Acústico Bajo Cabina' : 'Acoustic & Optical Flasher Under Car',
+          req: isTier3 ? 'mandatory' : 'none',
+          detail: isEs 
+            ? 'Activación continua obligatoria durante cualquier movimiento de la cabina con puertas puenteadas.' 
+            : 'Continuous activation mandated during any car motion when door contacts are bypassed.',
+          article: 'EN 81-20 §5.12.1.8.3'
+        },
+        {
+          title: isEs ? 'Botonera de Inspección de Foso Completa' : 'Full Pit Inspection Station',
+          req: isTier3 ? 'mandatory' : 'none',
+          detail: isEs 
+            ? 'Caja de mando en foso con pulsadores Subir/Bajar/Común, conmutador de inspección y pulsador de STOP biestable con prioridad absoluta.' 
+            : 'Pit control box with Up/Down/Common buttons, inspection switch, and bi-stable STOP with top priority.',
+          article: 'EN 81-20 §5.12.1.5'
+        },
+        {
+          title: isEs ? 'Botonera de Rescate en Cuadro de Maniobra' : 'Cabinet Rescue Station with Limit Bypass',
+          req: (isTier3 || isTier2) ? 'mandatory' : 'optional',
+          detail: isEs 
+            ? 'Pulsadores Común + Subir/Bajar que puentean finales de carrera, limitador y paracaídas para maniobras de salvamento y pruebas.' 
+            : 'Common + Up/Down pushbuttons bridging final limits, governor, and safety gear contacts for rescue and test operations.',
+          article: isEs ? 'Documentación Oficial EDEL K2' : 'Official EDEL K2 Documentation'
+        },
+        {
+          title: isEs ? 'Bobina de Disparo a Distancia en Limitador' : 'Remote Governor Tripping Coil',
+          req: isTier3 ? 'mandatory' : 'optional',
+          detail: isEs 
+            ? 'Pulsador TEST LIMITADOR en cuadro de maniobra para accionar el paracaídas sin acceso físico a la polea en hueco.' 
+            : 'TEST LIMITADOR pushbutton in cabinet to trip safety gear without physical shaft access.',
+          article: 'EN 81-20 §5.6.2.2.1.5'
+        },
+        {
+          title: isEs ? 'Faldón Guardapisos de Cabina (≥ 750 mm)' : 'Car Toe Guard / Apron (≥ 750 mm)',
+          req: isTier3 ? 'mandatory' : (isTier2 ? 'optional' : 'none'),
+          detail: isEs 
+            ? 'Faldón rígido o telescópico de al menos 750 mm capaz de soportar 300N (en Nivel 2 A3 es ≥ 200 mm).' 
+            : 'Rigid or telescopic apron at least 750mm resisting 300N (under Tier 2 A3, ≥ 200mm applies).',
+          article: 'EN 81-20 §5.4.3.2.2'
+        },
+        {
+          title: isEs ? 'Barrera Fotoeléctrica Volumétrica (Cortina de Luz)' : 'Type 2 Volumetric Light Curtain',
+          req: (isTier3 || market === 'mkt_modern') ? 'mandatory' : 'optional',
+          detail: isEs 
+            ? 'Protección en embarque que cubre entre 25 mm y 1600 mm de altura sobre la pisadera. Obligatoria en RD 355/2024.' 
+            : 'Door entrance barrier covering between 25mm and 1600mm above sill. Mandated under retrofit decrees.',
+          article: 'EN 81-20 §5.3.6.2.2.1'
+        },
+        {
+          title: isEs ? 'Precisión de Parada (±10 mm) y Nivelación (±20 mm)' : 'Stopping (±10mm) & Leveling (±20mm) Accuracy',
+          req: (isTier3 || isTier2 || market === 'mkt_modern') ? 'mandatory' : 'optional',
+          detail: isEs 
+            ? 'Control de deceleración preciso con pantallas de hueco o encoder absoluto para evitar tropiezos al entrar a la cabina.' 
+            : 'Precision deceleration control with magnets or absolute encoder to eliminate tripping hazards at landing.',
+          article: 'EN 81-20 §5.2.5.6.1 / EN 81-2 §12.15'
+        }
+      ];
+
+      let hwHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;">';
+      hwItems.forEach(item => {
+        let pillColor = '#10b981';
+        let pillText = isEs ? 'OBLIGATORIO' : 'MANDATORY';
+        if (item.req === 'optional') {
+          pillColor = '#f59e0b';
+          pillText = isEs ? 'OPCIONAL' : 'OPTIONAL';
+        } else if (item.req === 'none') {
+          pillColor = '#64748b';
+          pillText = isEs ? 'NO REQUERIDO' : 'NOT REQUIRED';
+        }
+
+        hwHtml += `
+          <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;">
+                <h4 style="margin:0;color:var(--text-primary);font-size:0.95rem;">${item.title}</h4>
+                <span class="badge" style="background:${pillColor}20;color:${pillColor};font-size:0.72rem;font-weight:700;white-space:nowrap;">${pillText}</span>
+              </div>
+              <p style="margin:0 0 10px 0;font-size:0.84rem;color:var(--text-secondary);line-height:1.5;">${item.detail}</p>
+            </div>
+            <div style="font-size:0.75rem;color:var(--accent-cyan);font-weight:600;border-top:1px dashed var(--border-color);padding-top:6px;">
+              Norma Ref: ${item.article}
+            </div>
+          </div>
+        `;
+      });
+      hwHtml += '</div>';
+      hwContainer.innerHTML = hwHtml;
+    }
+
+    // 3. Render Parameters Guide (Tab 2)
+    const paramsContainer = document.getElementById('normParamsContainer');
+    if (paramsContainer) {
+      let paramsHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;">';
+      
+      // Param 1: Norma EN81-20
+      paramsHtml += `
+        <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:16px;">
+          <div style="font-size:0.8rem;color:var(--accent-cyan);font-weight:700;text-transform:uppercase;">Consola K2 ➔ Menú 2.2.2.2</div>
+          <h4 style="margin:6px 0 8px 0;color:var(--text-primary);">NORMA EN81-20</h4>
+          <div style="font-size:1.1rem;font-weight:700;color:${isTier3 ? '#10b981' : '#f59e0b'};margin-bottom:8px;">
+            ${isTier3 ? 'ACTIVADO' : 'DESACTIVADO'}
+          </div>
+          <p style="font-size:0.84rem;color:var(--text-secondary);margin:0;line-height:1.5;">
+            ${isEs 
+              ? 'Habilita el protocolo EN 81-20 en la CPU K2, supervisión de puenteo de puertas P0..P3 y conmutación de inspección techo/foso.' 
+              : 'Enables EN 81-20 protocol in K2 CPU, P0..P3 door bypass supervision, and roof/pit inspection interlock.'}
+          </p>
+        </div>
+      `;
+
+      // Param 2: Válvula Auxiliar / Óleo
+      if (isHydraulic) {
+        paramsHtml += `
+          <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:16px;">
+            <div style="font-size:0.8rem;color:var(--accent-cyan);font-weight:700;text-transform:uppercase;">Consola K2 ➔ Menú 5.15.3</div>
+            <h4 style="margin:6px 0 8px 0;color:var(--text-primary);">${isEs ? 'VALVULA AUXILIAR ÓLEO' : 'HYDRAULIC AUX VALVE'}</h4>
+            <div style="font-size:1.1rem;font-weight:700;color:${(isTier3 || isTier2) ? '#10b981' : '#64748b'};margin-bottom:8px;">
+              ${(isTier3 || isTier2) ? 'UCM+Test' : 'NINGUNA / V1-V2'}
+            </div>
+            <p style="font-size:0.84rem;color:var(--text-secondary);margin:0;line-height:1.5;">
+              ${isEs 
+                ? 'Activa la salida de borna 97 (EB2) y el ciclo dinámico de autocontrol de apertura y cierre a presión estática.' 
+                : 'Activates terminal 97 (EB2) output and static pressure dynamic leak test cycle.'}
+            </p>
+          </div>
+
+          <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:16px;">
+            <div style="font-size:0.8rem;color:var(--accent-cyan);font-weight:700;text-transform:uppercase;">Consola K2 ➔ Menú 3.1.17.6</div>
+            <h4 style="margin:6px 0 8px 0;color:var(--text-primary);">${isEs ? 'TIEMPO REENVÍO ÓLEO' : 'HYDRAULIC RETURN TIME'}</h4>
+            <div style="font-size:1.1rem;font-weight:700;color:${(isTier3 || isTier2) ? '#10b981' : '#f59e0b'};margin-bottom:8px;">
+              ${(isTier3 || isTier2) ? '10 min (Ajustable 1..15 min)' : '0 min (Desactivado)'}
+            </div>
+            <p style="font-size:0.84rem;color:var(--text-secondary);margin:0;line-height:1.5;">
+              ${isEs 
+                ? '¡NUNCA programar a 0 en EN 81-20! El autocontrol de doble válvula solo se ejecuta al reenviar a la planta baja.' 
+                : 'NEVER set to 0 under EN 81-20! Dual-valve dynamic self-monitoring only runs upon bottom floor return.'}
+            </p>
+          </div>
+        `;
+      } else {
+        // Traction Fuji Frenic-Lift 2
+        paramsHtml += `
+          <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:16px;">
+            <div style="font-size:0.8rem;color:var(--accent-cyan);font-weight:700;text-transform:uppercase;">Variador Fuji ➔ Parámetros H96 / L84</div>
+            <h4 style="margin:6px 0 8px 0;color:var(--text-primary);">${isEs ? 'MONITORIZACIÓN DE FRENOS' : 'BRAKE MONITORING'}</h4>
+            <div style="font-size:1.1rem;font-weight:700;color:${(isTier3 || isTier2) ? '#10b981' : '#64748b'};margin-bottom:8px;">
+              ${(isTier3 || isTier2) ? 'H96 = 1 (Activo) | L84 = 1.0s' : 'H96 = 0 (Desactivado)'}
+            </div>
+            <p style="font-size:0.84rem;color:var(--text-secondary);margin:0;line-height:1.5;">
+              ${isEs 
+                ? 'Supervisa micros de freno en X5 (E05=111) y X6 (E06=112). Si falla dispara alarma bbE cortando series por contacto 30C-30B.' 
+                : 'Monitors brake microswitches on X5 (E05=111) and X6 (E06=112). Trips bbE cutting safety circuit via 30C-30B.'}
+            </p>
+          </div>
+
+          <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:16px;">
+            <div style="font-size:0.8rem;color:var(--accent-cyan);font-weight:700;text-transform:uppercase;">Variador Fuji ➔ Reset de Alarma bbE</div>
+            <h4 style="margin:6px 0 8px 0;color:var(--text-primary);">${isEs ? 'PROCEDIMIENTO REARME bbE' : 'bbE LOCKOUT RESET SEQUENCE'}</h4>
+            <div style="font-size:1.05rem;font-weight:700;color:var(--accent-cyan);margin-bottom:8px;">
+              Menu 2 ➔ H95 = 111 ➔ RESET
+            </div>
+            <p style="font-size:0.84rem;color:var(--text-secondary);margin:0;line-height:1.5;">
+              ${isEs 
+                ? 'Entrar en Función 2 Data Check ➔ ajustar H95=111 ➔ pulsar FUNC/DATA ➔ pulsar PRG ➔ pulsar RESET en teclado Fuji.' 
+                : 'Enter Function 2 Data Check ➔ set H95=111 ➔ press FUNC/DATA ➔ press PRG ➔ press RESET on keypad.'}
+            </p>
+          </div>
+        `;
+      }
+
+      // Param: TTR Limitador
+      paramsHtml += `
+        <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:16px;">
+          <div style="font-size:0.8rem;color:var(--accent-cyan);font-weight:700;text-transform:uppercase;">Consola K2 ➔ Menú 2.3.1.11</div>
+          <h4 style="margin:6px 0 8px 0;color:var(--text-primary);">${isEs ? 'MÁXIMO TIEMPO RECORRIDO (TTR)' : 'MAX RUNNING TIME (TTR)'}</h4>
+          <div style="font-size:1.1rem;font-weight:700;color:#10b981;margin-bottom:8px;">
+            20 segundos (o Modo Auto)
+          </div>
+          <p style="font-size:0.84rem;color:var(--text-secondary);margin:0;line-height:1.5;">
+            ${isEs 
+              ? 'Protección de tracción EN 81-20 §5.9.2.7. Si el motor gira sin recibir impulsos de hueco, la maniobra se para y bloquea con Avería 57.' 
+              : 'Traction protection under §5.9.2.7. If motor runs without receiving shaft pulses, controller locks out with Fault 57.'}
+          </p>
+        </div>
+      `;
+
+      paramsHtml += '</div>';
+      paramsContainer.innerHTML = paramsHtml;
+    }
+
+    // 4. Render Inspection Test Suite (Tab 3)
+    renderNormAuditTests();
+  }
+
+  function renderNormAuditTests() {
+    const container = document.getElementById('normTestsListContainer');
+    const fill = document.getElementById('normAuditProgressFill');
+    const progressText = document.getElementById('normAuditProgressText');
+    if (!container) return;
+
+    const driveEl = document.getElementById('normDriveSelect');
+    const directiveEl = document.getElementById('normDirectiveSelect');
+    const drive = driveEl ? driveEl.value : 'trac_fuji';
+    const directive = directiveEl ? directiveEl.value : 'tier3';
+    const isHydraulic = drive.startsWith('oleo');
+    const isTier3 = directive === 'tier3';
+    const isEs = currentLang === 'ES';
+
+    const testList = [
+      {
+        id: "test_ttr",
+        num: 1,
+        title: isEs ? "Limitador del Tiempo de Funcionamiento del Motor TTR" : "Motor Run Time Limiter TTR",
+        article: "EN 81-20 §5.9.2.7",
+        fault: "Avería 57 (Rearme Manual)",
+        procedure: isHydraulic 
+          ? (isEs ? "Desconectar bornas de motor. Realizar llamada. La cabina no se desplaza y tras 20s dispara Avería 57." : "Disconnect motor terminals. Place call. Car remains stationary and trips Fault 57 after 20s.")
+          : (isEs ? "En variador Lift2, ajustar C11 = 0 (Velocidad rápida a 0). Realizar llamada. La cabina queda parada y salta Avería 57." : "On Lift2 inverter, set C11 = 0. Place call. Car stays at floor and trips Fault 57 upon timer expiry.")
+      },
+      {
+        id: "test_final_limits",
+        num: 2,
+        title: isEs ? "Dispositivos de Final de Recorrido en MODO MONTAJE" : "Final Limit Switches via ASSEMBLY MODE",
+        article: "EN 81-20 §5.12.2",
+        fault: "Serie Abierta / Avería 53",
+        procedure: isEs 
+          ? "Activar MODO MONTAJE en Menú 2 durante arranque ('RESET?'). Pasar placa a INSPECCIÓN y rebasar parada extrema hasta cortar final de carrera. Recuperar posición con BOTONERA DE RESCATE."
+          : "Enable ASSEMBLY MODE in Menu 2 during power-up screen. Flip board to INSPECTION and drive past terminal landing until final limit opens. Recover level using CABINET RESCUE STATION."
+      },
+      {
+        id: "test_brake_shoe",
+        num: 3,
+        title: isEs ? "Freno Electromecánico: Redundancia con Media Mordaza" : "Electromechanical Brake: Half-Shoe Redundancy",
+        article: "EN 81-20 §6.3.1.b / §5.9.2.2.2.7",
+        fault: isEs ? "Parada Segura con 1 Bobina" : "Safe Deceleration on 1 Coil",
+        disabled: isHydraulic,
+        procedure: isHydraulic 
+          ? (isEs ? "No aplicable a centrales hidráulicas (ver Test 4 Doble Válvula)." : "Not applicable to hydraulic drives (see Test 4 Dual Valves).")
+          : (isEs ? "Desactivar H96=0. Conectar una bobina de freno a L-, L+ y mantener pulsado TEST LIMITADOR. Realizar llamada en bajada con carga nominal y conmutar a INSPECCIÓN: debe frenar en 1 bobina." : "Set H96=0. Connect one brake coil to L-, L+ and hold TEST LIMITADOR button. Run down at rated speed with full load and flip to INSPECTION: single shoe must safely decelerate car.")
+      },
+      {
+        id: "test_ucm",
+        num: 4,
+        title: isEs ? "Protección contra Movimiento Incontrolado UCM" : "Uncontrolled Car Movement UCM Protection",
+        article: "EN 81-20 §5.6.7",
+        fault: isHydraulic ? "Avería 53 (Bloqueo Permanente)" : "Alarma bbE / Fallo 51",
+        procedure: isHydraulic
+          ? (isEs ? "Programar reenvío a 1 min. En la planta más baja, durante el test secuencial de 1.5s de EB y EB2, abrir válvula de emergencia o pulsar señal 22: bloquea en Avería 53." : "Set return timer to 1 min. At bottom landing during 1.5s sequential check of EB & EB2, open emergency lowering valve or trigger terminal 22: locks out in Fault 53.")
+          : (isEs ? "Con cabina parada, desconectar micro MF1 en variador Fuji. Al iniciar marcha tras 1s (L84) dispara alarma bbE y Fallo 51 en K2. Resetear con H95=111." : "With car stopped, disconnect microswitch MF1 on Fuji drive. On attempt to run, trips bbE after 1s (L84) causing Fault 51 on K2. Reset with H95=111.")
+      },
+      {
+        id: "test_governor",
+        num: 5,
+        title: isEs ? "Disparo a Distancia del Limitador de Velocidad" : "Remote Overspeed Governor Tripping",
+        article: "EN 81-20 §5.6.2.2.1.5",
+        fault: isEs ? "Enclavamiento de Paracaídas" : "Safety Gear Wedging",
+        procedure: isEs 
+          ? "Pulsar botón TEST LIMITADOR en cuadro mientras la cabina desciende en inspección. La bobina dispara el limitador y clava cuñas. Liberar cuñas con Botonera de Rescate en subida."
+          : "Press TEST LIMITADOR button on controller while car descends in inspection. Remote coil trips governor and engages wedges. Disengage using Rescue Station driving UP."
+      },
+      {
+        id: "test_door_bypass",
+        num: 6,
+        title: isEs ? "Conmutador de Puenteo de Puertas P0..P3" : "Door Bypass Rotary Switch P0..P3",
+        article: "EN 81-20 §5.12.1.8",
+        fault: isTier3 ? "Avería 53 (Enclava Serie)" : (isEs ? "No requerido en este nivel" : "Not mandated in this tier"),
+        disabled: !isTier3,
+        procedure: !isTier3
+          ? (isEs ? "Solo exigido obligatoriamente en instalaciones certificadas bajo EN 81-20 (Nivel 3)." : "Only mandated in full EN 81-20 (Tier 3) certified installations.")
+          : (isEs ? "Girar conmutador a P1, P2 o P3: la maniobra se para y bloquea en Avería 53. Comprobar que en inspección se mueve con avisador acústico/óptico bajo cabina activo." : "Turn switch to P1, P2, or P3: lift immediately locks out in Fault 53. Verify motion permitted only in inspection with under-car acoustic flasher sounding.")
+      },
+      {
+        id: "test_insulation",
+        num: 7,
+        title: isEs ? "Resistencia de Aislamiento con Megóhmetro a 500Vdc" : "Insulation Resistance Test at 500Vdc",
+        article: "EN 81-20 §6.3.2.c",
+        fault: isEs ? "Resistencia ≥ 0.5 MΩ" : "Resistance ≥ 0.5 MΩ",
+        procedure: isEs 
+          ? "Desconectar todos los componentes electrónicos (CPU K2, variador Fuji, fuentes) y series 48Vac. Aplicar 500Vdc solo entre conductores y tierra. La resistencia debe superar 0.5 MΩ."
+          : "Disconnect all electronic boards (K2 CPU, inverter, power supplies) and 48Vac safety chain. Apply 500Vdc strictly across conductors to earth. Value must exceed 0.5 MΩ."
+      },
+      {
+        id: "test_ptc",
+        num: 8,
+        title: isEs ? "Protección Térmica de Motor por Sonda PTC" : "Motor Thermal PTC Probe Protection",
+        article: "EN 81-20 §5.10.4.2",
+        fault: isHydraulic ? "Avería 73" : "Fallo 51 / Alarma OH2",
+        procedure: isHydraulic
+          ? (isEs ? "Desconectar conector Th, Th en placa K2. En marcha finaliza el viaje; parada en planta impide nuevos arranques con Avería 73." : "Disconnect Th, Th on K2 board. When moving, finishes travel to landing; when stopped, locks out with Fault 73.")
+          : (isEs ? "Desconectar bornas PT1/PT2 de sonda PTC. El variador dispara por error OH2 y K2 muestra Fallo 51. Al reconectar y pulsar RESET, se restablece." : "Disconnect PT1/PT2 PTC terminals. Drive trips on OH2 and K2 indicates Fault 51. Reconnecting and pressing RESET clears fault.")
+      },
+      {
+        id: "test_traction_adherence",
+        num: 9,
+        title: isEs ? "Adherencia de Cables con Cabina en Amortiguadores" : "Traction Rope Adherence on Compressed Buffers",
+        article: "EN 81-20 §6.3.3",
+        fault: isEs ? "Deslizamiento Libre en Gargantas" : "Free Slip on Sheave Grooves",
+        disabled: isHydraulic,
+        procedure: isHydraulic
+          ? (isEs ? "No aplicable a ascensores hidráulicos." : "Not applicable to hydraulic installations.")
+          : (isEs ? "Bloquear puertas en Menú 5.2.1. Conmutar a RESCATE y pulsar Común + Bajar para asentar cabina vacía en amortiguadores. Verificar visualmente que la polea gira sin levantar el contrapeso." : "Lock doors via Menu 5.2.1. Switch to RESCUE and hold Common + Down to compress car on buffers. Verify traction sheave slips without hoisting counterweight.")
+      }
+    ];
+
+    let totalTests = 0;
+    let completedTests = 0;
+    let testsHtml = '';
+
+    testList.forEach(test => {
+      if (!test.disabled) totalTests++;
+      const currentStatus = normAuditState[test.id] || 'pending';
+      if (!test.disabled && (currentStatus === 'pass' || currentStatus === 'fail')) completedTests++;
+
+      let statusColor = '#94a3b8';
+      let statusLabel = isEs ? 'PENDIENTE' : 'PENDING';
+      if (currentStatus === 'pass') {
+        statusColor = '#10b981';
+        statusLabel = isEs ? 'CONFORME (PASA)' : 'COMPLIANT (PASS)';
+      } else if (currentStatus === 'fail') {
+        statusColor = '#ef4444';
+        statusLabel = isEs ? 'NO CONFORME (FALLA)' : 'NON-COMPLIANT (FAIL)';
+      }
+
+      testsHtml += `
+        <div style="background:var(--bg-card);border:1px solid ${currentStatus === 'pass' ? 'rgba(16,185,129,0.4)' : (currentStatus === 'fail' ? 'rgba(239,68,68,0.4)' : 'var(--border-color)')};border-radius:10px;padding:16px;margin-bottom:12px;opacity:${test.disabled ? '0.45' : '1'};">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+            <div>
+              <span style="font-weight:700;color:var(--accent-cyan);font-size:0.85rem;margin-right:8px;">TEST ${test.num}</span>
+              <span style="font-weight:600;color:var(--text-primary);font-size:0.95rem;">${test.title}</span>
+              <span style="font-size:0.75rem;color:var(--text-secondary);margin-left:8px;">(${test.article})</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="badge" style="background:${statusColor}20;color:${statusColor};font-size:0.75rem;font-weight:700;">${statusLabel}</span>
+            </div>
+          </div>
+
+          <p style="margin:0 0 10px 0;font-size:0.84rem;color:var(--text-secondary);line-height:1.5;">${test.procedure}</p>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;border-top:1px dashed var(--border-color);padding-top:10px;">
+            <div style="font-size:0.8rem;color:#f59e0b;">
+              <strong>${isEs ? 'Respuesta Esperada:' : 'Expected Reaction:'}</strong> ${test.fault}
+            </div>
+            ${!test.disabled ? `
+              <div style="display:flex;gap:6px;">
+                <button onclick="toggleNormAuditTest('${test.id}', 'pass')" style="padding:5px 12px;border-radius:5px;border:none;background:${currentStatus === 'pass' ? '#10b981' : '#1e293b'};color:${currentStatus === 'pass' ? '#fff' : '#94a3b8'};font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
+                  ✓ ${isEs ? 'Pasa' : 'Pass'}
+                </button>
+                <button onclick="toggleNormAuditTest('${test.id}', 'fail')" style="padding:5px 12px;border-radius:5px;border:none;background:${currentStatus === 'fail' ? '#ef4444' : '#1e293b'};color:${currentStatus === 'fail' ? '#fff' : '#94a3b8'};font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
+                  ✕ ${isEs ? 'Falla' : 'Fail'}
+                </button>
+                <button onclick="toggleNormAuditTest('${test.id}', 'pending')" style="padding:5px 10px;border-radius:5px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:0.75rem;cursor:pointer;">
+                  ${isEs ? 'Pendiente' : 'Pending'}
+                </button>
+              </div>
+            ` : `<span style="font-size:0.78rem;color:#64748b;font-style:italic;">${isEs ? 'No exigido en esta configuración' : 'Not required for this configuration'}</span>`}
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = testsHtml;
+
+    const pct = totalTests > 0 ? Math.round((completedTests / totalTests) * 100) : 0;
+    if (fill) fill.style.width = pct + '%';
+    if (progressText) {
+      progressText.textContent = `${completedTests} ${isEs ? `de ${totalTests} ensayos verificados (${pct}%)` : `of ${totalTests} tests verified (${pct}%)`}`;
+    }
   }
 
 })();
