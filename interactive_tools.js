@@ -170,14 +170,28 @@
       { id: "tool-faults", label: "🔍 5.2 Asistente de Diagnóstico de Averías en Vivo", icon: "🔍" },
       { id: "tool-terminal", label: "⚡ 5.3 Visualizador Interactivo de Bornas y Señales", icon: "⚡" },
       { id: "tool-console", label: "📟 5.4 Simulador Virtual de la Consola LCD 16×4", icon: "📟" },
-      { id: "tool-cheatsheets", label: "🖨️ 5.5 Fichas de Campo Imprimibles (One-Pagers)", icon: "🖨️" }
+      { id: "tool-cheatsheets", label: "🖨️ 5.5 Fichas de Campo Imprimibles (One-Pagers)", icon: "🖨️" },
+      { id: "tool-shaft-calc", label: "🏁 5.6 Calculador de Banderas y Deceleración", icon: "🏁" },
+      { id: "tool-fuji-gen", label: "⚡ 5.7 Generador de Parámetros Fuji Frenic-Lift", icon: "⚡" },
+      { id: "tool-safety-tracer", label: "🔴 5.8 Rastreador de Serie de Seguridad EN 81-20", icon: "🔴" },
+      { id: "tool-k3-hydraulic", label: "🛗 5.9 Optimizador de Válvulas Hidráulicas K3", icon: "🛗" },
+      { id: "tool-can-checker", label: "🔌 5.10 Comprobador de Red CAN e Impedancia", icon: "🔌" },
+      { id: "tool-load-weigher", label: "⚖️ 5.11 Asistente de Calibración de Pesacargas", icon: "⚖️" },
+      { id: "tool-commissioning", label: "📋 5.12 Protocolo de Primera Puesta en Marcha", icon: "📋" }
     ],
     EN: [
       { id: "tool-dip", label: "🎛️ 5.1 Interactive DIP Switch Addressing Calculator", icon: "🎛️" },
       { id: "tool-faults", label: "🔍 5.2 Live Fault Diagnostics & Troubleshooting Assistant", icon: "🔍" },
       { id: "tool-terminal", label: "⚡ 5.3 Interactive Terminal Strip & Signal Visualizer", icon: "⚡" },
       { id: "tool-console", label: "📟 5.4 Virtual 16×4 LCD Console Simulator (8 Menus)", icon: "📟" },
-      { id: "tool-cheatsheets", label: "🖨️ 5.5 Printable Field Cheatsheets (One-Pagers)", icon: "🖨️" }
+      { id: "tool-cheatsheets", label: "🖨️ 5.5 Printable Field Cheatsheets (One-Pagers)", icon: "🖨️" },
+      { id: "tool-shaft-calc", label: "🏁 5.6 Shaft Magnet & Slowdown Calculator", icon: "🏁" },
+      { id: "tool-fuji-gen", label: "⚡ 5.7 Fuji Frenic-Lift Parameter Preset Generator", icon: "⚡" },
+      { id: "tool-safety-tracer", label: "🔴 5.8 EN 81-20 Safety Series Fault Tracer", icon: "🔴" },
+      { id: "tool-k3-hydraulic", label: "🛗 5.9 K3 Hydraulic Valve & Timing Optimizer", icon: "🛗" },
+      { id: "tool-can-checker", label: "🔌 5.10 CAN Bus Topology & Impedance Checker", icon: "🔌" },
+      { id: "tool-load-weigher", label: "⚖️ 5.11 Load Weigher Calibration Wizard", icon: "⚖️" },
+      { id: "tool-commissioning", label: "📋 5.12 First-Power-On Commissioning Wizard", icon: "📋" }
     ]
   };
 
@@ -605,6 +619,555 @@
 </div>`;
   }
 
+
+  // --- TOOL 5.6: SHAFT MAGNET & SLOWDOWN CALCULATOR HTML ---
+  function getShaftCalculatorHtml(lang) {
+    const isEs = lang === 'ES';
+    return `
+<div class="doc-section" id="tool-shaft-calc-app">
+  <div class="doc-header">
+    <span class="badge badge-cyan">${isEs ? 'Herramienta Interactiva 5.6' : 'Interactive Tool 5.6'}</span>
+    <h1>🏁 ${isEs ? 'Calculador de Banderas y Distancias de Deceleración' : 'Shaft Magnet & Slowdown Distance Calculator'}</h1>
+    <p>${isEs 
+      ? 'Herramienta de cálculo para posicionar con precisión milimétrica las banderas de deceleración (CP_SUB / CP_BAJ), pantallas de paro de piso (PSUP / PINF) y zona de puertas EN 81-20 (FZP) según la velocidad nominal y la rampa del variador Fuji o maniobra K2/K3.'
+      : 'Engineering calculator to position slowdown flags (CP_SUB / CP_BAJ), floor stop screens (PSUP / PINF), and EN 81-20 door zone brackets (FZP) with millimeter precision based on nominal speed and VFD deceleration curve.'
+    }</p>
+  </div>
+
+  <div class="shaft-calc-container">
+    <div class="shaft-form-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h3 style="color:var(--accent-cyan);margin:0;">${isEs ? 'Parámetros Cinemáticos' : 'Kinematic Parameters'}</h3>
+        <div class="dip-presets-bar" style="margin:0;">
+          <button class="dip-preset-btn" onclick="setShaftPreset(0.63, 0.50, 0.08, 200)">0.63 m/s</button>
+          <button class="dip-preset-btn" onclick="setShaftPreset(1.00, 0.60, 0.08, 200)">1.00 m/s</button>
+          <button class="dip-preset-btn" onclick="setShaftPreset(1.60, 0.70, 0.09, 250)">1.60 m/s</button>
+          <button class="dip-preset-btn" onclick="setShaftPreset(2.00, 0.80, 0.10, 300)">2.00 m/s</button>
+        </div>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Velocidad Nominal del Ascensor (Vn):' : 'Nominal Elevator Speed (Vn):'}</label>
+        <div class="shaft-input-row">
+          <input type="number" id="shaftVn" value="1.00" step="0.05" min="0.2" max="3.0" oninput="calculateShaftDistances()">
+          <span class="shaft-unit-tag">m/s</span>
+        </div>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Deceleración de Rampa Fuji F08 / L38 (a):' : 'Deceleration Ramp Rate Fuji F08 / L38 (a):'}</label>
+        <div class="shaft-input-row">
+          <input type="number" id="shaftAcc" value="0.60" step="0.05" min="0.2" max="1.5" oninput="calculateShaftDistances()">
+          <span class="shaft-unit-tag">m/s²</span>
+        </div>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Velocidad de Nivelación / Aproximación Lenta (Vlev):' : 'Leveling / Creep Speed (Vlev):'}</label>
+        <div class="shaft-input-row">
+          <input type="number" id="shaftVlev" value="0.08" step="0.01" min="0.03" max="0.30" oninput="calculateShaftDistances()">
+          <span class="shaft-unit-tag">m/s</span>
+        </div>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Longitud de Pantalla de Paro (L_pantalla):' : 'Floor Stop Screen Length (L_screen):'}</label>
+        <div class="shaft-input-row">
+          <select id="shaftLscreen" onchange="calculateShaftDistances()">
+            <option value="150">150 mm (Compacto)</option>
+            <option value="200" selected>200 mm (Estándar EDEL)</option>
+            <option value="250">250 mm (Recomendado 1.6 m/s)</option>
+            <option value="300">300 mm (Alta Velocidad)</option>
+          </select>
+          <span class="shaft-unit-tag">mm</span>
+        </div>
+      </div>
+
+      <div class="shaft-calc-metric-grid">
+        <div class="shaft-metric-box">
+          <div class="shaft-metric-label">${isEs ? 'Distancia Deceleración Teórica' : 'Theoretical Decel Distance'}</div>
+          <div class="shaft-metric-val" id="resDecelDist">82.8 cm</div>
+          <span style="font-size:0.75rem;color:var(--text-muted);">(Vn² - Vlev²) / (2 · a)</span>
+        </div>
+
+        <div class="shaft-metric-box" style="border-color:rgba(6,182,212,0.4);">
+          <div class="shaft-metric-label" style="color:var(--accent-cyan);font-weight:700;">${isEs ? 'Posición Bandera CP_SUB/BAJ' : 'Physical Flag Distance'}</div>
+          <div class="shaft-metric-val" style="color:#06b6d4;" id="resFlagPos">92.8 cm</div>
+          <span style="font-size:0.75rem;color:var(--text-muted);">(Desde nivel de parada)</span>
+        </div>
+
+        <div class="shaft-metric-box">
+          <div class="shaft-metric-label">${isEs ? 'Tiempo Deslizamiento en Lenta' : 'Creep Time in Leveling'}</div>
+          <div class="shaft-metric-val" id="resCreepTime">1.25 s</div>
+          <span style="font-size:0.75rem;color:var(--text-muted);">(Óptimo: 0.8s - 1.5s)</span>
+        </div>
+
+        <div class="shaft-metric-box">
+          <div class="shaft-metric-label">${isEs ? 'Zona Puertas EN 81-20 (FZP)' : 'Door Zone EN 81-20 (FZP)'}</div>
+          <div class="shaft-metric-val" style="color:#10b981;" id="resDoorZone">±200 mm</div>
+          <span style="font-size:0.75rem;color:var(--text-muted);">Cumple UCM / A3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Graphic Representation -->
+    <div class="shaft-svg-panel">
+      <div style="font-size:0.82rem;font-weight:700;color:var(--accent-cyan);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">
+        ${isEs ? 'Esquema de Hueco y Banderas en Tiempo Real' : 'Real-time Shaft & Flag Diagram'}
+      </div>
+      <svg id="shaftSvg" viewBox="0 0 320 440" style="width:100%;max-width:300px;height:auto;">
+        <!-- Rails -->
+        <line x1="80" y1="20" x2="80" y2="420" stroke="#334155" stroke-width="4" stroke-dasharray="6,4"/>
+        <line x1="240" y1="20" x2="240" y2="420" stroke="#334155" stroke-width="4" stroke-dasharray="6,4"/>
+        
+        <!-- Floor Level 0 mm -->
+        <line x1="40" y1="340" x2="280" y2="340" stroke="#f59e0b" stroke-width="2"/>
+        <text x="285" y="344" fill="#f59e0b" font-size="11" font-family="monospace" font-weight="700">PISO (0 mm)</text>
+        
+        <!-- Door Zone ±200mm -->
+        <rect x="74" y="300" width="12" height="80" fill="rgba(16, 185, 129, 0.25)" stroke="#10b981" stroke-width="1.5" rx="2"/>
+        <text x="14" y="344" fill="#10b981" font-size="10" font-family="monospace">FZP ±200</text>
+
+        <!-- Floor Stop Screen -->
+        <rect id="svgStopScreen" x="88" y="320" width="16" height="40" fill="#38bdf8" rx="2"/>
+        <text x="110" y="344" fill="#38bdf8" font-size="10" font-family="sans-serif">Pantalla Paro (200mm)</text>
+
+        <!-- Deceleration Flag -->
+        <rect id="svgDecelFlag" x="88" y="140" width="16" height="35" fill="#f43f5e" rx="2"/>
+        <line id="svgDecelDim" x1="160" y1="340" x2="160" y2="157" stroke="#f43f5e" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <circle cx="160" cy="340" r="3" fill="#f43f5e"/>
+        <circle cx="160" cy="157" r="3" fill="#f43f5e"/>
+        <text id="svgDecelText" x="170" y="248" fill="#f43f5e" font-size="12" font-family="monospace" font-weight="700">928 mm</text>
+        <text x="110" y="162" fill="#f43f5e" font-size="10" font-family="sans-serif">Bandera CP_SUB</text>
+
+        <!-- Car representation -->
+        <rect x="96" y="210" width="128" height="90" fill="#1e293b" stroke="#06b6d4" stroke-width="2" rx="4"/>
+        <text x="135" y="258" fill="#e2e8f0" font-size="12" font-family="sans-serif" font-weight="700">CABINA K2</text>
+        <circle cx="96" cy="255" r="5" fill="#10b981"/>
+        <text x="105" y="258" fill="#10b981" font-size="9" font-family="monospace">PSUP</text>
+      </svg>
+      <div style="font-size:0.76rem;color:var(--text-muted);text-align:center;margin-top:6px;">
+        ${isEs ? 'El sensor PSUP en cabina detecta la bandera CP_SUB y conmuta a velocidad lenta C04.' : 'The cabin PSUP sensor hits the CP_SUB flag and transitions drive to C04 leveling speed.'}
+      </div>
+    </div>
+  </div>
+</div>`;
+  }
+
+  // --- TOOL 5.7: FUJI FRENIC-LIFT PRESET GENERATOR HTML ---
+  function getFujiGeneratorHtml(lang) {
+    const isEs = lang === 'ES';
+    return `
+<div class="doc-section" id="tool-fuji-gen-app">
+  <div class="doc-header">
+    <span class="badge badge-cyan">${isEs ? 'Herramienta Interactiva 5.7' : 'Interactive Tool 5.7'}</span>
+    <h1>⚡ ${isEs ? 'Generador de Parámetros Fuji Frenic-Lift LM1S / LM2A' : 'Fuji Frenic-Lift Parameter Preset Generator'}</h1>
+    <p>${isEs 
+      ? 'Generador automático de la tabla maestra de configuración de parámetros del variador Fuji Frenic-Lift para la maniobra EDEL K2. Calcule instantáneamente las curvas de aceleración, frecuencias C04..C11, parámetros de motor y ganancias anti-retroceso L65.'
+      : 'Automated parameter configuration sheet generator for Fuji Frenic-Lift (LM1S / LM2A) drives paired with the EDEL K2 controller. Instantly compute jerk S-curves, C04..C11 frequency steps, motor tuning, and L65 anti-rollback gain.'
+    }</p>
+  </div>
+
+  <div class="fuji-calc-container">
+    <div class="fuji-config-grid">
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Tipo de Máquina / Motor:' : 'Machine & Motor Type:'}</label>
+        <select id="fujiMotorType" onchange="calculateFujiParams()">
+          <option value="geared" selected>${isEs ? 'Asíncrono con Reductor (Geared 1420 RPM)' : 'Asynchronous Geared (1420 RPM)'}</option>
+          <option value="gearless">${isEs ? 'Síncrono Imanes Permanentes (Gearless PM)' : 'Synchronous Permanent Magnet (Gearless)'}</option>
+        </select>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Potencia Motor (kW):' : 'Motor Rated Power (kW):'}</label>
+        <select id="fujiKw" onchange="calculateFujiParams()">
+          <option value="4.0">4.0 kW (5.5 HP)</option>
+          <option value="5.5" selected>5.5 kW (7.5 HP)</option>
+          <option value="7.5">7.5 kW (10 HP)</option>
+          <option value="11.0">11.0 kW (15 HP)</option>
+          <option value="15.0">15.0 kW (20 HP)</option>
+        </select>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Velocidad Nominal Cabina:' : 'Nominal Elevator Speed:'}</label>
+        <select id="fujiSpeed" onchange="calculateFujiParams()">
+          <option value="0.63">0.63 m/s</option>
+          <option value="1.00" selected>1.00 m/s (Estándar)</option>
+          <option value="1.60">1.60 m/s (Rápido)</option>
+        </select>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Tipo de Encoder / Realimentación:' : 'Encoder Feedback Interface:'}</label>
+        <select id="fujiEncoder" onchange="calculateFujiParams()">
+          <option value="inc1024" selected>Incremental 1024 ppr (OPC-LM1-IL)</option>
+          <option value="inc2048">Incremental 2048 ppr (OPC-LM1-IL)</option>
+          <option value="endat">EnDat 2.1 / 2.2 Sincrónico (OPC-LM1-PS1)</option>
+          <option value="sincos">SinCos ERN 1387 (OPC-LM1-PR)</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;gap:6px;align-items:center;">
+        <span style="font-size:0.82rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">${isEs ? 'Filtrar Grupo:' : 'Filter Group:'}</span>
+        <button class="dip-preset-btn" onclick="filterFujiGroup('all')">${isEs ? 'Todos' : 'All'}</button>
+        <button class="dip-preset-btn" onclick="filterFujiGroup('F')">F (Básicos)</button>
+        <button class="dip-preset-btn" onclick="filterFujiGroup('E')">E (Terminales)</button>
+        <button class="dip-preset-btn" onclick="filterFujiGroup('C')">C (Velocidades)</button>
+        <button class="dip-preset-btn" onclick="filterFujiGroup('P')">P (Motor)</button>
+        <button class="dip-preset-btn" onclick="filterFujiGroup('L')">L (Confort/Freno)</button>
+      </div>
+      <button class="print-btn-field" onclick="copyFujiParamsClipboard()" style="padding:6px 14px;font-size:0.82rem;">
+        📋 ${isEs ? 'Copiar Tabla de Parámetros' : 'Copy Parameter Table'}
+      </button>
+    </div>
+
+    <div class="fuji-table-responsive">
+      <table class="table-doc" style="margin:0;">
+        <thead>
+          <tr>
+            <th style="width:70px;">Cód.</th>
+            <th>${isEs ? 'Parámetro Fuji Frenic-Lift' : 'Fuji Frenic-Lift Parameter'}</th>
+            <th style="width:120px;">${isEs ? 'Valor K2' : 'K2 Value'}</th>
+            <th style="width:110px;">${isEs ? 'Defecto Fábrica' : 'Factory Default'}</th>
+            <th>${isEs ? 'Conexión Placa K2 / Notas' : 'K2 Terminal / Engineering Note'}</th>
+          </tr>
+        </thead>
+        <tbody id="fujiParamsTbody">
+          <!-- Populated dynamically by calculateFujiParams() -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>`;
+  }
+
+  // --- TOOL 5.8: EN 81-20 SAFETY SERIES TRACER HTML ---
+  function getSafetyTracerHtml(lang) {
+    const isEs = lang === 'ES';
+    return `
+<div class="doc-section" id="tool-safety-tracer-app">
+  <div class="doc-header">
+    <span class="badge badge-cyan">${isEs ? 'Herramienta Interactiva 5.8' : 'Interactive Tool 5.8'}</span>
+    <h1>🔴 ${isEs ? 'Rastreador Interactivo de Serie de Seguridad EN 81-20' : 'EN 81-20 Safety Series Interactive Fault Tracer'}</h1>
+    <p>${isEs 
+      ? 'Simulador interactivo del circuito de seguridades de 110Vac del cuadro EDEL K2. Abra o cierre interruptores de foso, acuñamiento, puertas de rellano y cabina para comprobar instantáneamente caídas de tensión en cada borna y diagnosticar la avería exacta.'
+      : 'Interactive simulator of the 110Vac safety chain circuit for the EDEL K2 controller. Trip or reset safety switches across pit, overspeed, landing locks, and car gate to diagnose voltage drops and pin down exact fault codes.'
+    }</p>
+  </div>
+
+  <div class="safety-tracer-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h3 style="color:var(--accent-cyan);margin:0;">${isEs ? 'Esquema de Contactos Serie 110Vac (Bornas 39 a 46)' : '110Vac Safety Chain Contacts (Terminals 39 to 46)'}</h3>
+        <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">
+          ${isEs ? 'Haga clic en [DISPARAR/CERRAR] en cualquier interruptor o toque una Borna para medir con el multímetro:' : 'Click [TRIP/CLOSE] on any switch or tap a Terminal to probe with the multimeter:'}
+        </p>
+      </div>
+      <button class="dip-preset-btn" onclick="resetAllSafetySwitches()" style="background:#0284c7;color:#fff;">
+        🔄 ${isEs ? 'Restablecer Toda la Serie' : 'Reset All Safety Switches'}
+      </button>
+    </div>
+
+    <!-- Safety Nodes Schematic -->
+    <div class="safety-chain-schematic" id="safetyChainNodes">
+      <!-- Generated dynamically by initSafetyTracer() -->
+    </div>
+
+    <!-- Live Multimeter Display & Fault Diagnosis -->
+    <div class="multimeter-box-display">
+      <div>
+        <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">
+          ${isEs ? 'Medida Multímetro Digital (Fluke / K2 Test Point)' : 'Digital Multimeter Reading (Fluke / K2 Test Point)'}
+        </div>
+        <div class="multimeter-digits" id="meterVoltsDisplay">110.2 VAC</div>
+        <div style="font-size:0.85rem;color:var(--text-secondary);" id="meterProbeTarget">
+          ${isEs ? 'Punta de prueba conectada en: Borna 46 (Bobina R_SEG)' : 'Probe connected to: Terminal 46 (R_SEG Coil)'}
+        </div>
+      </div>
+
+      <div style="text-align:right;">
+        <span class="badge" id="safetyStatusBadge" style="background:#059669;color:#fff;font-size:0.95rem;padding:6px 14px;">
+          ✓ ${isEs ? 'SERIE CERRADA — CUADRO LISTO' : 'SAFETY CHAIN CLOSED — READY'}
+        </span>
+        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:6px;" id="safetyFaultCodeDesc">
+          ${isEs ? 'Sin anomalías. Relés de seguridad R_SEG1 y R_SEG2 alimentados.' : 'Normal status. Safety relays R_SEG1 and R_SEG2 energized.'}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
+  }
+
+  // --- TOOL 5.9: K3 HYDRAULIC OPTIMIZER HTML ---
+  function getHydraulicOptimizerHtml(lang) {
+    const isEs = lang === 'ES';
+    return `
+<div class="doc-section" id="tool-k3-hydraulic-app">
+  <div class="doc-header">
+    <span class="badge badge-cyan">${isEs ? 'Herramienta Interactiva 5.9' : 'Interactive Tool 5.9'}</span>
+    <h1>🛗 ${isEs ? 'Optimizador de Válvulas y Tiempos Hidráulicos K3 (GMV / Blain / Bucher)' : 'K3 Hydraulic Valve & Timing Optimizer (GMV / Blain / Bucher)'}</h1>
+    <p>${isEs 
+      ? 'Herramienta técnica para calcular con precisión los tiempos del Menu 3 (Temporizadores) en maniobras hidráulicas EDEL K3. Optimice el paso Estrella-Triángulo, retardos de electroválvulas V1/V2 y renivelación anti-deriva.'
+      : 'Engineering tool to optimize Menu 3 (Timers) on EDEL K3 hydraulic controllers. Fine-tune Star-Delta changeover, solenoid valve delay sequences, and anti-drift automatic re-leveling.'
+    }</p>
+  </div>
+
+  <div class="hydraulic-opt-container">
+    <div class="fuji-config-grid">
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Bloque de Válvulas Hidráulico:' : 'Hydraulic Valve Block Model:'}</label>
+        <select id="hydroValveBlock" onchange="calculateHydraulicTimers()">
+          <option value="gmv3010" selected>GMV 3010 (Biestable 2 Válvulas)</option>
+          <option value="blainEV100">Blain EV100 (4 Válvulas Proporcional)</option>
+          <option value="bucherIvalve">Bucher iValve Electrónico</option>
+          <option value="beringer">Beringer Hidráulica</option>
+        </select>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Potencia Grupo Motor-Bomba (kW):' : 'Pump Motor Power (kW):'}</label>
+        <select id="hydroKw" onchange="calculateHydraulicTimers()">
+          <option value="7.5">7.5 kW (10 HP)</option>
+          <option value="11.0" selected>11.0 kW (15 HP)</option>
+          <option value="15.0">15.0 kW (20 HP)</option>
+          <option value="18.5">18.5 kW (25 HP)</option>
+          <option value="22.0">22.0 kW (30 HP)</option>
+        </select>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Viscosidad del Aceite ISO VG:' : 'Oil Viscosity Grade ISO VG:'}</label>
+        <select id="hydroOilType" onchange="calculateHydraulicTimers()">
+          <option value="32">${isEs ? 'ISO VG 32 (Clima Frío)' : 'ISO VG 32 (Cold Climate)'}</option>
+          <option value="46" selected>${isEs ? 'ISO VG 46 (Estándar Templado)' : 'ISO VG 46 (Standard Moderate)'}</option>
+          <option value="68">${isEs ? 'ISO VG 68 (Clima Muy Cálido)' : 'ISO VG 68 (Hot Climate)'}</option>
+        </select>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Temperatura Estimada Aceite (°C):' : 'Estimated Oil Temperature (°C):'}</label>
+        <div class="shaft-input-row">
+          <input type="range" id="hydroTempSlider" min="10" max="70" value="35" oninput="updateHydroTemp(this.value)">
+          <span class="shaft-unit-tag" id="hydroTempVal">35 °C</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chronogram Waveform SVG -->
+    <div class="waveform-svg-box">
+      <div style="font-size:0.82rem;font-weight:700;color:var(--accent-cyan);margin-bottom:8px;text-transform:uppercase;">
+        ${isEs ? 'Cronograma Temporal de Activación de Contactores y Válvulas' : 'Contactor & Solenoid Timing Chronogram'}
+      </div>
+      <svg id="hydroWaveformSvg" viewBox="0 0 700 200" style="width:100%;height:auto;background:#050b14;border-radius:4px;">
+        <!-- Generated by renderHydroWaveform() -->
+      </svg>
+    </div>
+
+    <!-- Calculated Timers for K3 Console -->
+    <h3 style="color:var(--accent-cyan);margin-top:20px;font-size:1.05rem;">${isEs ? 'Parámetros Recomendados para Consola K3 (Menú 3)' : 'Recommended Settings for K3 Console (Menu 3)'}</h3>
+    <table class="table-doc">
+      <thead>
+        <tr>
+          <th>Menú</th>
+          <th>${isEs ? 'Parámetro de Maniobra' : 'Controller Parameter'}</th>
+          <th>${isEs ? 'Valor Calculado' : 'Calculated Value'}</th>
+          <th>${isEs ? 'Explicación de Ajuste Fino' : 'Field Tuning Guidelines'}</th>
+        </tr>
+      </thead>
+      <tbody id="hydroTimersTbody">
+        <!-- Generated dynamically -->
+      </tbody>
+    </table>
+  </div>
+</div>`;
+  }
+
+  // --- TOOL 5.10: CAN BUS CHECKER HTML ---
+  function getCanCheckerHtml(lang) {
+    const isEs = lang === 'ES';
+    return `
+<div class="doc-section" id="tool-can-checker-app">
+  <div class="doc-header">
+    <span class="badge badge-cyan">${isEs ? 'Herramienta Interactiva 5.10' : 'Interactive Tool 5.10'}</span>
+    <h1>🔌 ${isEs ? 'Comprobador de Red CAN Bus, Nodos e Impedancia' : 'CAN Bus Topology, Nodes & Impedance Checker'}</h1>
+    <p>${isEs 
+      ? 'Herramienta para verificar la correcta topología del bus CAN (ISO 11898), verificar la impedancia equivalente de 60Ω entre CAN_H y CAN_L y prevenir averías de comunicación F53/F54 por jumpers de 120Ω mal situados.'
+      : 'Engineering tool to verify CAN bus (ISO 11898) line impedance (60Ω target across CAN_H and CAN_L), monitor terminal jumpers, and troubleshoot F53/F54 communication dropouts.'
+    }</p>
+  </div>
+
+  <div class="can-checker-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h3 style="color:var(--accent-cyan);margin:0;">${isEs ? 'Nodos de la Red CAN Bus (Cabina y Rellano)' : 'CAN Bus Network Nodes (Car & Landing)'}</h3>
+        <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">
+          ${isEs ? 'Active o desactive los puentes de terminación (120Ω) de cada placa para simular la impedancia real:' : 'Toggle the 120Ω line termination jumpers on each board to compute overall bus resistance:'}
+        </p>
+      </div>
+      <button class="dip-preset-btn" onclick="setRecommendedCanTopology()" style="background:#0284c7;color:#fff;">
+        ⚡ ${isEs ? 'Configuración Recomendada (60Ω)' : 'Recommended Setup (60Ω)'}
+      </button>
+    </div>
+
+    <!-- Node Cards Grid -->
+    <div class="can-nodes-grid" id="canNodesGrid">
+      <!-- Generated by initCanChecker() -->
+    </div>
+
+    <!-- Real-time Multimeter & Warning Card -->
+    <div class="can-meter-card" id="canMeterCard">
+      <div>
+        <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">
+          ${isEs ? 'Resistencia Medida entre CAN_H y CAN_L (Sin Tensión)' : 'Measured Resistance Between CAN_H & CAN_L (Unpowered)'}
+        </div>
+        <div class="multimeter-digits" id="canOhmDisplay" style="color:#10b981;">60.0 Ω</div>
+        <div style="font-size:0.85rem;color:var(--text-secondary);" id="canVoltRefDisplay">
+          Con cuadro encendido: V(CAN_H) ≈ 2.70 Vdc | V(CAN_L) ≈ 2.30 Vdc (Vdiff = 0.4V)
+        </div>
+      </div>
+
+      <div style="text-align:right;">
+        <span class="badge" id="canHealthBadge" style="background:#059669;color:#fff;font-size:0.95rem;padding:6px 14px;">
+          ✓ ${isEs ? 'RED PERFECTA (60Ω)' : 'PERFECT BUS (60Ω)'}
+        </span>
+        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:6px;" id="canHealthAdvice">
+          ${isEs ? 'Exactamente dos terminaciones activas en los dos extremos físicos del bus.' : 'Exactly two terminations installed at physical bus endpoints.'}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
+  }
+
+  // --- TOOL 5.11: LOAD WEIGHER CALIBRATION HTML ---
+  function getLoadWeigherHtml(lang) {
+    const isEs = lang === 'ES';
+    return `
+<div class="doc-section" id="tool-load-weigher-app">
+  <div class="doc-header">
+    <span class="badge badge-cyan">${isEs ? 'Herramienta Interactiva 5.11' : 'Interactive Tool 5.11'}</span>
+    <h1>⚖️ ${isEs ? 'Asistente de Calibración de Pesacargas (Dinacell / MICELECT / K2)' : 'Load Weigher Calibration Wizard (Dinacell / MICELECT / K2)'}</h1>
+    <p>${isEs 
+      ? 'Guía interactiva paso a paso para calibrar la tara vacía (0 kg), presencia mínima (15 kg), carga completa (80%) y sobrecarga (110%) en el Menú 6 de la consola EDEL K2.'
+      : 'Interactive walkthrough to calibrate empty tare (0 kg), minimum presence (15 kg), full load bypass (80%), and overload safety cutoff (110%) on EDEL K2 Console Menu 6.'
+    }</p>
+  </div>
+
+  <div class="weigher-cal-container">
+    <div class="fuji-config-grid">
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Capacidad Nominal de Cabina (Q):' : 'Car Nominal Capacity (Q):'}</label>
+        <select id="weigherCapacity" onchange="updateWeigherCapacity(this.value)">
+          <option value="320">320 kg (4 Personas)</option>
+          <option value="450" selected>450 kg (6 Personas)</option>
+          <option value="630">630 kg (8 Personas)</option>
+          <option value="1000">1000 kg (13 Personas)</option>
+        </select>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Tipo de Sensor Pesacargas:' : 'Load Cell Sensor Interface:'}</label>
+        <select id="weigherSensorType">
+          <option value="can">CAN Bus K2-64296 (Digital)</option>
+          <option value="analog">0-10 Vdc Analógico (Borna IN_PESA)</option>
+          <option value="current">4-20 mA Bucle de Corriente</option>
+        </select>
+      </div>
+
+      <div class="shaft-field-group">
+        <label>${isEs ? 'Simulador de Carga Actual en Cabina:' : 'Simulate Car Weight Load:'}</label>
+        <div class="shaft-input-row">
+          <input type="range" id="weigherWeightSlider" min="0" max="600" value="0" oninput="updateWeigherWeight(this.value)">
+          <span class="shaft-unit-tag" id="weigherWeightVal">0 kg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual Weight Dial & Thresholds -->
+    <div class="weigher-bar-wrapper">
+      <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--text-secondary);">
+        <span>${isEs ? 'Vacío (0%)' : 'Empty (0%)'}</span>
+        <span style="color:#38bdf8;">${isEs ? 'Normal' : 'Normal'}</span>
+        <span style="color:#f59e0b;" id="weigher80Label">${isEs ? 'Completo 80% (360 kg)' : 'Full 80% (360 kg)'}</span>
+        <span style="color:#ef4444;" id="weigher110Label">${isEs ? 'Sobrecarga 110% (495 kg)' : 'Overload 110% (495 kg)'}</span>
+      </div>
+      <div class="weigher-bar-track">
+        <div class="weigher-bar-fill" id="weigherBarFill"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(15,23,42,0.7);padding:14px 20px;border-radius:8px;border:1px solid var(--border-color);margin-bottom:20px;">
+      <div>
+        <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">${isEs ? 'Estado Actual de Cabina K2' : 'Current K2 Cabin State'}</div>
+        <div style="font-size:1.25rem;font-weight:800;color:#10b981;margin-top:2px;" id="weigherStateText">
+          ${isEs ? 'CABINA VACÍA (0% - TARA OK)' : 'EMPTY CAR (0% - TARE OK)'}
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <span class="badge" id="weigherBuzzerBadge" style="background:#334155;color:#94a3b8;font-size:0.85rem;padding:5px 12px;">
+          🔇 ${isEs ? 'Zumbador SAE800: SILENCIO' : 'SAE800 Chime: OFF'}
+        </span>
+      </div>
+    </div>
+
+    <!-- Step by Step Walkthrough Menu 6 -->
+    <h3 style="color:var(--accent-cyan);font-size:1.05rem;">${isEs ? 'Procedimiento en Consola K2 (Menú 6)' : 'K2 Console Menu 6 Calibration Procedure'}</h3>
+    <ol style="color:var(--text-secondary);font-size:0.92rem;line-height:1.7;padding-left:20px;">
+      <li><strong>6.1 Calibrar Cero (Tara):</strong> ${isEs ? 'Vacíe la cabina completamente y asegure puertas cerradas. Pulse [OK] en la consola para memorizar el offset de cero.' : 'Empty the cabin completely and ensure doors are closed. Press [OK] to capture the zero offset.'}</li>
+      <li><strong>6.2 Carga Completa (80%):</strong> ${isEs ? 'Introduzca los pesos patrón o ajuste el umbral a ' : 'Introduce test weights or set threshold to '} <strong id="weigherStep80Kg">360 kg</strong>. ${isEs ? 'El ascensor cancelará llamadas de rellano cuando alcance este peso.' : 'The controller will bypass landing calls once this load is reached.'}</li>
+      <li><strong>6.3 Sobrecarga (110%):</strong> ${isEs ? 'Ajuste el valor a ' : 'Set cutoff threshold to '} <strong id="weigherStep110Kg">495 kg</strong>. ${isEs ? 'Al superar este peso, se bloquea la maniobra, se iluminará el indicador de sobrecarga y sonará el zumbador continuo.' : 'Above this load, elevator locks in floor, illuminates overload lamp and activates acoustic buzzer.'}</li>
+    </ol>
+  </div>
+</div>`;
+  }
+
+  // --- TOOL 5.12: COMMISSIONING WIZARD HTML ---
+  function getCommissioningWizardHtml(lang) {
+    const isEs = lang === 'ES';
+    return `
+<div class="doc-section" id="tool-commissioning-app">
+  <div class="doc-header">
+    <span class="badge badge-cyan">${isEs ? 'Herramienta Interactiva 5.12' : 'Interactive Tool 5.12'}</span>
+    <h1>📋 ${isEs ? 'Protocolo Interactivo de Primera Puesta en Marcha' : 'Interactive First-Power-On Commissioning Protocol'}</h1>
+    <p>${isEs 
+      ? 'Lista de verificación técnica interactiva en 4 fases para la puesta en marcha segura y sin fallos del cuadro EDEL K2. Los estados se guardan automáticamente en su navegador (localStorage).'
+      : 'Interactive 4-phase field checklist for safe, zero-defect commissioning of EDEL K2 controllers. All checkbox states are automatically persisted in your browser.'
+    }</p>
+  </div>
+
+  <div class="commissioning-wizard-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h3 style="color:var(--accent-cyan);margin:0;">${isEs ? 'Progreso de Puesta en Marcha' : 'Commissioning Progress'}</h3>
+        <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;" id="commissionProgressText">
+          0 ${isEs ? 'de 16 verificaciones completadas (0%)' : 'of 16 checks completed (0%)'}
+        </p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="dip-preset-btn" onclick="resetCommissionChecklist()">
+          🔄 ${isEs ? 'Reiniciar Lista' : 'Reset Checklist'}
+        </button>
+        <button class="print-btn-field" onclick="window.print()" style="padding:6px 14px;font-size:0.82rem;">
+          🖨️ ${isEs ? 'Imprimir Acta' : 'Print Protocol'}
+        </button>
+      </div>
+    </div>
+
+    <div class="commission-progress-track">
+      <div class="commission-progress-fill" id="commissionProgressFill"></div>
+    </div>
+
+    <!-- 4 Phases of Checklist -->
+    <div id="commissionPhasesContainer">
+      <!-- Generated dynamically by initCommissioningWizard() -->
+    </div>
+  </div>
+</div>`;
+  }
+
   // --- 8. INITIALIZE LOGIC FUNCTIONS ---
   window.initInteractiveTools = function(role, sectionId) {
     if (role !== 'tools') return;
@@ -617,6 +1180,20 @@
       initTerminalVisualizer();
     } else if (sectionId === 'tool-console') {
       initExpandedConsoleSimulator();
+    } else if (sectionId === 'tool-shaft-calc') {
+      initShaftCalculator();
+    } else if (sectionId === 'tool-fuji-gen') {
+      initFujiGenerator();
+    } else if (sectionId === 'tool-safety-tracer') {
+      initSafetyTracer();
+    } else if (sectionId === 'tool-k3-hydraulic') {
+      initHydraulicOptimizer();
+    } else if (sectionId === 'tool-can-checker') {
+      initCanChecker();
+    } else if (sectionId === 'tool-load-weigher') {
+      initLoadWeigher();
+    } else if (sectionId === 'tool-commissioning') {
+      initCommissioningWizard();
     }
   };
 
@@ -941,7 +1518,14 @@
       "tool-faults": getFaultDiagnosticsHtml(lang),
       "tool-terminal": getTerminalVisualizerHtml(lang),
       "tool-console": getConsoleSimulatorHtml(lang),
-      "tool-cheatsheets": getPrintableCheatsheetsHtml(lang)
+      "tool-cheatsheets": getPrintableCheatsheetsHtml(lang),
+      "tool-shaft-calc": getShaftCalculatorHtml(lang),
+      "tool-fuji-gen": getFujiGeneratorHtml(lang),
+      "tool-safety-tracer": getSafetyTracerHtml(lang),
+      "tool-k3-hydraulic": getHydraulicOptimizerHtml(lang),
+      "tool-can-checker": getCanCheckerHtml(lang),
+      "tool-load-weigher": getLoadWeigherHtml(lang),
+      "tool-commissioning": getCommissioningWizardHtml(lang)
     });
 
     // In docsData_ES
@@ -966,12 +1550,12 @@
     if (typeof roleLocalization !== 'undefined') {
       roleLocalization.ES.tools = {
         title: "5. Herramientas Interactivas",
-        desc: "Calculadora DIP, Diagnóstico de Averías, Bornas y Consola",
+        desc: "12 Herramientas: DIP, Averías, Bornas, Consola, Banderas, Fuji, Series 110V, Óleo K3, CAN y Puesta en Marcha",
         sidebar: "Herramientas de Ingeniería Interactivas"
       };
       roleLocalization.EN.tools = {
         title: "5. Interactive Tools",
-        desc: "DIP Calc, Live Faults, Terminal Map & Console Simulator",
+        desc: "12 Engineering Tools: DIP, Live Faults, Terminals, Console, Shaft Decel, Fuji, Safety Series, K3, CAN & Commissioning",
         sidebar: "Interactive Engineering Tools"
       };
     }
@@ -982,6 +1566,666 @@
     document.addEventListener('DOMContentLoaded', registerToolsRole);
   } else {
     registerToolsRole();
+  }
+
+
+  // ==========================================================================
+  // ENGINES FOR TOOLS 5.6 TO 5.12
+  // ==========================================================================
+
+  // --- 1. SHAFT CALCULATOR ENGINE ---
+  window.calculateShaftDistances = function() {
+    const vnInput = document.getElementById('shaftVn');
+    const aInput = document.getElementById('shaftAcc');
+    const vlevInput = document.getElementById('shaftVlev');
+    const lScreenInput = document.getElementById('shaftLscreen');
+    if (!vnInput || !aInput || !vlevInput || !lScreenInput) return;
+
+    const vn = parseFloat(vnInput.value) || 1.0;
+    const a = parseFloat(aInput.value) || 0.6;
+    const vlev = parseFloat(vlevInput.value) || 0.08;
+    const lscreenMm = parseFloat(lScreenInput.value) || 200;
+
+    // Sdec = (Vn^2 - Vlev^2) / (2 * a) in meters
+    const sdecM = Math.max(0, (vn * vn - vlev * vlev) / (2 * a));
+    const sdecCm = (sdecM * 100).toFixed(1);
+
+    // Physical flag distance from floor level = Sdec + Lscreen/2 (meters -> cm)
+    const flagPosM = sdecM + (lscreenMm / 2000.0);
+    const flagPosCm = (flagPosM * 100).toFixed(1);
+
+    // Creep time in seconds (creeping along remaining flag half: (Lscreen/2) / Vlev)
+    const creepTime = ((lscreenMm / 2000.0) / vlev).toFixed(2);
+
+    const elDecel = document.getElementById('resDecelDist');
+    const elFlag = document.getElementById('resFlagPos');
+    const elCreep = document.getElementById('resCreepTime');
+    const elTextSvg = document.getElementById('svgDecelText');
+
+    if (elDecel) elDecel.textContent = sdecCm + ' cm';
+    if (elFlag) elFlag.textContent = flagPosCm + ' cm';
+    if (elCreep) elCreep.textContent = creepTime + ' s';
+    if (elTextSvg) elTextSvg.textContent = Math.round(flagPosM * 1000) + ' mm';
+  };
+
+  window.setShaftPreset = function(vn, a, vlev, lscreen) {
+    const vnInput = document.getElementById('shaftVn');
+    const aInput = document.getElementById('shaftAcc');
+    const vlevInput = document.getElementById('shaftVlev');
+    const lScreenInput = document.getElementById('shaftLscreen');
+    if (vnInput) vnInput.value = vn.toFixed(2);
+    if (aInput) aInput.value = a.toFixed(2);
+    if (vlevInput) vlevInput.value = vlev.toFixed(2);
+    if (lScreenInput) lScreenInput.value = lscreen.toString();
+    calculateShaftDistances();
+  };
+
+  function initShaftCalculator() {
+    calculateShaftDistances();
+  }
+
+  // --- 2. FUJI PARAMETER GENERATOR ENGINE ---
+  const fujiMasterParams = [
+    { code: "F03", name: "Frecuencia Máxima de Salida", default: "50.0 Hz", group: "F", note: "Borna X4 Rápida. Velocidad nominal del motor." },
+    { code: "F04", name: "Frecuencia Base Nominal", default: "50.0 Hz", group: "F", note: "Placa de características del motor (50 Hz / 60 Hz)." },
+    { code: "F07", name: "Rampa de Aceleración 1", default: "2.50 s", group: "F", note: "Arranque suave sin sacudidas (jerk)." },
+    { code: "F08", name: "Rampa de Deceleración 1", default: "2.20 s", group: "F", note: "Deceleración hasta velocidad de nivelación C04." },
+    { code: "E01", name: "Terminal X1 (Borna 24)", default: "0 (FWD)", group: "E", note: "Marcha SUBIR desde relé R_SUBIDA de K2." },
+    { code: "E02", name: "Terminal X2 (Borna 25)", default: "1 (REV)", group: "E", note: "Marcha BAJAR desde relé R_BAJADA de K2." },
+    { code: "E03", name: "Terminal X3 (Borna 26)", default: "2 (SS1)", group: "E", note: "Selección Velocidad Lenta C04 (Nivelación)." },
+    { code: "E04", name: "Terminal X4 (Borna 27)", default: "3 (SS2)", group: "E", note: "Selección Velocidad Rápida C07 (Nominal)." },
+    { code: "E05", name: "Terminal EN (Borna EN)", default: "100 (EN)", group: "E", note: "Habilitación general / contacto guiado contactor." },
+    { code: "C04", name: "Velocidad V1 (Lenta / Nivelación)", default: "4.0 Hz", group: "C", note: "Aproximación lenta a planta (0.08 m/s)." },
+    { code: "C05", name: "Velocidad V2 (Inspección / Techo)", default: "12.5 Hz", group: "C", note: "Marcha lenta en revisión de techo (0.25 m/s)." },
+    { code: "C06", name: "Velocidad V_INT (Piso a Piso)", default: "35.0 Hz", group: "C", note: "Viaje corto entre plantas adyacentes (0.70 m/s)." },
+    { code: "C07", name: "Velocidad V3 (Rápida Nominal)", default: "50.0 Hz", group: "C", note: "Velocidad de contrato nominal (1.00 m/s)." },
+    { code: "C11", name: "Velocidad Rescate Baterías", default: "6.0 Hz", group: "C", note: "Evacuación automática por falta de tensión." },
+    { code: "P01", name: "Número de Polos del Motor", default: "4 Polos", group: "P", note: "4 polos para 1500 rpm / 16-24 polos en Gearless." },
+    { code: "P02", name: "Potencia Nominal del Motor", default: "5.5 kW", group: "P", note: "Dato de placa del motor (Fuji Frenic-Lift)." },
+    { code: "P03", name: "Corriente Nominal del Motor", default: "11.8 A", group: "P", note: "Ajuste térmico electrónico de protección." },
+    { code: "P12", name: "Pulsos de Encoder por Vuelta", default: "1024 ppr", group: "P", note: "Configuración tarjeta OPC-LM1-IL o PS1." },
+    { code: "L36", name: "Curva S Inicio Aceleración", default: "0.80 s", group: "L", note: "Confort de arranque sin tirón inicial." },
+    { code: "L38", name: "Curva S Fin Deceleración", default: "0.70 s", group: "L", note: "Entrada suave a la velocidad lenta de nivelación." },
+    { code: "L65", name: "Ganancia Anti-Retroceso (Rollback)", default: "120%", group: "L", note: "Control de velocidad a 0 rpm antes de abrir freno." },
+    { code: "L67", name: "Tiempo Retención Parada Freno", default: "0.35 s", group: "L", note: "Retención de par motor hasta caída completa zapatas." }
+  ];
+
+  let currentFujiFilter = 'all';
+
+  window.calculateFujiParams = function() {
+    const motorType = document.getElementById('fujiMotorType') ? document.getElementById('fujiMotorType').value : 'geared';
+    const kw = document.getElementById('fujiKw') ? document.getElementById('fujiKw').value : '5.5';
+    const speed = document.getElementById('fujiSpeed') ? parseFloat(document.getElementById('fujiSpeed').value) : 1.0;
+    const enc = document.getElementById('fujiEncoder') ? document.getElementById('fujiEncoder').value : 'inc1024';
+
+    const tbody = document.getElementById('fujiParamsTbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    fujiMasterParams.forEach(p => {
+      if (currentFujiFilter !== 'all' && p.group !== currentFujiFilter) return;
+
+      let val = p.default;
+      if (p.code === 'P02') val = kw + ' kW';
+      if (p.code === 'P01') val = (motorType === 'gearless') ? '20 Polos' : '4 Polos';
+      if (p.code === 'P03') {
+        const k = parseFloat(kw);
+        val = (k * 2.15).toFixed(1) + ' A';
+      }
+      if (p.code === 'P12') {
+        if (enc === 'inc1024') val = '1024 ppr';
+        else if (enc === 'inc2048') val = '2048 ppr';
+        else if (enc === 'endat') val = '2048 ppr (SSI/EnDat)';
+        else if (enc === 'sincos') val = 'SinCos 1387 (2048)';
+      }
+      if (p.code === 'C07') {
+        val = (speed === 1.6) ? '80.0 Hz' : (speed === 0.63 ? '31.5 Hz' : '50.0 Hz');
+      }
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><span class="fuji-code-tag">${p.code}</span></td>
+        <td style="font-weight:600;color:var(--text-primary);">${p.name}</td>
+        <td style="font-family:var(--font-mono);font-weight:700;color:#38bdf8;">${val}</td>
+        <td style="color:var(--text-muted);font-size:0.85rem;">${p.default}</td>
+        <td style="font-size:0.85rem;color:var(--text-secondary);">${p.note}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  };
+
+  window.filterFujiGroup = function(grp) {
+    currentFujiFilter = grp;
+    calculateFujiParams();
+  };
+
+  window.copyFujiParamsClipboard = function() {
+    let out = "PARÁMETROS FUJI FRENIC-LIFT — EDEL K2\n";
+    fujiMasterParams.forEach(p => {
+      out += `${p.code}: ${p.name} -> ${p.default} (${p.note})\n`;
+    });
+    navigator.clipboard.writeText(out).then(() => {
+      alert("Tabla de parámetros copiada al portapapeles.");
+    });
+  };
+
+  function initFujiGenerator() {
+    calculateFujiParams();
+  }
+
+  // --- 3. SAFETY TRACER ENGINE ---
+  const safetySwitches = [
+    { id: "sw_fuse", borna: "39", name: "Fusible F4 (2A 110Vac)", state: "closed", faultCode: "F00", desc: "Alimentación general 110Vac" },
+    { id: "sw_foso", borna: "40", name: "Stop Foso + Limitador Velocidad + Finales", state: "closed", faultCode: "F01", desc: "Serie foso y cuarto de poleas" },
+    { id: "sw_pres_rellano", borna: "41", name: "Contactos Enclavamiento Rellano (Presencia)", state: "closed", faultCode: "F02", desc: "Contactos mecánicos de puertas cerradas" },
+    { id: "sw_cerrojos", borna: "42", name: "Contactos Cerrojo Rellano (Bloqueo Eléctrico)", state: "closed", faultCode: "F12", desc: "Cerrojo de seguridad enclavado" },
+    { id: "sw_manguera", borna: "43", name: "Línea Manguera Hacia Cabina", state: "closed", faultCode: "F01", desc: "Alimentación serie de cabina" },
+    { id: "sw_techo", borna: "44", name: "Stop Techo Cabina + Contacto Paracaídas", state: "closed", faultCode: "F01", desc: "Botonera de inspección y cuñas" },
+    { id: "sw_cabina_gate", borna: "45", name: "Contacto Puerta de Cabina (Operador)", state: "closed", faultCode: "F04", desc: "Hoja de cabina cerrada" },
+    { id: "sw_coils", borna: "46", name: "Bobina Relés R_SEG1 y R_SEG2 (K2)", state: "closed", faultCode: "F01", desc: "Relés guiados de seguridad K2" }
+  ];
+
+  let selectedProbeBorna = "46";
+
+  window.toggleSafetySwitch = function(swId) {
+    const sw = safetySwitches.find(s => s.id === swId);
+    if (!sw) return;
+    sw.state = (sw.state === 'closed') ? 'open' : 'closed';
+    renderSafetyChain();
+    updateSafetyMultimeter();
+  };
+
+  window.resetAllSafetySwitches = function() {
+    safetySwitches.forEach(s => s.state = 'closed');
+    renderSafetyChain();
+    updateSafetyMultimeter();
+  };
+
+  window.selectSafetyProbe = function(borna) {
+    selectedProbeBorna = borna;
+    updateSafetyMultimeter();
+  };
+
+  function renderSafetyChain() {
+    const container = document.getElementById('safetyChainNodes');
+    if (!container) return;
+    container.innerHTML = '';
+
+    safetySwitches.forEach((sw, idx) => {
+      const isOpen = sw.state === 'open';
+      const item = document.createElement('div');
+      item.className = `safety-node-item ${isOpen ? 'node-open' : 'node-closed'}`;
+      item.innerHTML = `
+        <div class="safety-node-info">
+          <span class="safety-borna-badge" onclick="selectSafetyProbe('${sw.borna}')" style="cursor:pointer;" title="Poner punta multímetro aquí">
+            Borna ${sw.borna} 📍
+          </span>
+          <div>
+            <div style="font-weight:700;color:${isOpen ? '#ef4444' : '#f8fafc'};">${sw.name}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">${sw.desc}</div>
+          </div>
+        </div>
+        <button class="safety-switch-toggle-btn ${isOpen ? 'btn-tripped' : ''}" onclick="toggleSafetySwitch('${sw.id}')">
+          ${isOpen ? '⚠️ DISPARADO (ABIERTO)' : '✓ CERRADO (OK)'}
+        </button>
+      `;
+      container.appendChild(item);
+    });
+  }
+
+  function updateSafetyMultimeter() {
+    const meterVal = document.getElementById('meterVoltsDisplay');
+    const meterTarget = document.getElementById('meterProbeTarget');
+    const statusBadge = document.getElementById('safetyStatusBadge');
+    const faultDesc = document.getElementById('safetyFaultCodeDesc');
+    if (!meterVal || !meterTarget) return;
+
+    // Find if any switch BEFORE or AT the selected probe borna is OPEN
+    const probeIndex = safetySwitches.findIndex(s => s.borna === selectedProbeBorna);
+    let voltage = 110.0;
+    let firstOpenSwitch = null;
+
+    for (let i = 0; i <= probeIndex; i++) {
+      if (safetySwitches[i].state === 'open') {
+        voltage = 0.0;
+        firstOpenSwitch = safetySwitches[i];
+        break;
+      }
+    }
+
+    // Check if whole chain is closed
+    const anyOpen = safetySwitches.find(s => s.state === 'open');
+
+    meterVal.textContent = (voltage > 50) ? (110.2 + (Math.random() * 0.4)).toFixed(1) + ' VAC' : '000.0 VAC';
+    meterVal.style.color = (voltage > 50) ? '#38bdf8' : '#ef4444';
+    meterTarget.textContent = `Punta de prueba conectada en: Borna ${selectedProbeBorna} (${safetySwitches[probeIndex].name})`;
+
+    if (!anyOpen) {
+      if (statusBadge) {
+        statusBadge.textContent = '✓ SERIE CERRADA — CUADRO LISTO';
+        statusBadge.style.background = '#059669';
+      }
+      if (faultDesc) faultDesc.textContent = 'Sin anomalías. Relés de seguridad R_SEG1 y R_SEG2 alimentados.';
+    } else {
+      if (statusBadge) {
+        statusBadge.textContent = `⚠️ BLOQUEO POR SEGURIDAD [Avería ${anyOpen.faultCode}]`;
+        statusBadge.style.background = '#dc2626';
+      }
+      if (faultDesc) {
+        faultDesc.textContent = `Punto de interrupción: ${anyOpen.name} (Borna ${anyOpen.borna}). Multímetro leerá 0V a partir de esta borna.`;
+      }
+    }
+  }
+
+  function initSafetyTracer() {
+    renderSafetyChain();
+    updateSafetyMultimeter();
+  }
+
+  // --- 4. HYDRAULIC OPTIMIZER ENGINE ---
+  window.updateHydroTemp = function(temp) {
+    const label = document.getElementById('hydroTempVal');
+    if (label) label.textContent = temp + ' °C';
+    calculateHydraulicTimers();
+  };
+
+  window.calculateHydraulicTimers = function() {
+    const valve = document.getElementById('hydroValveBlock') ? document.getElementById('hydroValveBlock').value : 'gmv3010';
+    const kw = document.getElementById('hydroKw') ? parseFloat(document.getElementById('hydroKw').value) : 11.0;
+    const temp = document.getElementById('hydroTempSlider') ? parseInt(document.getElementById('hydroTempSlider').value) : 35;
+
+    // Calculate Star-Delta time: 1.8s base + 0.05s per kW above 7.5kW + cold oil penalty
+    let tStarDelta = 1.8 + ((kw - 7.5) * 0.04);
+    if (temp < 20) tStarDelta += 0.4; // thicker cold oil requires longer spin-up
+    tStarDelta = tStarDelta.toFixed(1);
+
+    const tbody = document.getElementById('hydroTimersTbody');
+    if (!tbody) return;
+    tbody.innerHTML = `
+      <tr>
+        <td><strong>3.4</strong></td>
+        <td style="font-weight:700;color:var(--text-primary);">TPO ESTRELLA-TRIÁNGULO</td>
+        <td style="font-family:var(--font-mono);font-weight:700;color:#38bdf8;">${tStarDelta} s</td>
+        <td>Tiempo de aceleración del motor en estrella sin carga hidráulica.</td>
+      </tr>
+      <tr>
+        <td><strong>3.4</strong></td>
+        <td style="font-weight:700;color:var(--text-primary);">Tiempo Muerto Contactores</td>
+        <td style="font-family:var(--font-mono);font-weight:700;color:#38bdf8;">50 ms</td>
+        <td>Enclavamiento de seguridad para evitar cortocircuito entre KM2 y KM3.</td>
+      </tr>
+      <tr>
+        <td><strong>3.3</strong></td>
+        <td style="font-weight:700;color:var(--text-primary);">Retardo Apertura Válvula Rápida</td>
+        <td style="font-family:var(--font-mono);font-weight:700;color:#38bdf8;">250 ms</td>
+        <td>Retardo tras entrar KM3 (Triángulo) para evitar sobrepresión en arranque.</td>
+      </tr>
+      <tr>
+        <td><strong>3.1</strong></td>
+        <td style="font-weight:700;color:var(--text-primary);">Tiempo de Nivelación en Parada</td>
+        <td style="font-family:var(--font-mono);font-weight:700;color:#38bdf8;">1.20 s</td>
+        <td>Aproximación lenta para suave detención sin golpe de ariete hidráulico.</td>
+      </tr>
+      <tr>
+        <td><strong>3.5</strong></td>
+        <td style="font-weight:700;color:var(--text-primary);">Reenvío Óleo a Planta Baja</td>
+        <td style="font-family:var(--font-mono);font-weight:700;color:#38bdf8;">600 s (10 min)</td>
+        <td>Baja el émbolo al fondo para evitar enfriamiento y decantación de aceite.</td>
+      </tr>
+    `;
+
+    renderHydroWaveform(parseFloat(tStarDelta));
+  };
+
+  function renderHydroWaveform(tStarDelta) {
+    const svg = document.getElementById('hydroWaveformSvg');
+    if (!svg) return;
+    svg.innerHTML = `
+      <!-- Grid lines -->
+      <line x1="120" y1="20" x2="680" y2="20" stroke="#1e293b"/>
+      <line x1="120" y1="60" x2="680" y2="60" stroke="#1e293b"/>
+      <line x1="120" y1="100" x2="680" y2="100" stroke="#1e293b"/>
+      <line x1="120" y1="140" x2="680" y2="140" stroke="#1e293b"/>
+      <line x1="120" y1="180" x2="680" y2="180" stroke="#1e293b"/>
+
+      <!-- Labels -->
+      <text x="20" y="35" fill="#f8fafc" font-size="11" font-weight="700">KM1 Línea</text>
+      <text x="20" y="75" fill="#38bdf8" font-size="11" font-weight="700">KM2 Estrella</text>
+      <text x="20" y="115" fill="#10b981" font-size="11" font-weight="700">KM3 Triángulo</text>
+      <text x="20" y="155" fill="#f59e0b" font-size="11" font-weight="700">EV-R (Rápida)</text>
+      <text x="20" y="195" fill="#f43f5e" font-size="11" font-weight="700">EV-L (Lenta)</text>
+
+      <!-- Waveform curves -->
+      <!-- KM1: Active from t=0 to t=end -->
+      <polyline points="120,40 160,40 160,25 660,25 660,40 680,40" fill="none" stroke="#f8fafc" stroke-width="2.5"/>
+
+      <!-- KM2: Active for tStarDelta (approx 160px) -->
+      <polyline points="120,80 160,80 160,65 320,65 320,80 680,80" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+
+      <!-- KM3: Active after 50ms dead time -->
+      <polyline points="120,120 335,120 335,105 660,105 660,120 680,120" fill="none" stroke="#10b981" stroke-width="2.5"/>
+
+      <!-- EV-R: Starts 250ms after KM3, drops before floor -->
+      <polyline points="120,160 370,160 370,145 540,145 540,160 680,160" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+
+      <!-- EV-L: Remains active until floor level stop -->
+      <polyline points="120,200 370,200 370,185 640,185 640,200 680,200" fill="none" stroke="#f43f5e" stroke-width="2.5"/>
+    `;
+  }
+
+  function initHydraulicOptimizer() {
+    calculateHydraulicTimers();
+  }
+
+  // --- 5. CAN BUS CHECKER ENGINE ---
+  const canNodes = [
+    { id: "node_k2", name: "Cuadro K2 Mainboard (Extremo 1)", pos: "Cuarto Máquinas", term: true },
+    { id: "node_techo", name: "Placa Techo K2-64290", pos: "Techo Cabina", term: false },
+    { id: "node_cop", name: "Botonera Cabina K2-64292", pos: "Cabina", term: false },
+    { id: "node_pesa", name: "Pesacargas K2-64296", pos: "Chasis", term: false },
+    { id: "node_p0", name: "BotCAN Piso 0", pos: "Rellano", term: false },
+    { id: "node_pTop", name: "BotCAN Piso Ático (Extremo 2)", pos: "Rellano Superior", term: true }
+  ];
+
+  window.toggleCanTerm = function(nodeId) {
+    const n = canNodes.find(item => item.id === nodeId);
+    if (!n) return;
+    n.term = !n.term;
+    renderCanNodes();
+    updateCanHealth();
+  };
+
+  window.setRecommendedCanTopology = function() {
+    canNodes.forEach(n => {
+      n.term = (n.id === 'node_k2' || n.id === 'node_pTop');
+    });
+    renderCanNodes();
+    updateCanHealth();
+  };
+
+  function renderCanNodes() {
+    const grid = document.getElementById('canNodesGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    canNodes.forEach(n => {
+      const card = document.createElement('div');
+      card.className = 'can-node-card';
+      card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-weight:700;color:var(--text-primary);font-size:0.95rem;">${n.name}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Ubicación: ${n.pos}</div>
+          </div>
+          <span class="badge" style="background:${n.term ? '#0284c7' : '#334155'};color:#fff;">
+            ${n.term ? '120Ω ACTIVA' : 'SIN PUENTE'}
+          </span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+          <span style="font-size:0.82rem;color:var(--text-secondary);">Jumper de Terminación:</span>
+          <button class="safety-switch-toggle-btn ${n.term ? '' : 'btn-tripped'}" onclick="toggleCanTerm('${n.id}')" style="padding:4px 10px;">
+            ${n.term ? 'CERRADO (ON)' : 'ABIERTO (OFF)'}
+          </button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function updateCanHealth() {
+    const ohmDisp = document.getElementById('canOhmDisplay');
+    const badge = document.getElementById('canHealthBadge');
+    const advice = document.getElementById('canHealthAdvice');
+    const card = document.getElementById('canMeterCard');
+    if (!ohmDisp || !badge || !advice) return;
+
+    const termsCount = canNodes.filter(n => n.term).length;
+    let req = 9999;
+    if (termsCount > 0) {
+      req = (120.0 / termsCount).toFixed(1);
+    }
+
+    if (card) {
+      card.classList.remove('meter-warn', 'meter-error');
+    }
+
+    if (termsCount === 2) {
+      ohmDisp.textContent = "60.0 Ω";
+      ohmDisp.style.color = "#10b981";
+      badge.textContent = "✓ RED PERFECTA (60Ω)";
+      badge.style.background = "#059669";
+      advice.textContent = "Cumple la norma ISO 11898-2. Sin riesgo de reflexiones ni caídas de comunicación.";
+    } else if (termsCount === 1) {
+      ohmDisp.textContent = "120.0 Ω";
+      ohmDisp.style.color = "#f59e0b";
+      badge.textContent = "⚠️ FALTA 1 TERMINACIÓN (120Ω)";
+      badge.style.background = "#d97706";
+      advice.textContent = "Hay un solo jumper colocado. El bus sufrirá eco de señal y causará Avería F53 esporádica.";
+      if (card) card.classList.add('meter-warn');
+    } else if (termsCount > 2) {
+      ohmDisp.textContent = req + " Ω";
+      ohmDisp.style.color = "#ef4444";
+      badge.textContent = `⚠️ SOBRECARGA (${termsCount} TERMINACIONES)`;
+      badge.style.background = "#dc2626";
+      advice.textContent = `Hay ${termsCount} jumpers cerrados. Sobrecarga los transceptores PCA82C250. Abra los jumpers intermedios.`;
+      if (card) card.classList.add('meter-error');
+    } else {
+      ohmDisp.textContent = "∞ Ω (Abierto)";
+      ohmDisp.style.color = "#ef4444";
+      badge.textContent = "🚨 SIN TERMINACIÓN";
+      badge.style.background = "#dc2626";
+      advice.textContent = "Ningún jumper conectado. La comunicación CAN no funcionará (Avería F53 y F54 continua).";
+      if (card) card.classList.add('meter-error');
+    }
+  }
+
+  function initCanChecker() {
+    renderCanNodes();
+    updateCanHealth();
+  }
+
+  // --- 6. LOAD WEIGHER CALIBRATION ENGINE ---
+  let weigherCapKg = 450;
+
+  window.updateWeigherCapacity = function(cap) {
+    weigherCapKg = parseInt(cap) || 450;
+    const kg80 = Math.round(weigherCapKg * 0.8);
+    const kg110 = Math.round(weigherCapKg * 1.1);
+
+    const l80 = document.getElementById('weigher80Label');
+    const l110 = document.getElementById('weigher110Label');
+    const s80 = document.getElementById('weigherStep80Kg');
+    const s110 = document.getElementById('weigherStep110Kg');
+
+    if (l80) l80.textContent = `Completo 80% (${kg80} kg)`;
+    if (l110) l110.textContent = `Sobrecarga 110% (${kg110} kg)`;
+    if (s80) s80.textContent = `${kg80} kg`;
+    if (s110) s110.textContent = `${kg110} kg`;
+
+    const slider = document.getElementById('weigherWeightSlider');
+    if (slider) {
+      slider.max = (weigherCapKg * 1.35).toString();
+      updateWeigherWeight(slider.value);
+    }
+  };
+
+  window.updateWeigherWeight = function(weight) {
+    const w = parseInt(weight) || 0;
+    const label = document.getElementById('weigherWeightVal');
+    const fill = document.getElementById('weigherBarFill');
+    const stateText = document.getElementById('weigherStateText');
+    const buzzerBadge = document.getElementById('weigherBuzzerBadge');
+    if (label) label.textContent = w + ' kg';
+
+    const pct = Math.min(100, Math.round((w / (weigherCapKg * 1.2)) * 100));
+    if (fill) {
+      fill.style.width = pct + '%';
+      fill.classList.remove('fill-80', 'fill-110');
+    }
+
+    const kg80 = weigherCapKg * 0.8;
+    const kg110 = weigherCapKg * 1.1;
+
+    if (w >= kg110) {
+      if (fill) fill.classList.add('fill-110');
+      if (stateText) {
+        stateText.textContent = `🚨 SOBRECARGA (${w} kg - MANIOBRA BLOQUEADA)`;
+        stateText.style.color = '#ef4444';
+      }
+      if (buzzerBadge) {
+        buzzerBadge.textContent = '🔊 Zumbador SAE800: ACTIVO CONTINUO';
+        buzzerBadge.style.background = '#dc2626';
+        buzzerBadge.style.color = '#fff';
+      }
+    } else if (w >= kg80) {
+      if (fill) fill.classList.add('fill-80');
+      if (stateText) {
+        stateText.textContent = `⚠️ COMPLETO 80% (${w} kg - BYPASS LLAMADAS)`;
+        stateText.style.color = '#f59e0b';
+      }
+      if (buzzerBadge) {
+        buzzerBadge.textContent = '🔇 Zumbador SAE800: SILENCIO';
+        buzzerBadge.style.background = '#334155';
+        buzzerBadge.style.color = '#94a3b8';
+      }
+    } else if (w > 15) {
+      if (stateText) {
+        stateText.textContent = `✓ CABINA OCUPADA (${w} kg - SERVICIO NORMAL)`;
+        stateText.style.color = '#38bdf8';
+      }
+      if (buzzerBadge) {
+        buzzerBadge.textContent = '🔇 Zumbador SAE800: SILENCIO';
+        buzzerBadge.style.background = '#334155';
+        buzzerBadge.style.color = '#94a3b8';
+      }
+    } else {
+      if (stateText) {
+        stateText.textContent = 'CABINA VACÍA (0% - TARA OK)';
+        stateText.style.color = '#10b981';
+      }
+      if (buzzerBadge) {
+        buzzerBadge.textContent = '🔇 Zumbador SAE800: SILENCIO';
+        buzzerBadge.style.background = '#334155';
+        buzzerBadge.style.color = '#94a3b8';
+      }
+    }
+  };
+
+  function initLoadWeigher() {
+    updateWeigherCapacity(450);
+  }
+
+  // --- 7. COMMISSIONING WIZARD ENGINE ---
+  const commissionPhases = [
+    {
+      title: "Fase 1: Comprobaciones en Frío (Sin Tensión)",
+      steps: [
+        "Aislamiento de tierra: Comprobar continuidad a tierra (< 2Ω) y que la serie 110V no derive a chasis.",
+        "Medida impedancia CAN: Medir 60Ω entre bornas CAN_H y CAN_L en cuadro K2 (conmutadores cerrados en extremos).",
+        "Inspección visual bornas de potencia: Apretar bornas R, S, T, U, V, W y verificar conexionado de resistencia de frenado.",
+        "Verificación de puentes de seguridad de fábrica retirados del conexionado definitivo."
+      ]
+    },
+    {
+      title: "Fase 2: Primera Conexión y Comprobación de Tensiones",
+      steps: [
+        "Comprobación de secundarios del transformador: 12Vac (CPU), 18Vac (relés) y 110Vac (seguridades).",
+        "Medición del bus +24Vdc (Bornas 1 y 2): Verificar tensión entre 23.8 Vdc y 25.2 Vdc.",
+        "Verificación de LEDs de CPU K2: LED RUN parpadea a 1 Hz, LED ERR permanece apagado.",
+        "Encendido de pantalla LCD de consola: Comprobar pantalla de inicio 'EDEL v0.6.2'."
+      ]
+    },
+    {
+      title: "Fase 3: Primer Movimiento en Modo Inspección",
+      steps: [
+        "Conmutar caja de inspección de techo a modo REVISIÓN (LED amarillo de inspección encendido).",
+        "Pulsar SUBIR en inspección: Verificar que enclavan contactores y sentido de giro correcto.",
+        "Comprobar contador de encoder: Al subir la cabina, el valor de cota en consola DEBE aumentar en positivo.",
+        "Probar pulsador de STOP de inspección: Debe cortar inmediatamente la serie y desarmar contactores."
+      ]
+    },
+    {
+      title: "Fase 4: Auto-Aprendizaje de Hueco y Puesta en Servicio",
+      steps: [
+        "Lanzar viaje de aprendizaje de pantallas desde Consola Menú 5.14 (posicionamiento de hueco).",
+        "Verificar registro de cotas milimétricas en cada piso y banderas de deceleración CP_SUB/CP_BAJ.",
+        "Ajustar tiempos de puertas en Menú 3.1 (Tpo Apertura 3.0s, Tpo Espera 4.5s).",
+        "Realizar viajes de prueba en automático comprobando parada a ras de suelo (±3 mm)."
+      ]
+    }
+  ];
+
+  let commissionState = {};
+
+  window.toggleCommissionStep = function(stepId) {
+    commissionState[stepId] = !commissionState[stepId];
+    localStorage.setItem('edel_commission_state', JSON.stringify(commissionState));
+    renderCommissionChecklist();
+  };
+
+  window.resetCommissionChecklist = function() {
+    if (confirm("¿Desea restablecer todos los puntos de comprobación de la lista?")) {
+      commissionState = {};
+      localStorage.removeItem('edel_commission_state');
+      renderCommissionChecklist();
+    }
+  };
+
+  function renderCommissionChecklist() {
+    const container = document.getElementById('commissionPhasesContainer');
+    const fill = document.getElementById('commissionProgressFill');
+    const progressText = document.getElementById('commissionProgressText');
+    if (!container) return;
+    container.innerHTML = '';
+
+    let totalSteps = 0;
+    let completedSteps = 0;
+
+    commissionPhases.forEach((phase, pIdx) => {
+      const block = document.createElement('div');
+      block.className = 'commission-phase-block';
+      
+      let stepsHtml = '';
+      phase.steps.forEach((stepText, sIdx) => {
+        totalSteps++;
+        const stepId = `p${pIdx}_s${sIdx}`;
+        const isChecked = !!commissionState[stepId];
+        if (isChecked) completedSteps++;
+
+        stepsHtml += `
+          <div class="commission-check-item ${isChecked ? 'item-completed' : ''}" onclick="toggleCommissionStep('${stepId}')">
+            <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); toggleCommissionStep('${stepId}')">
+            <span style="font-size:0.9rem;color:${isChecked ? 'var(--text-muted)' : 'var(--text-primary)'};">${stepText}</span>
+          </div>
+        `;
+      });
+
+      block.innerHTML = `
+        <div class="commission-phase-header">
+          <h4 style="margin:0;color:var(--accent-cyan);font-size:1.02rem;">${phase.title}</h4>
+        </div>
+        <div class="commission-checklist">
+          ${stepsHtml}
+        </div>
+      `;
+      container.appendChild(block);
+    });
+
+    const pct = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
+    if (fill) fill.style.width = pct + '%';
+    if (progressText) {
+      progressText.textContent = `${completedSteps} de ${totalSteps} verificaciones completadas (${pct}%)`;
+    }
+  }
+
+  function initCommissioningWizard() {
+    try {
+      const saved = localStorage.getItem('edel_commission_state');
+      commissionState = saved ? JSON.parse(saved) : {};
+    } catch(e) {
+      commissionState = {};
+    }
+    renderCommissionChecklist();
   }
 
 })();
