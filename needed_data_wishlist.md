@@ -15,23 +15,23 @@ To achieve **100% engineering completeness, field troubleshooting depth, and fac
 
 ## 1. Electrical Schematics & Hardware Diagrams (*Esquemas Eléctricos*)
 
-| Item Code | Document Description | Target Controller / Module | Specific Details Needed |
-| :--- | :--- | :--- | :--- |
-| **DOC-E01** | **Master Multi-Wire Installation Schematics (*Esquema Multifilar Completo*)** | K2 Standard & ADVANCED K2 (EN 81-20/50) | Full PDF/CAD drawings detailing 110V/48V series, Borna 40 (landing door locks), Borna 41 (car door contact), and PES bypass switches. |
-| **DOC-E02** | **K3 Goods Lift / Hydraulic Schematic (*Esquemas K3 Montacargas*)** | K3-74278 Autonomous Hydraulic Board | Valve solenoids (V1/V2/V3), star-delta starter wiring, oil re-leveling circuits (*reenvío de aceite*), and inspection station bypasses. |
-| **DOC-E03** | **OEM Pre-Wired Cabinets (*Planos Maniobras Premontadas*)** | OEM Customer Variations | Wiring blue-prints for key OEM partners: **TRESA, OMEGA, RALOE, FELESA, GMV, INELSA**. Differences in traveling cable (*manguera plana*) pinout and junction boxes. |
-| **DOC-E04** | **Car Top Junction Box (CCM) Wiring** | Placa de Techo Cabina (64290 / 64291) | Connection map between car operating panel (COP), barrier light curtain (CEDES/Telco), load weighing sensors, and door operator (Fermator/Wittur). |
+| Item Code | Document Description | Target Controller / Module | Specific Details Needed | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **DOC-E01** | **Master Multi-Wire Installation Schematics (*Esquema Multifilar Completo*)** | K2 Standard & ADVANCED K2 (EN 81-20/50) | Full PDF/CAD drawings detailing 110V/48V series, Borna 40 (landing door locks), Borna 41 (car door contact), and PES bypass switches. KRN (PCB 64411C CAN) vs OTP (PCB 64420B discrete). | ✅ **RECEIVED & INTEGRATED** (Premontadas K2 & ADVANCED K2 Schematics, Duplex, Gearless Rescue, K2-64299) |
+| **DOC-E02** | **K3 Goods Lift / Hydraulic Schematic (*Esquemas K3 Montacargas*)** | K3-74278 Autonomous Hydraulic Board | Valve solenoids (V1/V2/V3), star-delta starter wiring, oil re-leveling circuits (*reenvío de aceite*), and inspection station bypasses. | ⏳ Pending |
+| **DOC-E03** | **OEM Pre-Wired Cabinets (*Planos Maniobras Premontadas*)** | OEM Customer Variations | Wiring blue-prints for key OEM partners: **TRESA, OMEGA, RALOE, FELESA, GMV, INELSA**. Differences in traveling cable (*manguera plana*) pinout and junction boxes. | ⏳ Pending |
+| **DOC-E04** | **Car Top Junction Box (CCM) Wiring** | Placa de Techo Cabina (64290 / 64291) | Connection map between car operating panel (COP), barrier light curtain (CEDES/Telco), load weighing sensors, and door operator (Fermator/Wittur). | ✅ **RECEIVED & INTEGRATED** (KRN / PCB 64411C & OTP / PCB 64420B Schematics) |
 
 ---
 
 ## 2. CAN Bus Telemetry & Protocol Specifications (*Protocolos CAN*)
 
-| Item Code | Description | Format | Key Data Points Required |
-| :--- | :--- | :--- | :--- |
-| **DOC-C01** | **Raw CAN Bus Traces (Normal Operation)** | `.trc`, `.asc`, `.csv`, PCAN, or Vector format | Complete cycle: Idle $\rightarrow$ Call dispatch $\rightarrow$ Door closing $\rightarrow$ High-speed acceleration $\rightarrow$ Leveling $\rightarrow$ Stopping $\rightarrow$ Door reopening. |
-| **DOC-C02** | **Raw CAN Bus Traces (Fault Scenarios)** | `.trc` / `.csv` | Trace of bus behavior during **Fallo 53** (UCM trip), emergency stop opening, safety chain break mid-travel, and CAN bus error-frame recovery. |
-| **DOC-C03** | **$XBD & $XTR Frame Specification** | Technical Note / Header file | Bit-level definitions for internal broadcast frames ($XBD car status, $XTR trip counter/timer broadcasts) and landing panel dispatch commands ($X01–$X3F). |
-| **DOC-C04** | **iCOM CANopen Lift (CiA 417) Profile** | Technical Specification | Object Dictionary profile ($2000–$6FFF) implemented on K2-64299 iCOM module for remote dispatchers and monitoring tools. |
+| Item Code | Description | Format | Key Data Points Required | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **DOC-C01** | **Raw CAN Bus Traces (Normal Operation)** | `.trc`, `.asc`, `.csv`, PCAN, or Vector format | Complete cycle: Idle $\rightarrow$ Call dispatch $\rightarrow$ Door closing $\rightarrow$ High-speed acceleration $\rightarrow$ Leveling $\rightarrow$ Stopping $\rightarrow$ Door reopening. | ⏳ Pending |
+| **DOC-C02** | **Raw CAN Bus Traces (Fault Scenarios)** | `.trc` / `.csv` | Trace of bus behavior during **Fallo 53** (UCM trip), emergency stop opening, safety chain break mid-travel, and CAN bus error-frame recovery. | ⏳ Pending |
+| **DOC-C03** | **$XBD & $XTR Frame Specification** | Technical Note / Header file | Bit-level definitions for internal broadcast frames ($XBD car status, $XTR trip counter/timer broadcasts) and landing panel dispatch commands ($X01–$X3F). | ⏳ Pending |
+| **DOC-C04** | **iCOM CANopen Lift (CiA 417) Profile & Interface Module** | Technical Specification / Ficha | Object Dictionary profile & Fuji Frenic-Lift 2 interface module **K2-64299** (`y33=2`, `y21=2`, `y24=4`, SW5, `H03=11`, `bbE` reset via `H95=111`). | ✅ **RECEIVED & INTEGRATED** (Ficha EDEL64299) |
 
 ---
 
@@ -58,11 +58,11 @@ To achieve **100% engineering completeness, field troubleshooting depth, and fac
 
 ## 5. Factory QA & Regulatory Testing Protocols (*Protocolos de Ensayo*)
 
-| Item Code | Protocol Document | Standard | Verification Procedure |
-| :--- | :--- | :--- | :--- |
-| **DOC-T01** | **Official Factory Bench Test Sheet (*Hoja de Control de Calidad*)** | QA Production Line | Step-by-step checklist matching internal software phases `mTest 01` to `mTest 11` on the factory computer vision bench. |
-| **DOC-T02** | **EN 81-20 / EN 81-50 Commissioning Inspection Sheet** | European Elevator Directive | Exact procedure for field certification: A3/UCM (Unintended Car Movement) dynamic tripping test, motor run time limiter (TTR), and brake contact supervision. |
-| **DOC-T03** | **Emergency Evacuation & Hand-Release Verification** | Field Safety Norms | Test procedure for battery-backed rescue, manual brake release levers, and optical overspeed indicators. |
+| Item Code | Protocol Document | Standard | Verification Procedure | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **DOC-T01** | **Official Factory Bench Test Sheet (*Hoja de Control de Calidad*)** | QA Production Line | Step-by-step checklist matching internal software phases `mTest 01` to `mTest 11` on the factory computer vision bench. | ⏳ Pending |
+| **DOC-T02** | **EN 81-20 / EN 81-50 Commissioning Inspection Sheet** | European Elevator Directive | Exact procedure for field certification: A3/UCM (Unintended Car Movement) dynamic tripping test, motor run time limiter (TTR), and brake contact supervision. | ✅ **RECEIVED & INTEGRATED** (Procedimientos de Test EN 81-20 Jesús) |
+| **DOC-T03** | **Emergency Evacuation & Automatic Rescue Verification** | Field Safety Norms | Test procedure for battery-backed rescue, manual brake release levers, and **Gearless Automatic Evacuation (UPS 2000VA, Relés RE/FR, K2-643VF J43/J47)**. | ✅ **RECEIVED & INTEGRATED** (Adaptación Rescate Gearless Automático R01) |
 
 ---
 
@@ -78,11 +78,11 @@ To achieve **100% engineering completeness, field troubleshooting depth, and fac
 
 ## 7. Interactive Field Engineering Tools Data Wishlist (*Datos Específicos para Herramientas Interactivas*)
 
-| Item Code | Interactive Tool Target | Requested Engineering Data / Files | Field Utility & Planned Enhancement |
-| :--- | :--- | :--- | :--- |
-| **DOC-I01** | **Tool 5.6: Calculador de Banderas y Deceleración** | Official mechanical drawings of EDEL magnetic sensor brackets; reed switch vs. bistable sensor datasheets (`PSUP`, `PINF`, `FZP`); standard magnet lengths (150mm, 200mm, 250mm). | Automatically displays exact mounting bracket screw offsets, part numbers, and overlap margins for door pre-opening compliance under EN 81-20 / A3. |
-| **DOC-I02** | **Tool 5.7: Generador de Parámetros Fuji Frenic-Lift** | Factory `.fnc` or `.prm` parameter backup files from real EDEL commissioning jobs with Montanari (e.g. MGV25), Alberto Sassi (MF48), and Ziehl-Abegg machines, including encoder auto-tuning results. | Adds 1-click machine presets to instantly populate motor inertia, rated slip, no-load current, and verified zero-speed anti-rollback gains (`L65`–`L73`). |
-| **DOC-I03** | **Tool 5.8: Rastreador de Serie de Seguridad EN 81-20** | Detailed multi-wire schematics for the K2 Door/Landing Lock Bypass Unit (*Bypass de Puertas / Cerrojos de Rellano para Mantenimiento*) according to EN 81-20 §5.12.1.8. | Implements interactive bypass switch simulation mode for field technicians performing pit or roof maintenance. |
+| Item Code | Interactive Tool Target | Requested Engineering Data / Files | Field Utility & Planned Enhancement | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **DOC-I01** | **Tool 5.6: Calculador de Banderas y Deceleración** | Official mechanical drawings of EDEL magnetic sensor brackets; reed switch vs. bistable sensor datasheets (`PSUP`, `PINF`, `FZP`); standard magnet lengths (150mm, 200mm, 250mm). | Automatically displays exact mounting bracket screw offsets, part numbers, and overlap margins for door pre-opening compliance under EN 81-20 / A3. | ⏳ Pending |
+| **DOC-I02** | **Tool 5.7: Generador de Parámetros Fuji Frenic-Lift** | Factory `.fnc` or `.prm` parameter backup files from real EDEL commissioning jobs with Montanari (e.g. MGV25), Alberto Sassi (MF48), and Ziehl-Abegg machines, including encoder auto-tuning results. | Adds 1-click machine presets to instantly populate motor inertia, rated slip, no-load current, and verified zero-speed anti-rollback gains (`L65`–`L73`). | ⏳ Pending |
+| **DOC-I03** | **Tool 5.8: Rastreador de Serie de Seguridad EN 81-20** | Detailed multi-wire schematics for the K2 Door/Landing Lock Bypass Unit (*Bypass de Puertas / Cerrojos de Rellano para Mantenimiento*) according to EN 81-20 §5.12.1.8. | Complete multi-wire schematics received: Borna 40 (landing locks), Borna 41 (car door), PES bypass switch P0-P3, roof/pit safety switches. | ✅ **RECEIVED & INTEGRATED** (Esquemas Premontada ADVANCED K2) |
 | **DOC-I04** | **Tool 5.9: Optimizador de Tiempos Hidráulicos K3** | Factory tuning guideline sheets and valve block adjustment screw tables (screws 1 to 5) for **GMV 3010** and **Blain EV100** hydraulic units. | Injects screw-by-screw adjustment steps and bypass valve flow regulation directly into the live chronogram troubleshooting tab. |
 | **DOC-I05** | **Tool 5.10: Comprobador de Red CAN Bus e Impedancia** | CAN baud rate and message ID mapping tables for third-party landing indicators and Car Operating Panels (COP) such as **DMG, Vega, and Avire**. | Injects third-party pinout guides and baud rate mismatch warnings to prevent `Avería F53/F54` on retrofit installations. |
 | **DOC-I06** | **Tool 5.11: Asistente de Calibración de Pesacargas** | Installation manuals, wire color codes, and internal DIP switch tables for EDEL-supplied load weighing units (**Dinacell OMEGA**, **MICELECT LM-3D**, and **K2-64296**). | Displays exact wire terminal colors (Excitation, Signal, Shield) and sensor zero-drift compensation instructions. |
