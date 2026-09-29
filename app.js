@@ -3590,7 +3590,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
           <h2>2. Bloque 1: Bus de Cabina y Displays — Emisión desde Cuadro ($XBD)</h2>
           <p>Tramas transmitidas periódicamente desde la placa base central hacia el techo de cabina, botonera COP, displays de posición y sintetizador vocal.</p>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #0284c7;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #0284c7;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#0284c7;font-size:1.1rem;">Trama 1.0 — Tipo 0: Trama Periódica Principal (Piso, Flechas, Puertas y Síntesis de Voz)</h3>
               <span class="badge" style="background:#0284c7;color:#fff;">ID: $XBD | Tipo = 0</span>
@@ -3706,90 +3706,172 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             </div>
     
             
-            <div style="width:100%;margin-top:10px;margin-bottom:10px;padding:8px 12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.87rem;color:#fde68a;display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.1rem;flex-shrink:0;">⚡</span>
+            <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
               <div><b>Notas de Taller / Instalación:</b> La tensión diferencial entre CAN-H y CAN-L debe oscilar entre 1.5V y 3.5V en estado recesivo/dominante. Si el audio repite pisos continuamente, comprobar que PP^ y PPv no tengan ruido parásito.</div>
             </div>
         
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">A1</code>
-                <span><b>Abrir Operador 1:</b> Relé de apertura de puerta de cabina principal (1 = Abrir, 0 = Reposo).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">A2</code>
-                <span><b>Abrir Operador 2:</b> Relé de apertura de puerta de cabina del segundo embarque.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">CP</code>
-                <span><b>Cerrar Puertas:</b> Orden de maniobra de forzar cierre de puertas.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PP^</code>
-                <span><b>Próxima Partida Subir:</b> Flecha de predirección subir. Por flanco de subida reproduce el audio del piso actual en cabina.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PPv</code>
-                <span><b>Próxima Partida Bajar:</b> Flecha de predirección bajar. Por flanco de subida reproduce el audio del piso actual en cabina.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">TEL_OUT</code>
-                <span><b>Teléfono de Socorro:</b> Activación del canal de audio del interfono de cabina.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">F^</code>
-                <span><b>Flecha de Dirección Subida:</b> Sentido de marcha subir encendido en pantalla.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">Fv</code>
-                <span><b>Flecha de Dirección Bajada:</b> Sentido de marcha bajar encendido en pantalla.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">GONG</code>
-                <span><b>Campana Acústica:</b> Disparo de señal acústica de llegada a planta.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PLANTA</code>
-                <span><b>Piso Actual (0..31):</b> Planta actual en formato binario de 5 bits (EDCBA), con asimetría sumada.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">P00..P31</code>
-                <span><b>Llamadas de Cabina:</b> LED de confirmación de llamada iluminado en botonera COP de cabina.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">KO</code>
-                <span><b>Fuera de Servicio:</b> Audio 'Fuera de servicio' por flanco de subida; pictograma visible mientras esté a 1.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">KG</code>
-                <span><b>Exceso de Carga:</b> Audio 'Exceso de carga' por flanco de subida; pictograma visible mientras esté a 1 (pesacargas 110%).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PA</code>
-                <span><b>Puertas Abiertas:</b> Audio 'Puertas abiertas' por flanco de subida.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">CP</code>
-                <span><b>Cerrando Puertas:</b> Audio 'Cerrando puertas' por flanco de subida.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">SEN</code>
-                <span><b>Sentido de Marcha:</b> Audio 'Subiendo' o 'Bajando' por flanco de subida según PP^ y PPv. Si ambos están a 1 simultáneamente, se inhibe.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">REAP</code>
-                <span><b>Reapertura:</b> Bip acústico de reapertura por fotocélula interrumpida.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">MUTE</code>
-                <span><b>Silenciamiento Total:</b> 1 = Silenciar todos los audios de voz (modo reposo o nocturno).</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">A1</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Abrir Operador 1:</b> Relé de apertura de puerta de cabina principal (1 = Abrir, 0 = Reposo).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">A2</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Abrir Operador 2:</b> Relé de apertura de puerta de cabina del segundo embarque.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Cerrar Puertas:</b> Orden de maniobra de forzar cierre de puertas.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PP^</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Próxima Partida Subir:</b> Flecha de predirección subir. Por flanco de subida reproduce el audio del piso actual en cabina.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PPv</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Próxima Partida Bajar:</b> Flecha de predirección bajar. Por flanco de subida reproduce el audio del piso actual en cabina.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TEL_OUT</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Teléfono de Socorro:</b> Activación del canal de audio del interfono de cabina.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">F^</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Flecha de Dirección Subida:</b> Sentido de marcha subir encendido en pantalla.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">Fv</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Flecha de Dirección Bajada:</b> Sentido de marcha bajar encendido en pantalla.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">GONG</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Campana Acústica:</b> Disparo de señal acústica de llegada a planta.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PLANTA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Piso Actual (0..31):</b> Planta actual en formato binario de 5 bits (EDCBA), con asimetría sumada.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">P00..P31</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Llamadas de Cabina:</b> LED de confirmación de llamada iluminado en botonera COP de cabina.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">KO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Fuera de Servicio:</b> Audio 'Fuera de servicio' por flanco de subida; pictograma visible mientras esté a 1.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">KG</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Exceso de Carga:</b> Audio 'Exceso de carga' por flanco de subida; pictograma visible mientras esté a 1 (pesacargas 110%).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Puertas Abiertas:</b> Audio 'Puertas abiertas' por flanco de subida.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Cerrando Puertas:</b> Audio 'Cerrando puertas' por flanco de subida.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">SEN</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Sentido de Marcha:</b> Audio 'Subiendo' o 'Bajando' por flanco de subida según PP^ y PPv. Si ambos están a 1 simultáneamente, se inhibe.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REAP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Reapertura:</b> Bip acústico de reapertura por fotocélula interrumpida.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">MUTE</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Silenciamiento Total:</b> 1 = Silenciar todos los audios de voz (modo reposo o nocturno).
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #7c3aed;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #7c3aed;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Trama 1.1 — Tipo 1: Modos Especiales (Inspección, Bomberos, Ahorro OFF y Velocidades)</h3>
               <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XBD | Tipo = 1</span>
@@ -3905,82 +3987,156 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             </div>
     
             
-            <div style="width:100%;margin-top:10px;margin-bottom:10px;padding:8px 12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.87rem;color:#fde68a;display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.1rem;flex-shrink:0;">⚡</span>
+            <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
               <div><b>Notas de Taller / Instalación:</b> Si la pantalla muestra 'INSPECCIÓN' de forma fija y bloquea el ascensor, verificar que el conmutador de la caja de revisión de techo (Borna 26) no esté accionado o que su contacto NC no esté abierto o sucio.</div>
             </div>
         
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">INSP</code>
-                <span><b>Modo Inspección:</b> Byte 3, Bit 3 (0x08). ¡Conmutador de revisión de techo accionado! La pantalla muestra 'INSPECCIÓN' e inhabilita las llamadas ordinarias.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">OFF</code>
-                <span><b>Ahorro de Energía:</b> Byte 3, Bit 7 (0x80). Relé temporizado de luz de cabina apagado. Apaga la retroiluminación (backlight) del display.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">EM</code>
-                <span><b>Emergencia / Bomberos:</b> Byte 3, Bit 6 (0x40). Contacto de llave de bomberos accionado. Muestra pictograma de bombero e inhibe llamadas.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">LEVA</code>
-                <span><b>Leva Retráctil:</b> Byte 3, Bit 5 (0x20). Salida de relé de leva retráctil activada para enclavamiento de puertas batientes.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">EVAC</code>
-                <span><b>Evacuación EN 81-73:</b> Byte 3, Bit 4 (0x10). Maniobra de retorno forzado a planta de evacuación por detección de fuego.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">VIP</code>
-                <span><b>Servicio Exclusivo:</b> Byte 3, Bit 2 (0x04). Cabina en modo de viaje preferente sin paradas intermedias.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PA</code>
-                <span><b>Puerta Abierta:</b> Byte 3, Bit 1 (0x02). Indica que las puertas se encuentran en fase abierta en el ciclo de maniobra.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">OUT_CFG</code>
-                <span><b>Configuración Salidas:</b> Byte 4 completo. Mapeo dinámico de salidas de relé de cabina.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">VC_MODE</code>
-                <span><b>Consola Virtual iCOM:</b> Byte 5, Bit 0. Modo consola remota para parametrizar el variador Fuji Frenic Lift.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">V.RAP</code>
-                <span><b>Velocidad Rápida:</b> Byte 6, Bit 6 (0x40). Tracción en régimen nominal de marcha.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">V.LEN</code>
-                <span><b>Velocidad Lenta:</b> Byte 6, Bit 7 (0x80). Tracción en velocidad lenta de aproximación / nivelación o marcha de inspección.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">MARCHA</code>
-                <span><b>Viaje Activo:</b> Byte 6, Bit 5 (0x20). Cabina en desplazamiento hacia un piso.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">DESTINO</code>
-                <span><b>Planta Destino (0..31):</b> Byte 6, Bits 0..4. Piso objetivo hacia el que se dirige el ascensor.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">NIVEL</code>
-                <span><b>Nivel de Piso Exacto:</b> Byte 7, Bit 0 (0x01). Cabina detenida dentro de la zona de desenclavamiento (enrase milimétrico).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">LLEGADA</code>
-                <span><b>Señal Llegada:</b> Byte 7, Bit 1 (0x02). Activación de cota de deceleración de llegada a piso.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">REAP_OK</code>
-                <span><b>Reapertura Habilitada:</b> Byte 7, Bit 2 (0x04). El temporizador de reapertura no está bloqueado.</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Modo Inspección:</b> Byte 3, Bit 3 (0x08). ¡Conmutador de revisión de techo accionado! La pantalla muestra 'INSPECCIÓN' e inhabilita las llamadas ordinarias.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">OFF</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Ahorro de Energía:</b> Byte 3, Bit 7 (0x80). Relé temporizado de luz de cabina apagado. Apaga la retroiluminación (backlight) del display.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">EM</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Emergencia / Bomberos:</b> Byte 3, Bit 6 (0x40). Contacto de llave de bomberos accionado. Muestra pictograma de bombero e inhibe llamadas.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">LEVA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Leva Retráctil:</b> Byte 3, Bit 5 (0x20). Salida de relé de leva retráctil activada para enclavamiento de puertas batientes.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">EVAC</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Evacuación EN 81-73:</b> Byte 3, Bit 4 (0x10). Maniobra de retorno forzado a planta de evacuación por detección de fuego.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">VIP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Servicio Exclusivo:</b> Byte 3, Bit 2 (0x04). Cabina en modo de viaje preferente sin paradas intermedias.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Puerta Abierta:</b> Byte 3, Bit 1 (0x02). Indica que las puertas se encuentran en fase abierta en el ciclo de maniobra.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">OUT_CFG</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Configuración Salidas:</b> Byte 4 completo. Mapeo dinámico de salidas de relé de cabina.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">VC_MODE</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Consola Virtual iCOM:</b> Byte 5, Bit 0. Modo consola remota para parametrizar el variador Fuji Frenic Lift.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">V.RAP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Velocidad Rápida:</b> Byte 6, Bit 6 (0x40). Tracción en régimen nominal de marcha.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">V.LEN</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Velocidad Lenta:</b> Byte 6, Bit 7 (0x80). Tracción en velocidad lenta de aproximación / nivelación o marcha de inspección.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">MARCHA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Viaje Activo:</b> Byte 6, Bit 5 (0x20). Cabina en desplazamiento hacia un piso.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">DESTINO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Planta Destino (0..31):</b> Byte 6, Bits 0..4. Piso objetivo hacia el que se dirige el ascensor.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">NIVEL</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Nivel de Piso Exacto:</b> Byte 7, Bit 0 (0x01). Cabina detenida dentro de la zona de desenclavamiento (enrase milimétrico).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">LLEGADA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Señal Llegada:</b> Byte 7, Bit 1 (0x02). Activación de cota de deceleración de llegada a piso.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REAP_OK</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Reapertura Habilitada:</b> Byte 7, Bit 2 (0x04). El temporizador de reapertura no está bloqueado.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #059669;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#059669;font-size:1.1rem;">Trama 1.2 — Tipo 2: Comando a Encoder de Hueco (TRAMA_CAB_TX_ENCODER)</h3>
               <span class="badge" style="background:#059669;color:#fff;">ID: $XBD | Tipo = 2</span>
@@ -4097,28 +4253,54 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
             
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">TYPE = 2</code>
-                <span><b>Tipo Trama Encoder:</b> Identifica orden hacia el encoder de faja perforada K2-64296.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">CMD = 0x01</code>
-                <span><b>Reset Encoder:</b> Puesta a cero de la cota de hueco absoluta.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">CMD = 0x02</code>
-                <span><b>Ajuste Pulsador:</b> Memorización de cota de piso por pulsador de revisión de cabina.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">CMD = 0x03</code>
-                <span><b>Beep Confirmación:</b> Pitido acústico de memorización correcta de parada.</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TYPE = 2</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Tipo Trama Encoder:</b> Identifica orden hacia el encoder de faja perforada K2-64296.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CMD = 0x01</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Reset Encoder:</b> Puesta a cero de la cota de hueco absoluta.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CMD = 0x02</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Ajuste Pulsador:</b> Memorización de cota de piso por pulsador de revisión de cabina.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CMD = 0x03</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Beep Confirmación:</b> Pitido acústico de memorización correcta de parada.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #d97706;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #d97706;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#d97706;font-size:1.1rem;">Trama 1.3 — Tipo 3: Reto Criptográfico Anti-Copia (TRAMA_CAB_TX_CREARFIRMA)</h3>
               <span class="badge" style="background:#d97706;color:#fff;">ID: $XBD | Tipo = 3</span>
@@ -4235,20 +4417,38 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
             
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">FIRMA</code>
-                <span><b>Semilla de Reto:</b> Valor hash Cifrado(firma, theAleat, 0) calculado por la CPU central.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">RDM</code>
-                <span><b>Número Aleatorio:</b> Semilla generada por el timer de hardware TCNT para evitar ataques por repetición.</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FIRMA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Semilla de Reto:</b> Valor hash Cifrado(firma, theAleat, 0) calculado por la CPU central.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">RDM</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Número Aleatorio:</b> Semilla generada por el timer de hardware TCNT para evitar ataques por repetición.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #ef4444;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #ef4444;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#ef4444;font-size:1.1rem;">Trama 1.6 — Tipo 7: Token Criptográfico Rodante (TRAMA_CAB_TX_TOKEN)</h3>
               <span class="badge" style="background:#ef4444;color:#fff;">ID: $XBD | Tipo = 7</span>
@@ -4365,31 +4565,57 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
             
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">KAUX</code>
-                <span><b>Contador XOR 0x5A:</b> ContadorCab XOR TOKEN_KAUX_CAB (patrón alterno de sincronismo).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">ID_H</code>
-                <span><b>Contador XOR ID High:</b> ContadorCab XOR (TOKEN_ID >> 8).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">ID_L</code>
-                <span><b>Contador XOR ID Low:</b> ContadorCab XOR (TOKEN_ID & 0xFF).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">CRC</code>
-                <span><b>Polinomio CRC-8:</b> CRC(0x1D, KSecretaCab, Byte1 ^ Byte2 ^ Byte3). Sello de autenticidad.</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">KAUX</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Contador XOR 0x5A:</b> ContadorCab XOR TOKEN_KAUX_CAB (patrón alterno de sincronismo).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ID_H</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Contador XOR ID High:</b> ContadorCab XOR (TOKEN_ID >> 8).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ID_L</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Contador XOR ID Low:</b> ContadorCab XOR (TOKEN_ID & 0xFF).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CRC</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Polinomio CRC-8:</b> CRC(0x1D, KSecretaCab, Byte1 ^ Byte2 ^ Byte3). Sello de autenticidad.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
           <h2>3. Bloque 2: Bus de Cabina — Respuestas desde Periféricos hacia el Cuadro ($XBN)</h2>
           <p>Tramas emitidas desde los dispositivos instalados en la cabina (placa de techo KRN, botoneras modulares BotCAN, encoder y consola) hacia el cuadro central.</p>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #059669;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#059669;font-size:1.1rem;">Trama 2.0 — Tipo 0: Placa Cabina KRN / K2-64290 (Pulsadores, Pesacargas y Fotocélulas)</h3>
               <span class="badge" style="background:#059669;color:#fff;">ID: $XBN | Tipo = 0</span>
@@ -4505,70 +4731,132 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             </div>
     
             
-            <div style="width:100%;margin-top:10px;margin-bottom:10px;padding:8px 12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.87rem;color:#fde68a;display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.1rem;flex-shrink:0;">⚡</span>
+            <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
               <div><b>Notas de Taller / Instalación:</b> Bornas de placa: Si la maniobra no arranca y marca sobrecarga sin pasajeros, revisar tensión de 24Vcc en Borna 23. Si no obedece botonera, verificar que Borna 26 marque estado 1.</div>
             </div>
         
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">EXCESO_CARGA</code>
-                <span><b>Pesacargas Sobrecarga 110%:</b> Byte 1, Bit 0. Borna 23. Contacto NA. Impide el cierre de puertas y el arranque.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">INSP_CAB</code>
-                <span><b>Conmutador Inspección Techo:</b> Byte 1, Bit 1. Borna 26. 1 = Maniobra Normal, 0 = Modo Revisión accionado.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">COMPLETO</code>
-                <span><b>Pesacargas Cabina Completa 80%:</b> Byte 1, Bit 2. Borna 28. No atiende llamadas de rellano en el trayecto.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">FC_CERRAR</code>
-                <span><b>Final Carrera Puerta Cerrada:</b> Byte 1, Bit 3. Borna 29. Contacto FCC del operador.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">FC_ABRIR</code>
-                <span><b>Final Carrera Puerta Abierta:</b> Byte 1, Bit 4. Borna 30. Contacto FCA del operador.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">REAP</code>
-                <span><b>Reapertura / Fotocélula:</b> Byte 1, Bit 5. Borna 31. Barrera infrarroja cortada provocando apertura inmediata.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">BOMB_CAB</code>
-                <span><b>Llave Bomberos en Cabina:</b> Byte 1, Bit 6. Borna 33. Conmutador de llave interior para fase de rescate.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PULS_CERRAR</code>
-                <span><b>Pulsador Cerrar Puerta:</b> Byte 1, Bit 7. Borna 34. Botón '>' de botonera de cabina para forzar cierre rápido.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PISADERA</code>
-                <span><b>Contacto Móvil Pisadera:</b> Byte 2, Bit 0. Borna 35. Contacto mecánico de seguridad contra atrapamiento.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">FOTO_1 / FOTO_2</code>
-                <span><b>Barreras Ópticas 1 y 2:</b> Byte 2, Bits 1 y 2. Supervisión de operadores adicionales.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">TEL_IN</code>
-                <span><b>Pulsador Socorro / Alarma:</b> Byte 2, Bit 3. Botón de campana de cabina presionado por pasajeros.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">CALL_00..31</code>
-                <span><b>Llamadas de Cabina:</b> Bytes 3..6. Matriz física de pulsadores presionados en la cabina.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">SELLO</code>
-                <span><b>Firma Dinámica Token:</b> Byte 7. CRC(0x1D, KSecretaCab, 0x00 ^ ContadorCab). Validación anti-tamper.</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">EXCESO_CARGA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pesacargas Sobrecarga 110%:</b> Byte 1, Bit 0. Borna 23. Contacto NA. Impide el cierre de puertas y el arranque.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP_CAB</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Conmutador Inspección Techo:</b> Byte 1, Bit 1. Borna 26. 1 = Maniobra Normal, 0 = Modo Revisión accionado.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">COMPLETO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pesacargas Cabina Completa 80%:</b> Byte 1, Bit 2. Borna 28. No atiende llamadas de rellano en el trayecto.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FC_CERRAR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Final Carrera Puerta Cerrada:</b> Byte 1, Bit 3. Borna 29. Contacto FCC del operador.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FC_ABRIR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Final Carrera Puerta Abierta:</b> Byte 1, Bit 4. Borna 30. Contacto FCA del operador.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REAP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Reapertura / Fotocélula:</b> Byte 1, Bit 5. Borna 31. Barrera infrarroja cortada provocando apertura inmediata.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">BOMB_CAB</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Llave Bomberos en Cabina:</b> Byte 1, Bit 6. Borna 33. Conmutador de llave interior para fase de rescate.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_CERRAR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pulsador Cerrar Puerta:</b> Byte 1, Bit 7. Borna 34. Botón '>' de botonera de cabina para forzar cierre rápido.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PISADERA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Contacto Móvil Pisadera:</b> Byte 2, Bit 0. Borna 35. Contacto mecánico de seguridad contra atrapamiento.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FOTO_1 / FOTO_2</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Barreras Ópticas 1 y 2:</b> Byte 2, Bits 1 y 2. Supervisión de operadores adicionales.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TEL_IN</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pulsador Socorro / Alarma:</b> Byte 2, Bit 3. Botón de campana de cabina presionado por pasajeros.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CALL_00..31</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Llamadas de Cabina:</b> Bytes 3..6. Matriz física de pulsadores presionados en la cabina.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">SELLO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Firma Dinámica Token:</b> Byte 7. CRC(0x1D, KSecretaCab, 0x00 ^ ContadorCab). Validación anti-tamper.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #7c3aed;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #7c3aed;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Trama 2.5 — Tipo 5: Placa Cabina v2 ADVANCED K2-64291 (Botonera Inspección Techo Subir/Bajar)</h3>
               <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XBN | Tipo = 5</span>
@@ -4684,37 +4972,63 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             </div>
     
             
-            <div style="width:100%;margin-top:10px;margin-bottom:10px;padding:8px 12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.87rem;color:#fde68a;display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.1rem;flex-shrink:0;">⚡</span>
+            <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
               <div><b>Notas de Taller / Instalación:</b> La maniobra supervisa por software que PULS_INSP_SUBIR y PULS_INSP_BAJAR nunca se accionen simultáneamente; en caso de fallo de contactos, detiene la marcha de revisión de inmediato.</div>
             </div>
         
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PULS_INSP_SUBIR</code>
-                <span><b>Pulsador Subir Techo:</b> Byte 1, Bit 7 (0x80). Botón negro/verde de subir en la caja de revisión de techo presionado.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PULS_INSP_BAJAR</code>
-                <span><b>Pulsador Bajar Techo:</b> Byte 1, Bit 6 (0x40). Botón negro/verde de bajar en la caja de revisión de techo presionado.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">INSP_CAB</code>
-                <span><b>Conmutador Inspección:</b> Byte 1, Bit 1 (0x02). Conmutador de dos posiciones Normal/Revisión de techo.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">FALDON</code>
-                <span><b>Faldón Telescópico:</b> Byte 2, Bit 7. Contacto de seguridad de faldón extensible desplegado (norma EN 81-20).</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_INSP_SUBIR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pulsador Subir Techo:</b> Byte 1, Bit 7 (0x80). Botón negro/verde de subir en la caja de revisión de techo presionado.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_INSP_BAJAR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pulsador Bajar Techo:</b> Byte 1, Bit 6 (0x40). Botón negro/verde de bajar en la caja de revisión de techo presionado.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP_CAB</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Conmutador Inspección:</b> Byte 1, Bit 1 (0x02). Conmutador de dos posiciones Normal/Revisión de techo.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FALDON</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Faldón Telescópico:</b> Byte 2, Bit 7. Contacto de seguridad de faldón extensible desplegado (norma EN 81-20).
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
           <h2>4. Bloque 3: Bus de Rellano / Exteriores — Emisión hacia Displays de Rellano ($XTR)</h2>
           <p>Tramas transmitidas desde el cuadro por el par trenzado del hueco hacia las placas mCAN de los pulsadores y displays de cada rellano.</p>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #0284c7;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #0284c7;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#0284c7;font-size:1.1rem;">Trama 3.0 — Tipo 0: Registro de Llamadas de Bajada y Posición en Rellano</h3>
               <span class="badge" style="background:#0284c7;color:#fff;">ID: $XTR | Tipo = 0</span>
@@ -4831,35 +5145,65 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
             
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">CAN_ID</code>
-                <span><b>Canal de Rellano:</b> Byte 0, Bits 7..5. Sub-bus de hueco (id_CAN << 3).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">TIPO = 0</code>
-                <span><b>Trama Registro Bajada:</b> Byte 0, Bits 2..0. TRAMA_EXT_TX_REGBAJADA = 0.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">LED_DN_00..31</code>
-                <span><b>LED Registro Bajada:</b> Bytes 3..6. 1 = Encender LED del pulsador de llamada de bajada en el rellano.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">OCUPADO</code>
-                <span><b>Ascensor Ocupado:</b> Byte 7, Bit 0. Señal luminosa de 'Ocupado' en botonera exterior.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">REVISION</code>
-                <span><b>Fuera de Servicio / Revisión:</b> Byte 7, Bit 1. Enciende indicador rojo de 'No Entrar' o avería en rellano.</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CAN_ID</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Canal de Rellano:</b> Byte 0, Bits 7..5. Sub-bus de hueco (id_CAN << 3).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TIPO = 0</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Trama Registro Bajada:</b> Byte 0, Bits 2..0. TRAMA_EXT_TX_REGBAJADA = 0.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">LED_DN_00..31</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>LED Registro Bajada:</b> Bytes 3..6. 1 = Encender LED del pulsador de llamada de bajada en el rellano.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">OCUPADO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Ascensor Ocupado:</b> Byte 7, Bit 0. Señal luminosa de 'Ocupado' en botonera exterior.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REVISION</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Fuera de Servicio / Revisión:</b> Byte 7, Bit 1. Enciende indicador rojo de 'No Entrar' o avería en rellano.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
           <h2>5. Bloque 4: Bus de Rellano / Exteriores — Llamadas hacia el Cuadro ($X01 a $X3F)</h2>
           <p>Tramas emitidas cuando un usuario presiona un pulsador exterior en cualquier piso, o cuando se acciona una llave de bomberos o inspección de foso.</p>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #059669;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#059669;font-size:1.1rem;">Trama 4.0 — Tipo 0: Pulsación de Llamada Estándar en Rellano</h3>
               <span class="badge" style="background:#059669;color:#fff;">ID: $X01..$X3F | Tipo = 0</span>
@@ -4976,32 +5320,62 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
             
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PULS_BAJAR</code>
-                <span><b>Pulsador Bajada Presionado:</b> Byte 1, Bit 5 (0x20). Llamada de pasillo hacia abajo registrada.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PULS_SUBIR</code>
-                <span><b>Pulsador Subida Presionado:</b> Byte 1, Bit 6 (0x40). Llamada de pasillo hacia arriba registrada.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">BOMB_EXT</code>
-                <span><b>Llave Bomberos en Rellano:</b> Byte 1, Bit 7 (0x80). Conmutador de bomberos normativo accionado en planta de acceso.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">FLOOR (0..31)</code>
-                <span><b>Planta Emisora:</b> Byte 1, Bits 0..4. Identificador de la planta física de donde procede la pulsación.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">TOKEN_FLAG</code>
-                <span><b>Presencia Token:</b> Byte 2, Bit 7 (0x80). 1 = Placa de rellano segura con autenticación activa.</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_BAJAR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pulsador Bajada Presionado:</b> Byte 1, Bit 5 (0x20). Llamada de pasillo hacia abajo registrada.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_SUBIR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pulsador Subida Presionado:</b> Byte 1, Bit 6 (0x40). Llamada de pasillo hacia arriba registrada.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">BOMB_EXT</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Llave Bomberos en Rellano:</b> Byte 1, Bit 7 (0x80). Conmutador de bomberos normativo accionado en planta de acceso.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FLOOR (0..31)</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Planta Emisora:</b> Byte 1, Bits 0..4. Identificador de la planta física de donde procede la pulsación.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TOKEN_FLAG</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Presencia Token:</b> Byte 2, Bit 7 (0x80). 1 = Placa de rellano segura con autenticación activa.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #7c3aed;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #7c3aed;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Trama 4.4 — Tipo 4: Botonera de Inspección de Foso y Cuarto de Poleas</h3>
               <span class="badge" style="background:#7c3aed;color:#fff;">ID: $X01..$X3F | Tipo = 4</span>
@@ -5117,41 +5491,71 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             </div>
     
             
-            <div style="width:100%;margin-top:10px;margin-bottom:10px;padding:8px 12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.87rem;color:#fde68a;display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.1rem;flex-shrink:0;">⚡</span>
+            <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
               <div><b>Notas de Taller / Instalación:</b> Prioridad de seguridad: Si la botonera de foso entra en revisión (INSP_ON = 1), el cuadro bloquea cualquier intento de mover la cabina desde la botonera de techo, garantizando la vida del operario en el foso.</div>
             </div>
         
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">INSP_ON</code>
-                <span><b>Conmutador Revisión Accionado:</b> Byte 1, Bit 7 (0x80). Conmutador de inspección de foso o cuarto de poleas activado.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PULS_SUBIR</code>
-                <span><b>Pulsador Subir Inspección:</b> Byte 1, Bit 6 (0x40). Orden de marcha subir a velocidad de revisión.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PULS_BAJAR</code>
-                <span><b>Pulsador Bajar Inspección:</b> Byte 1, Bit 5 (0x20). Orden de marcha bajar a velocidad de revisión.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">UBICACION = 0</code>
-                <span><b>Botonera de Foso:</b> Byte 2, Bits 0..2 = 0x00. Dispositivo instalado en el foso (EN 81-20).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">UBICACION = 1</code>
-                <span><b>Botonera Cuarto Poleas:</b> Byte 2, Bits 0..2 = 0x01. Dispositivo instalado en el cuarto de poleas superior.</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP_ON</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Conmutador Revisión Accionado:</b> Byte 1, Bit 7 (0x80). Conmutador de inspección de foso o cuarto de poleas activado.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_SUBIR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pulsador Subir Inspección:</b> Byte 1, Bit 6 (0x40). Orden de marcha subir a velocidad de revisión.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_BAJAR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pulsador Bajar Inspección:</b> Byte 1, Bit 5 (0x20). Orden de marcha bajar a velocidad de revisión.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">UBICACION = 0</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Botonera de Foso:</b> Byte 2, Bits 0..2 = 0x00. Dispositivo instalado en el foso (EN 81-20).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">UBICACION = 1</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Botonera Cuarto Poleas:</b> Byte 2, Bits 0..2 = 0x01. Dispositivo instalado en el cuarto de poleas superior.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
           <h2>6. Bloque 5: Bus de Maniobra Múltiple — Dúplex / Triplex ($M00 a $M03)</h2>
           <p>Comunicación peer-to-peer de alta velocidad entre cuadros de maniobra independientes emparejados en batería.</p>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #8b5cf6;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #8b5cf6;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#8b5cf6;font-size:1.1rem;">Trama 5.0 — Tipo 0: Posición, Paro y Llamadas de Bajada Compartidas</h3>
               <span class="badge" style="background:#8b5cf6;color:#fff;">ID: $M00..$M03 | Tipo = 0</span>
@@ -5268,39 +5672,73 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
             
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">miID</code>
-                <span><b>Identificador Ascensor:</b> Byte 0, Bits 0..3. Número de ascensor en la batería: 0 = Ascensor A, 1 = B, 2 = C.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">ASIM</code>
-                <span><b>Asimetría de Plantas:</b> Byte 1, Bits 5..7. Desfase de plantas entre huecos no alineados.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PLANTA</code>
-                <span><b>Piso Actual:</b> Byte 1, Bits 0..4. Cota de parada del ascensor emisor.</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">PARO</code>
-                <span><b>Zona de Parada:</b> Byte 2. Estado del selector de desaceleración y paro (SenyalParo + 1).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">ERR</code>
-                <span><b>Código de Avería Compañero:</b> Byte 3. Fallo activo (si marca avería, el compañero asume automáticamente sus llamadas).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">DN_00..31</code>
-                <span><b>Llamadas Bajada Asignadas:</b> Bytes 4..7. Máscara de llamadas de bajada que este ascensor ha aceptado atender.</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">miID</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Identificador Ascensor:</b> Byte 0, Bits 0..3. Número de ascensor en la batería: 0 = Ascensor A, 1 = B, 2 = C.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ASIM</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Asimetría de Plantas:</b> Byte 1, Bits 5..7. Desfase de plantas entre huecos no alineados.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PLANTA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Piso Actual:</b> Byte 1, Bits 0..4. Cota de parada del ascensor emisor.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PARO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Zona de Parada:</b> Byte 2. Estado del selector de desaceleración y paro (SenyalParo + 1).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ERR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Código de Avería Compañero:</b> Byte 3. Fallo activo (si marca avería, el compañero asume automáticamente sus llamadas).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">DN_00..31</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Llamadas Bajada Asignadas:</b> Bytes 4..7. Máscara de llamadas de bajada que este ascensor ha aceptado atender.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     
           <h2>7. Bloque 6: Puente de Variador Fuji iCOM (CANopen Lift CiA 417)</h2>
           <p>Canal CAN dedicado al control de tracción directa con el variador de frecuencia Fuji Frenic Lift.</p>
     
-          <div class="card" style="margin-bottom:24px;border-left:4px solid #059669;">
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
               <h3 style="margin:0;color:#059669;font-size:1.1rem;">Trama 6.0 — COB-ID 0x501: Telemetría Eléctrica de Tracción</h3>
               <span class="badge" style="background:#059669;color:#fff;">COB-ID: 0x501 | Fuji &rarr; EDEL</span>
@@ -5417,25 +5855,51 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
             
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:6px 12px;width:100%;margin-top:8px;">
-                  <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">FREQ</code>
-                <span><b>Frecuencia de Salida:</b> Bytes 0..1. Hz * 100 entregados al motor por el ondulador IGBT (Ej: 5000 = 50.00 Hz).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">CURR</code>
-                <span><b>Corriente Eficaz de Motor:</b> Bytes 2..3. Amperios * 10 consumidos por las bobinas del estator (Ej: 135 = 13.5 A).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">VDC</code>
-                <span><b>Tensión de Bus DC:</b> Bytes 4..5. Voltaje continuo medido en los condensadores de filtrado de potencia (Ej: 560 V).</span>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);font-size:0.86rem;line-height:1.45;display:flex;align-items:flex-start;gap:8px;">
-                <code style="font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--text-accent,#38bdf8);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:4px;white-space:nowrap;">TORQ</code>
-                <span><b>Par Motor Desarrollado:</b> Bytes 6..7. % de par nominal desarrollado en tiempo real.</span>
-              </div>
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acrónimo</th>
+                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FREQ</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Frecuencia de Salida:</b> Bytes 0..1. Hz * 100 entregados al motor por el ondulador IGBT (Ej: 5000 = 50.00 Hz).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CURR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Corriente Eficaz de Motor:</b> Bytes 2..3. Amperios * 10 consumidos por las bobinas del estator (Ej: 135 = 13.5 A).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">VDC</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Tensión de Bus DC:</b> Bytes 4..5. Voltaje continuo medido en los condensadores de filtrado de potencia (Ej: 560 V).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TORQ</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Par Motor Desarrollado:</b> Bytes 6..7. % de par nominal desarrollado en tiempo real.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+    
           </div>
     <h2>8. Cryptographic Specification: TokenCustom, Cifrado() & CRC Polynomial</h2>
           <p>La maniobra incorpora un motor de seguridad criptográfica por hardware distribuido entre la placa base y todos los periféricos CAN para asegurar licencias y evitar el clonado de placas:</p>
