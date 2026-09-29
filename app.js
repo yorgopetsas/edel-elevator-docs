@@ -3535,7 +3535,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
           <div class="doc-header">
             <span class="badge badge-purple">Section 31</span>
             <h1>31. 8-Bit CAN Frame Matrix, Physical Specifications & TokenCustom Cryptography</h1>
-            <p>Complete technical specification with authentic 8-bit matrices (Bit 7 to Bit 0) and acronym legends for every frame across all 6 CAN subsystems in EDEL controllers.</p>
+            <p>Complete technical specification with authentic 8-bit matrices (Bit 7 to Bit 0) and individual full-width acronym tables for every frame across all 6 CAN subsystems in EDEL controllers (256 kbps, 29-bit ID, TSEG1/2=4).</p>
           
             <div style="display:flex;gap:10px;margin-top:14px;">
               <button onclick="window.openInteractiveTool('tool-can-checker')" class="action-btn-primary" style="background:linear-gradient(135deg,#0284c7,#06b6d4);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(2,132,199,0.35);">
@@ -3547,58 +3547,58 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
           <div class="callout callout-human">
             <div class="callout-icon">🛰️</div>
             <div class="callout-content">
-              <h4>Arquitectura Global y Formato de Rejilla de 8 Bits (Norma EDEL Oficial)</h4>
-              <p>El protocolo de bus CAN de EDEL utiliza tramas de longitud fija de 8 Bytes (DATA[0] a DATA[7]) a <b>256 kbps</b> con identificadores extendidos de 29 bits. Siguiendo el estándar de documentación interna del departamento de I+D, cada trama se presenta en una <b>matriz de 8 columnas (Bit 7 a Bit 0)</b> con su correspondiente desglose eléctrico y funcional de acrónimos para facilitar la labor de comprobación con osciloscopio o analizador de bus.</p>
+              <h4>Global CAN Bus Architecture & 8-Bit Grid Matrix Format (Official EDEL Standard)</h4>
+              <p>The EDEL CAN bus protocol utilizes fixed 8-byte frames (DATA[0] to DATA[7]) at <b>256 kbps</b> with 29-bit extended identifiers. Following the internal R&D engineering documentation standard, each frame is presented in an <b>8-column matrix (Bit 7 to Bit 0)</b> accompanied by its complete electrical and functional acronym breakdown to streamline field diagnostics using an oscilloscope or bus analyzer.</p>
             </div>
           </div>
 
-          <h2>1. Especificación Física Oficial y Temporización de Bus (Capa de Enlace)</h2>
+          <h2>1. Official Physical Layer & Bus Timing Specification (Data Link)</h2>
           <div class="table-container">
             <table class="doc-table">
               <thead>
                 <tr>
-                  <th>Parámetro Físico CAN</th>
-                  <th>Valor Oficial EDEL</th>
-                  <th>Significado Eléctrico / Práctico para el Instalador</th>
+                  <th>Physical CAN Parameter</th>
+                  <th>Official EDEL Value</th>
+                  <th>Electrical / Field Practical Meaning</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><b>Velocidad de Bus (Baudrate)</b></td>
+                  <td><b>Bus Bitrate (Baudrate)</b></td>
                   <td><code>256 kbps</code></td>
-                  <td>Velocidad balanceada sobre par trenzado apantallado (CAN-H / CAN-L). Obligatoria resistencia terminal de 120 Ω en cada extremo del hueco.</td>
+                  <td>Balanced transmission over shielded twisted pair (CAN-H / CAN-L). Mandatory 120 Ω termination resistor at each end of the shaft.</td>
                 </tr>
                 <tr>
-                  <td><b>Formato de Identificador</b></td>
+                  <td><b>Identifier Format</b></td>
                   <td><code>Extendido 29 bits</code></td>
-                  <td>Máscara binaria aceptada para displays: <code>00100100010xyz010000100100010</code>. Los bits <code>xyz</code> seleccionan la variante de protocolo (<code>$XBD</code>, <code>$YBD</code>, <code>$ZBD</code>). Tramas con otros IDs se descartan.</td>
+                  <td>Accepted binary mask for displays: <code>00100100010xyz010000100100010</code>. The bits <code>xyz</code> select the protocol family (<code>$XBD</code>, <code>$YBD</code>, <code>$ZBD</code>). Frames with other IDs are filtered out.</td>
                 </tr>
                 <tr>
-                  <td><b>Segmentos de Bit (MSCAN)</b></td>
+                  <td><b>Bit Timing Segments (MSCAN)</b></td>
                   <td><code>TSEG1 = 4, TSEG2 = 4, SAMP = 1</code></td>
-                  <td>Configuración de sincronismo interno del microcontrolador (Freescale HCS12 / S12X). 1 muestra por bit en el punto de muestreo del 50%.</td>
+                  <td>Microcontroller internal timing configuration for Freescale HCS12/S12X. 1 sample per bit at the 50% sample point.</td>
                 </tr>
                 <tr>
-                  <td><b>Longitud de Datos (DLC)</b></td>
+                  <td><b>Data Length (DLC)</b></td>
                   <td><code>8 Bytes</code> estándar</td>
-                  <td>Todas las tramas transmiten invariablemente una trama de 8 bytes de carga útil (DATA[0] a DATA[7]).</td>
+                  <td>All control, call button, telemetry, and security frames carry an 8-byte payload (DATA[0] to DATA[7]).</td>
                 </tr>
               </tbody>
             </table>
           </div>
-
-          <h2>2. Bloque 1: Bus de Cabina y Displays — Emisión desde Cuadro ($XBD)</h2>
-          <p>Tramas transmitidas periódicamente desde la placa base central hacia el techo de cabina, botonera COP, displays de posición y sintetizador vocal.</p>
+    
+          <h2>2. Block 1: Car Bus & Displays — Downlink from Controller ($XBD)</h2>
+          <p>Frames periodically transmitted from the mainboard to car top, COP, position displays, and voice synthesizers.</p>
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #0284c7;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#0284c7;font-size:1.1rem;">Trama 1.0 — Tipo 0: Trama Periódica Principal (Piso, Flechas, Puertas y Síntesis de Voz)</h3>
-              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XBD | Tipo = 0</span>
+              <h3 style="margin:0;color:#0284c7;font-size:1.1rem;">Frame 1.0 — Type 0: Main Periodic Frame (Floor, Arrows, Doors & Voice Audio)</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XBD | Type = 0</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Emisión cíclica rápida (cada 20–40 ms). Informa del estado de los operadores de puerta, sentido de marcha, posición actual de cabina y disparo de pistas de voz.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Fast cyclic transmission (every 20–40 ms). Reports door operator status, travel direction, current car position, and voice announcement trigger pulses.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -3708,7 +3708,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             
             <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
               <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
-              <div><b>Notas de Taller / Instalación:</b> La tensión diferencial entre CAN-H y CAN-L debe oscilar entre 1.5V y 3.5V en estado recesivo/dominante. Si el audio repite pisos continuamente, comprobar que PP^ y PPv no tengan ruido parásito.</div>
+              <div><b>Workshop / Field Installation Notes:</b> Differential voltage between CAN-H and CAN-L must oscillate between 1.5V and 3.5V during recessive/dominant states. If voice announces floor numbers repeatedly, check that PP^ and PPv lines are free of electromagnetic noise.</div>
             </div>
         
             
@@ -3716,8 +3716,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -3726,7 +3726,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">A1</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Abrir Operador 1:</b> Relé de apertura de puerta de cabina principal (1 = Abrir, 0 = Reposo).
+                      <b>Open Door Operator 1:</b> Controller relay command to open main car door (1 = Open, 0 = Idle).
                     </td>
                   </tr>
                   <tr>
@@ -3734,7 +3734,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">A2</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Abrir Operador 2:</b> Relé de apertura de puerta de cabina del segundo embarque.
+                      <b>Open Door Operator 2:</b> Controller relay command to open rear door (second entrance).
                     </td>
                   </tr>
                   <tr>
@@ -3742,7 +3742,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CP</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Cerrar Puertas:</b> Orden de maniobra de forzar cierre de puertas.
+                      <b>Close Doors:</b> Forced door closing command from controller.
                     </td>
                   </tr>
                   <tr>
@@ -3750,7 +3750,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PP^</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Próxima Partida Subir:</b> Flecha de predirección subir. Por flanco de subida reproduce el audio del piso actual en cabina.
+                      <b>Next Departure Up:</b> Direction pre-announcement arrow. Rising edge triggers floor audio announcement in car.
                     </td>
                   </tr>
                   <tr>
@@ -3758,7 +3758,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PPv</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Próxima Partida Bajar:</b> Flecha de predirección bajar. Por flanco de subida reproduce el audio del piso actual en cabina.
+                      <b>Next Departure Down:</b> Direction pre-announcement arrow. Rising edge triggers floor audio announcement in car.
                     </td>
                   </tr>
                   <tr>
@@ -3766,7 +3766,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TEL_OUT</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Teléfono de Socorro:</b> Activación del canal de audio del interfono de cabina.
+                      <b>Emergency Telephone:</b> Audio line activation for car emergency intercom.
                     </td>
                   </tr>
                   <tr>
@@ -3774,7 +3774,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">F^</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Flecha de Dirección Subida:</b> Sentido de marcha subir encendido en pantalla.
+                      <b>Direction Arrow Up:</b> Active upward travel direction indicator on display.
                     </td>
                   </tr>
                   <tr>
@@ -3782,7 +3782,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">Fv</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Flecha de Dirección Bajada:</b> Sentido de marcha bajar encendido en pantalla.
+                      <b>Direction Arrow Down:</b> Active downward travel direction indicator on display.
                     </td>
                   </tr>
                   <tr>
@@ -3790,7 +3790,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">GONG</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Campana Acústica:</b> Disparo de señal acústica de llegada a planta.
+                      <b>Arrival Gong:</b> Acoustic arrival bell trigger pulse.
                     </td>
                   </tr>
                   <tr>
@@ -3798,7 +3798,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PLANTA</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Piso Actual (0..31):</b> Planta actual en formato binario de 5 bits (EDCBA), con asimetría sumada.
+                      <b>Current Floor (0..31):</b> Current physical floor in 5-bit binary code (EDCBA), including asymmetry offset.
                     </td>
                   </tr>
                   <tr>
@@ -3806,7 +3806,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">P00..P31</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Llamadas de Cabina:</b> LED de confirmación de llamada iluminado en botonera COP de cabina.
+                      <b>Car Calls:</b> Registered car call pushbutton LED confirmation on Car Operating Panel (COP).
                     </td>
                   </tr>
                   <tr>
@@ -3814,7 +3814,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">KO</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Fuera de Servicio:</b> Audio 'Fuera de servicio' por flanco de subida; pictograma visible mientras esté a 1.
+                      <b>Out of Service:</b> 'Out of Service' speech audio on rising edge; display icon remains active while state is 1.
                     </td>
                   </tr>
                   <tr>
@@ -3822,7 +3822,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">KG</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Exceso de Carga:</b> Audio 'Exceso de carga' por flanco de subida; pictograma visible mientras esté a 1 (pesacargas 110%).
+                      <b>Overload:</b> 'Car Overloaded' speech audio on rising edge; display icon active while 110% load is present.
                     </td>
                   </tr>
                   <tr>
@@ -3830,7 +3830,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PA</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Puertas Abiertas:</b> Audio 'Puertas abiertas' por flanco de subida.
+                      <b>Doors Opening:</b> 'Doors Opening' speech audio on rising edge.
                     </td>
                   </tr>
                   <tr>
@@ -3838,7 +3838,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CP</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Cerrando Puertas:</b> Audio 'Cerrando puertas' por flanco de subida.
+                      <b>Doors Closing:</b> 'Doors Closing' speech audio on rising edge.
                     </td>
                   </tr>
                   <tr>
@@ -3846,7 +3846,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">SEN</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Sentido de Marcha:</b> Audio 'Subiendo' o 'Bajando' por flanco de subida según PP^ y PPv. Si ambos están a 1 simultáneamente, se inhibe.
+                      <b>Travel Direction Speech:</b> 'Going Up' or 'Going Down' audio on rising edge according to PP^ and PPv. Suppressed if both are 1.
                     </td>
                   </tr>
                   <tr>
@@ -3854,7 +3854,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REAP</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Reapertura:</b> Bip acústico de reapertura por fotocélula interrumpida.
+                      <b>Door Reopening:</b> Warning beep when photocell or door open button is interrupted.
                     </td>
                   </tr>
                   <tr>
@@ -3862,7 +3862,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">MUTE</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Silenciamiento Total:</b> 1 = Silenciar todos los audios de voz (modo reposo o nocturno).
+                      <b>Audio Mute:</b> 1 = Inhibit all speech synthesis audio (useful during night mode or idle standby).
                     </td>
                   </tr>
                 </tbody>
@@ -3873,13 +3873,13 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #7c3aed;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Trama 1.1 — Tipo 1: Modos Especiales (Inspección, Bomberos, Ahorro OFF y Velocidades)</h3>
-              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XBD | Tipo = 1</span>
+              <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Frame 1.1 — Type 1: Special Operational Modes (Inspection, Firefighters, Energy Saving OFF & Travel Speeds)</h3>
+              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XBD | Type = 1</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Informa a la cabina y periféricos sobre estados de seguridad excepcionales, conmutadores de revisión, modo bomberos y régimen de marcha.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Transmits safety exceptions, car-top inspection switch status, firefighter operation, and inverter speed states.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -3989,7 +3989,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             
             <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
               <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
-              <div><b>Notas de Taller / Instalación:</b> Si la pantalla muestra 'INSPECCIÓN' de forma fija y bloquea el ascensor, verificar que el conmutador de la caja de revisión de techo (Borna 26) no esté accionado o que su contacto NC no esté abierto o sucio.</div>
+              <div><b>Workshop / Field Installation Notes:</b> If the screen permanently displays 'INSPECTION' and elevator will not answer calls, verify that the car-top revision switch (Terminal 26) is not active and that its NC safety contact is clean and properly seated.</div>
             </div>
         
             
@@ -3997,8 +3997,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -4007,7 +4007,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Modo Inspección:</b> Byte 3, Bit 3 (0x08). ¡Conmutador de revisión de techo accionado! La pantalla muestra 'INSPECCIÓN' e inhabilita las llamadas ordinarias.
+                      <b>Inspection Mode:</b> Byte 3, Bit 3 (0x08). Car-top revision switch activated! Display shows 'INSPECTION' and all normal passenger calls are disabled.
                     </td>
                   </tr>
                   <tr>
@@ -4015,7 +4015,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">OFF</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Ahorro de Energía:</b> Byte 3, Bit 7 (0x80). Relé temporizado de luz de cabina apagado. Apaga la retroiluminación (backlight) del display.
+                      <b>Energy Saving Mode:</b> Byte 3, Bit 7 (0x80). Timed car lighting disconnected. Turns off display backlight to extend LCD service life.
                     </td>
                   </tr>
                   <tr>
@@ -4023,7 +4023,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">EM</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Emergencia / Bomberos:</b> Byte 3, Bit 6 (0x40). Contacto de llave de bomberos accionado. Muestra pictograma de bombero e inhibe llamadas.
+                      <b>Emergency / Firefighter:</b> Byte 3, Bit 6 (0x40). Fire switch triggered. Displays firefighter symbol and cancels hall calls.
                     </td>
                   </tr>
                   <tr>
@@ -4031,7 +4031,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">LEVA</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Leva Retráctil:</b> Byte 3, Bit 5 (0x20). Salida de relé de leva retráctil activada para enclavamiento de puertas batientes.
+                      <b>Retractable Cam:</b> Byte 3, Bit 5 (0x20). Output relay for mechanical retractable locking cam on swing doors.
                     </td>
                   </tr>
                   <tr>
@@ -4039,7 +4039,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">EVAC</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Evacuación EN 81-73:</b> Byte 3, Bit 4 (0x10). Maniobra de retorno forzado a planta de evacuación por detección de fuego.
+                      <b>Evacuation Mode EN 81-73:</b> Byte 3, Bit 4 (0x10). Automatic emergency recall to designated exit floor upon smoke detection.
                     </td>
                   </tr>
                   <tr>
@@ -4047,7 +4047,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">VIP</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Servicio Exclusivo:</b> Byte 3, Bit 2 (0x04). Cabina en modo de viaje preferente sin paradas intermedias.
+                      <b>VIP / Priority Service:</b> Byte 3, Bit 2 (0x04). Priority service mode with non-stop direct travel.
                     </td>
                   </tr>
                   <tr>
@@ -4055,7 +4055,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PA</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Puerta Abierta:</b> Byte 3, Bit 1 (0x02). Indica que las puertas se encuentran en fase abierta en el ciclo de maniobra.
+                      <b>Doors Open State:</b> Byte 3, Bit 1 (0x02). Indicates doors are fully open in the controller state cycle.
                     </td>
                   </tr>
                   <tr>
@@ -4063,7 +4063,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">OUT_CFG</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Configuración Salidas:</b> Byte 4 completo. Mapeo dinámico de salidas de relé de cabina.
+                      <b>Output Configuration:</b> Byte 4. Dynamic relay mapping byte for car outputs.
                     </td>
                   </tr>
                   <tr>
@@ -4071,7 +4071,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">VC_MODE</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Consola Virtual iCOM:</b> Byte 5, Bit 0. Modo consola remota para parametrizar el variador Fuji Frenic Lift.
+                      <b>Virtual Console Mode:</b> Byte 5, Bit 0. Handheld remote terminal mode for Fuji Frenic Lift inverter parametrization.
                     </td>
                   </tr>
                   <tr>
@@ -4079,7 +4079,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">V.RAP</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Velocidad Rápida:</b> Byte 6, Bit 6 (0x40). Tracción en régimen nominal de marcha.
+                      <b>Nominal Fast Speed:</b> Byte 6, Bit 6 (0x40). Inverter running at full nominal travel speed.
                     </td>
                   </tr>
                   <tr>
@@ -4087,7 +4087,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">V.LEN</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Velocidad Lenta:</b> Byte 6, Bit 7 (0x80). Tracción en velocidad lenta de aproximación / nivelación o marcha de inspección.
+                      <b>Creep / Inspection Speed:</b> Byte 6, Bit 7 (0x80). Inverter running at slow leveling or car-top inspection speed.
                     </td>
                   </tr>
                   <tr>
@@ -4095,7 +4095,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">MARCHA</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Viaje Activo:</b> Byte 6, Bit 5 (0x20). Cabina en desplazamiento hacia un piso.
+                      <b>Active Travel:</b> Byte 6, Bit 5 (0x20). Car currently in motion between floors.
                     </td>
                   </tr>
                   <tr>
@@ -4103,7 +4103,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">DESTINO</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Planta Destino (0..31):</b> Byte 6, Bits 0..4. Piso objetivo hacia el que se dirige el ascensor.
+                      <b>Destination Floor (0..31):</b> Byte 6, Bits 0..4. Target floor index for the active run.
                     </td>
                   </tr>
                   <tr>
@@ -4111,7 +4111,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">NIVEL</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Nivel de Piso Exacto:</b> Byte 7, Bit 0 (0x01). Cabina detenida dentro de la zona de desenclavamiento (enrase milimétrico).
+                      <b>Exact Floor Level:</b> Byte 7, Bit 0 (0x01). Car stopped inside door zone with millimeter precision.
                     </td>
                   </tr>
                   <tr>
@@ -4119,7 +4119,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">LLEGADA</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Señal Llegada:</b> Byte 7, Bit 1 (0x02). Activación de cota de deceleración de llegada a piso.
+                      <b>Arrival Zone:</b> Byte 7, Bit 1 (0x02). Deceleration approach point triggered.
                     </td>
                   </tr>
                   <tr>
@@ -4127,7 +4127,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REAP_OK</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Reapertura Habilitada:</b> Byte 7, Bit 2 (0x04). El temporizador de reapertura no está bloqueado.
+                      <b>Reopening Enabled:</b> Byte 7, Bit 2 (0x04). Reopening safety timer is active.
                     </td>
                   </tr>
                 </tbody>
@@ -4138,13 +4138,13 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Trama 1.2 — Tipo 2: Comando a Encoder de Hueco (TRAMA_CAB_TX_ENCODER)</h3>
-              <span class="badge" style="background:#059669;color:#fff;">ID: $XBD | Tipo = 2</span>
+              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Frame 1.2 — Type 2: Shaft Encoder Command (TRAMA_CAB_TX_ENCODER)</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $XBD | Type = 2</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Orden emitida por la maniobra hacia el cabezal lector de cinta de hueco para calibrar cotas milimétricas durante la puesta en marcha.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Command transmitted by the controller to the K2-64296 perforated tape reader head to calibrate millimeter floor levels.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -4257,8 +4257,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -4267,7 +4267,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TYPE = 2</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Tipo Trama Encoder:</b> Identifica orden hacia el encoder de faja perforada K2-64296.
+                      <b>Encoder Frame Type:</b> Designates command addressed to K2-64296 shaft tape reader head.
                     </td>
                   </tr>
                   <tr>
@@ -4275,7 +4275,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CMD = 0x01</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Reset Encoder:</b> Puesta a cero de la cota de hueco absoluta.
+                      <b>Reset Encoder:</b> Resets absolute millimeter position to zero.
                     </td>
                   </tr>
                   <tr>
@@ -4283,7 +4283,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CMD = 0x02</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Ajuste Pulsador:</b> Memorización de cota de piso por pulsador de revisión de cabina.
+                      <b>Pushbutton Adjust:</b> Calibrates floor level using the car inspection button.
                     </td>
                   </tr>
                   <tr>
@@ -4291,7 +4291,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CMD = 0x03</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Beep Confirmación:</b> Pitido acústico de memorización correcta de parada.
+                      <b>Confirm Beep:</b> Acoustic confirmation of memorized floor level.
                     </td>
                   </tr>
                 </tbody>
@@ -4302,13 +4302,13 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #d97706;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#d97706;font-size:1.1rem;">Trama 1.3 — Tipo 3: Reto Criptográfico Anti-Copia (TRAMA_CAB_TX_CREARFIRMA)</h3>
-              <span class="badge" style="background:#d97706;color:#fff;">ID: $XBD | Tipo = 3</span>
+              <h3 style="margin:0;color:#d97706;font-size:1.1rem;">Frame 1.3 — Type 3: Anti-Tamper Security Challenge (TRAMA_CAB_TX_CREARFIRMA)</h3>
+              <span class="badge" style="background:#d97706;color:#fff;">ID: $XBD | Type = 3</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Interrogación periódica de seguridad anti-clonado. Si la placa periférica no responde con el cálculo correcto en 3 intentos, la maniobra se bloquea.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Periodic anti-cloning security challenge. If a peripheral board does not return the correct hash within 3 attempts, the controller triggers a safety lockout.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -4421,8 +4421,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -4431,7 +4431,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FIRMA</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Semilla de Reto:</b> Valor hash Cifrado(firma, theAleat, 0) calculado por la CPU central.
+                      <b>Challenge Seed:</b> Hash value Cifrado(firma, theAleat, 0) computed by the central CPU.
                     </td>
                   </tr>
                   <tr>
@@ -4439,7 +4439,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">RDM</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Número Aleatorio:</b> Semilla generada por el timer de hardware TCNT para evitar ataques por repetición.
+                      <b>Hardware Random Seed:</b> Nonce generated from micro timer TCNT to prevent replay attacks.
                     </td>
                   </tr>
                 </tbody>
@@ -4450,13 +4450,13 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #ef4444;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#ef4444;font-size:1.1rem;">Trama 1.6 — Tipo 7: Token Criptográfico Rodante (TRAMA_CAB_TX_TOKEN)</h3>
-              <span class="badge" style="background:#ef4444;color:#fff;">ID: $XBD | Tipo = 7</span>
+              <h3 style="margin:0;color:#ef4444;font-size:1.1rem;">Frame 1.6 — Type 7: Rolling Cryptographic Token (TRAMA_CAB_TX_TOKEN)</h3>
+              <span class="badge" style="background:#ef4444;color:#fff;">ID: $XBD | Type = 7</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Transmisión de sincronismo cada 500 ms del motor de seguridad TokenCustom para bus de cabina.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">500ms cyclic synchronism packet for the TokenCustom hardware licensing engine on car bus.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -4569,8 +4569,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -4579,7 +4579,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">KAUX</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Contador XOR 0x5A:</b> ContadorCab XOR TOKEN_KAUX_CAB (patrón alterno de sincronismo).
+                      <b>Counter XOR 0x5A:</b> ContadorCab XOR TOKEN_KAUX_CAB (alternating synchronism pattern).
                     </td>
                   </tr>
                   <tr>
@@ -4587,7 +4587,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ID_H</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Contador XOR ID High:</b> ContadorCab XOR (TOKEN_ID >> 8).
+                      <b>Counter XOR ID High:</b> ContadorCab XOR (TOKEN_ID >> 8).
                     </td>
                   </tr>
                   <tr>
@@ -4595,7 +4595,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ID_L</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Contador XOR ID Low:</b> ContadorCab XOR (TOKEN_ID & 0xFF).
+                      <b>Counter XOR ID Low:</b> ContadorCab XOR (TOKEN_ID & 0xFF).
                     </td>
                   </tr>
                   <tr>
@@ -4603,7 +4603,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CRC</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Polinomio CRC-8:</b> CRC(0x1D, KSecretaCab, Byte1 ^ Byte2 ^ Byte3). Sello de autenticidad.
+                      <b>CRC-8 Polynomial Hash:</b> CRC(0x1D, KSecretaCab, Byte1 ^ Byte2 ^ Byte3) hardware integrity seal.
                     </td>
                   </tr>
                 </tbody>
@@ -4612,18 +4612,18 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           </div>
     
-          <h2>3. Bloque 2: Bus de Cabina — Respuestas desde Periféricos hacia el Cuadro ($XBN)</h2>
-          <p>Tramas emitidas desde los dispositivos instalados en la cabina (placa de techo KRN, botoneras modulares BotCAN, encoder y consola) hacia el cuadro central.</p>
+          <h2>3. Block 2: Car Bus — Uplink from Peripherals to Master ($XBN)</h2>
+          <p>Frames transmitted from car devices (KRN car top, BotCAN modular COP, encoder, and handheld console) back to the central controller.</p>
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Trama 2.0 — Tipo 0: Placa Cabina KRN / K2-64290 (Pulsadores, Pesacargas y Fotocélulas)</h3>
-              <span class="badge" style="background:#059669;color:#fff;">ID: $XBN | Tipo = 0</span>
+              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Frame 2.0 — Type 0: Car Top Board KRN / K2-64290 (Pushbuttons, Load Weighing & Photocells)</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $XBN | Type = 0</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Es la trama más crítica de cabina: transmite el estado de todos los contactos de seguridad de puertas, conmutador de revisión y llamadas de cabina.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Most critical car frame: transmits door interlocks, car-top inspection switch, load weighing sensors, and COP car call pushbuttons.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -4733,7 +4733,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             
             <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
               <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
-              <div><b>Notas de Taller / Instalación:</b> Bornas de placa: Si la maniobra no arranca y marca sobrecarga sin pasajeros, revisar tensión de 24Vcc en Borna 23. Si no obedece botonera, verificar que Borna 26 marque estado 1.</div>
+              <div><b>Workshop / Field Installation Notes:</b> Board Terminals: If the controller does not start and indicates overload with no passengers inside, check 24VDC on Terminal 23. If the car operating panel pushbuttons are unresponsive, ensure Terminal 26 reads state 1.</div>
             </div>
         
             
@@ -4741,8 +4741,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -4751,7 +4751,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">EXCESO_CARGA</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Pesacargas Sobrecarga 110%:</b> Byte 1, Bit 0. Borna 23. Contacto NA. Impide el cierre de puertas y el arranque.
+                      <b>Overload 110%:</b> Byte 1, Bit 0. Terminal 23. NO contact. Prevents doors closing and inhibits travel.
                     </td>
                   </tr>
                   <tr>
@@ -4759,7 +4759,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP_CAB</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Conmutador Inspección Techo:</b> Byte 1, Bit 1. Borna 26. 1 = Maniobra Normal, 0 = Modo Revisión accionado.
+                      <b>Car-Top Inspection Switch:</b> Byte 1, Bit 1. Terminal 26. 1 = Normal Operation, 0 = Inspection Mode active.
                     </td>
                   </tr>
                   <tr>
@@ -4767,7 +4767,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">COMPLETO</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Pesacargas Cabina Completa 80%:</b> Byte 1, Bit 2. Borna 28. No atiende llamadas de rellano en el trayecto.
+                      <b>Full Load 80%:</b> Byte 1, Bit 2. Terminal 28. Bypasses landing calls during peak transit.
                     </td>
                   </tr>
                   <tr>
@@ -4775,7 +4775,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FC_CERRAR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Final Carrera Puerta Cerrada:</b> Byte 1, Bit 3. Borna 29. Contacto FCC del operador.
+                      <b>Door Closed Limit Switch:</b> Byte 1, Bit 3. Terminal 29. FCC operator interlock contact.
                     </td>
                   </tr>
                   <tr>
@@ -4783,7 +4783,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FC_ABRIR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Final Carrera Puerta Abierta:</b> Byte 1, Bit 4. Borna 30. Contacto FCA del operador.
+                      <b>Door Open Limit Switch:</b> Byte 1, Bit 4. Terminal 30. FCA operator limit contact.
                     </td>
                   </tr>
                   <tr>
@@ -4791,7 +4791,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REAP</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Reapertura / Fotocélula:</b> Byte 1, Bit 5. Borna 31. Barrera infrarroja cortada provocando apertura inmediata.
+                      <b>Reopening Photocell:</b> Byte 1, Bit 5. Terminal 31. Infrared light curtain interrupted, triggering immediate reopening.
                     </td>
                   </tr>
                   <tr>
@@ -4799,7 +4799,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">BOMB_CAB</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Llave Bomberos en Cabina:</b> Byte 1, Bit 6. Borna 33. Conmutador de llave interior para fase de rescate.
+                      <b>Car Firefighter Key:</b> Byte 1, Bit 6. Terminal 33. Key switch inside cabin for Phase 2 firefighter operation.
                     </td>
                   </tr>
                   <tr>
@@ -4807,7 +4807,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_CERRAR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Pulsador Cerrar Puerta:</b> Byte 1, Bit 7. Borna 34. Botón '>' de botonera de cabina para forzar cierre rápido.
+                      <b>Door Close Pushbutton:</b> Byte 1, Bit 7. Terminal 34. '>' COP button to override dwell time.
                     </td>
                   </tr>
                   <tr>
@@ -4815,7 +4815,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PISADERA</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Contacto Móvil Pisadera:</b> Byte 2, Bit 0. Borna 35. Contacto mecánico de seguridad contra atrapamiento.
+                      <b>Movable Apron Contact:</b> Byte 2, Bit 0. Terminal 35. Mechanical safety contact beneath car threshold.
                     </td>
                   </tr>
                   <tr>
@@ -4823,7 +4823,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FOTO_1 / FOTO_2</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Barreras Ópticas 1 y 2:</b> Byte 2, Bits 1 y 2. Supervisión de operadores adicionales.
+                      <b>Optical Curtains 1 & 2:</b> Byte 2, Bits 1 & 2. Second entrance and auxiliary photocells.
                     </td>
                   </tr>
                   <tr>
@@ -4831,7 +4831,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TEL_IN</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Pulsador Socorro / Alarma:</b> Byte 2, Bit 3. Botón de campana de cabina presionado por pasajeros.
+                      <b>Alarm / Intercom Button:</b> Byte 2, Bit 3. Yellow emergency push button on COP.
                     </td>
                   </tr>
                   <tr>
@@ -4839,7 +4839,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CALL_00..31</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Llamadas de Cabina:</b> Bytes 3..6. Matriz física de pulsadores presionados en la cabina.
+                      <b>Car Call Matrix:</b> Bytes 3..6. Direct physical status of car pushbuttons (1 = pressed).
                     </td>
                   </tr>
                   <tr>
@@ -4847,7 +4847,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">SELLO</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Firma Dinámica Token:</b> Byte 7. CRC(0x1D, KSecretaCab, 0x00 ^ ContadorCab). Validación anti-tamper.
+                      <b>Dynamic Token Seal:</b> Byte 7. CRC(0x1D, KSecretaCab, 0x00 ^ ContadorCab). Anti-tamper verification.
                     </td>
                   </tr>
                 </tbody>
@@ -4858,13 +4858,13 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #7c3aed;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Trama 2.5 — Tipo 5: Placa Cabina v2 ADVANCED K2-64291 (Botonera Inspección Techo Subir/Bajar)</h3>
-              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XBN | Tipo = 5</span>
+              <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Frame 2.5 — Type 5: Car Board v2 ADVANCED K2-64291 (Car-Top Inspection Up/Down Buttons)</h3>
+              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XBN | Type = 5</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Transmisión de alta fiabilidad desde placas K2-64291 con control integrado de los pulsadores de subida/bajada de revisión.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">High-reliability frame from K2-64291 boards providing direct software supervisory monitoring of car-top inspection up/down pushbuttons.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -4974,7 +4974,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             
             <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
               <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
-              <div><b>Notas de Taller / Instalación:</b> La maniobra supervisa por software que PULS_INSP_SUBIR y PULS_INSP_BAJAR nunca se accionen simultáneamente; en caso de fallo de contactos, detiene la marcha de revisión de inmediato.</div>
+              <div><b>Workshop / Field Installation Notes:</b> The controller firmware validates that PULS_INSP_SUBIR and PULS_INSP_BAJAR are never pressed simultaneously; in case of contact weld or simultaneous actuation, all motion is immediately stopped.</div>
             </div>
         
             
@@ -4982,8 +4982,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -4992,7 +4992,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_INSP_SUBIR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Pulsador Subir Techo:</b> Byte 1, Bit 7 (0x80). Botón negro/verde de subir en la caja de revisión de techo presionado.
+                      <b>Inspection UP Pushbutton:</b> Byte 1, Bit 7 (0x80). Black/green UP button on inspection station pressed.
                     </td>
                   </tr>
                   <tr>
@@ -5000,7 +5000,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_INSP_BAJAR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Pulsador Bajar Techo:</b> Byte 1, Bit 6 (0x40). Botón negro/verde de bajar en la caja de revisión de techo presionado.
+                      <b>Inspection DOWN Pushbutton:</b> Byte 1, Bit 6 (0x40). Black/green DOWN button on inspection station pressed.
                     </td>
                   </tr>
                   <tr>
@@ -5008,7 +5008,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP_CAB</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Conmutador Inspección:</b> Byte 1, Bit 1 (0x02). Conmutador de dos posiciones Normal/Revisión de techo.
+                      <b>Inspection Mode Switch:</b> Byte 1, Bit 1 (0x02). Rotary Normal/Inspection selector switch.
                     </td>
                   </tr>
                   <tr>
@@ -5016,7 +5016,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FALDON</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Faldón Telescópico:</b> Byte 2, Bit 7. Contacto de seguridad de faldón extensible desplegado (norma EN 81-20).
+                      <b>Retractable Safety Apron:</b> Byte 2, Bit 7. Extended apron safety interlock (EN 81-20).
                     </td>
                   </tr>
                 </tbody>
@@ -5025,18 +5025,18 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           </div>
     
-          <h2>4. Bloque 3: Bus de Rellano / Exteriores — Emisión hacia Displays de Rellano ($XTR)</h2>
-          <p>Tramas transmitidas desde el cuadro por el par trenzado del hueco hacia las placas mCAN de los pulsadores y displays de cada rellano.</p>
+          <h2>4. Block 3: Landing Bus — Downlink to Hall Displays ($XTR)</h2>
+          <p>Frames transmitted from the controller down the shaft pair to landing call buttons and floor indicators.</p>
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #0284c7;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#0284c7;font-size:1.1rem;">Trama 3.0 — Tipo 0: Registro de Llamadas de Bajada y Posición en Rellano</h3>
-              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XTR | Tipo = 0</span>
+              <h3 style="margin:0;color:#0284c7;font-size:1.1rem;">Frame 3.0 — Type 0: Down Call Registration & Floor Position on Landings</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XTR | Type = 0</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Actualiza la posición del display de pasillo y enciende los LEDs de registro de llamada de bajada en cada rellano.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Updates landing indicators and illuminates confirmation LEDs on hall downward call buttons.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -5149,8 +5149,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -5159,7 +5159,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CAN_ID</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Canal de Rellano:</b> Byte 0, Bits 7..5. Sub-bus de hueco (id_CAN << 3).
+                      <b>Landing Channel Index:</b> Byte 0, Bits 7..5. Shaft sub-bus routing (id_CAN << 3).
                     </td>
                   </tr>
                   <tr>
@@ -5167,7 +5167,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TIPO = 0</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Trama Registro Bajada:</b> Byte 0, Bits 2..0. TRAMA_EXT_TX_REGBAJADA = 0.
+                      <b>Down Registration Type:</b> Byte 0, Bits 2..0. TRAMA_EXT_TX_REGBAJADA = 0.
                     </td>
                   </tr>
                   <tr>
@@ -5175,7 +5175,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">LED_DN_00..31</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>LED Registro Bajada:</b> Bytes 3..6. 1 = Encender LED del pulsador de llamada de bajada en el rellano.
+                      <b>Down Call Registration LEDs:</b> Bytes 3..6. 1 = Turn on hall call button confirmation LED.
                     </td>
                   </tr>
                   <tr>
@@ -5183,7 +5183,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">OCUPADO</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Ascensor Ocupado:</b> Byte 7, Bit 0. Señal luminosa de 'Ocupado' en botonera exterior.
+                      <b>Elevator In Use:</b> Byte 7, Bit 0. In-use indicator illuminated at landing stations.
                     </td>
                   </tr>
                   <tr>
@@ -5191,7 +5191,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REVISION</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Fuera de Servicio / Revisión:</b> Byte 7, Bit 1. Enciende indicador rojo de 'No Entrar' o avería en rellano.
+                      <b>Out of Service / Inspection:</b> Byte 7, Bit 1. Red out-of-service warning indicator.
                     </td>
                   </tr>
                 </tbody>
@@ -5200,18 +5200,18 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           </div>
     
-          <h2>5. Bloque 4: Bus de Rellano / Exteriores — Llamadas hacia el Cuadro ($X01 a $X3F)</h2>
-          <p>Tramas emitidas cuando un usuario presiona un pulsador exterior en cualquier piso, o cuando se acciona una llave de bomberos o inspección de foso.</p>
+          <h2>5. Block 4: Landing Bus — Uplink Calls to Controller ($X01 to $X3F)</h2>
+          <p>Frames transmitted when a passenger pushes a hall call button, or when pit inspection / firefighters keys are triggered.</p>
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Trama 4.0 — Tipo 0: Pulsación de Llamada Estándar en Rellano</h3>
-              <span class="badge" style="background:#059669;color:#fff;">ID: $X01..$X3F | Tipo = 0</span>
+              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Frame 4.0 — Type 0: Standard Hall Call Button Press</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $X01..$X3F | Type = 0</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Emitida en el instante en que un usuario acciona el botón de rellano para llamar al ascensor.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Transmitted instantaneously when a passenger actuates a landing call button to request service.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -5324,8 +5324,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -5334,7 +5334,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_BAJAR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Pulsador Bajada Presionado:</b> Byte 1, Bit 5 (0x20). Llamada de pasillo hacia abajo registrada.
+                      <b>Down Call Pressed:</b> Byte 1, Bit 5 (0x20). Hall downward call registered.
                     </td>
                   </tr>
                   <tr>
@@ -5342,7 +5342,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_SUBIR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Pulsador Subida Presionado:</b> Byte 1, Bit 6 (0x40). Llamada de pasillo hacia arriba registrada.
+                      <b>Up Call Pressed:</b> Byte 1, Bit 6 (0x40). Hall upward call registered.
                     </td>
                   </tr>
                   <tr>
@@ -5350,7 +5350,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">BOMB_EXT</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Llave Bomberos en Rellano:</b> Byte 1, Bit 7 (0x80). Conmutador de bomberos normativo accionado en planta de acceso.
+                      <b>Landing Fire Key:</b> Byte 1, Bit 7 (0x80). Main firefighter recall key switch activated.
                     </td>
                   </tr>
                   <tr>
@@ -5358,7 +5358,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FLOOR (0..31)</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Planta Emisora:</b> Byte 1, Bits 0..4. Identificador de la planta física de donde procede la pulsación.
+                      <b>Calling Floor:</b> Byte 1, Bits 0..4. Physical floor index of the transmitting landing station.
                     </td>
                   </tr>
                   <tr>
@@ -5366,7 +5366,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TOKEN_FLAG</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Presencia Token:</b> Byte 2, Bit 7 (0x80). 1 = Placa de rellano segura con autenticación activa.
+                      <b>Token Authenticated:</b> Byte 2, Bit 7 (0x80). 1 = Secure encrypted landing node verified.
                     </td>
                   </tr>
                 </tbody>
@@ -5377,13 +5377,13 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #7c3aed;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Trama 4.4 — Tipo 4: Botonera de Inspección de Foso y Cuarto de Poleas</h3>
-              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $X01..$X3F | Tipo = 4</span>
+              <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Frame 4.4 — Type 4: Pit & Pulley Room Inspection Station</h3>
+              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $X01..$X3F | Type = 4</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Supervisa las botoneras de revisión de foso y cuarto de poleas exigidas por la norma EN 81-20.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Supervises mandatory EN 81-20 emergency inspection control stations located in the shaft pit and pulley room.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -5493,7 +5493,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             
             <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
               <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
-              <div><b>Notas de Taller / Instalación:</b> Prioridad de seguridad: Si la botonera de foso entra en revisión (INSP_ON = 1), el cuadro bloquea cualquier intento de mover la cabina desde la botonera de techo, garantizando la vida del operario en el foso.</div>
+              <div><b>Workshop / Field Installation Notes:</b> Safety priority: Pit inspection has absolute priority over car-top inspection. If the pit station enters inspection mode (INSP_ON = 1), the controller blocks any movement command from car-top to protect technician inside pit.</div>
             </div>
         
             
@@ -5501,8 +5501,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -5511,7 +5511,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP_ON</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Conmutador Revisión Accionado:</b> Byte 1, Bit 7 (0x80). Conmutador de inspección de foso o cuarto de poleas activado.
+                      <b>Inspection Switch Active:</b> Byte 1, Bit 7 (0x80). Pit or pulley room inspection switch engaged.
                     </td>
                   </tr>
                   <tr>
@@ -5519,7 +5519,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_SUBIR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Pulsador Subir Inspección:</b> Byte 1, Bit 6 (0x40). Orden de marcha subir a velocidad de revisión.
+                      <b>Inspection UP Button:</b> Byte 1, Bit 6 (0x40). Run up in inspection mode.
                     </td>
                   </tr>
                   <tr>
@@ -5527,7 +5527,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_BAJAR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Pulsador Bajar Inspección:</b> Byte 1, Bit 5 (0x20). Orden de marcha bajar a velocidad de revisión.
+                      <b>Inspection DOWN Button:</b> Byte 1, Bit 5 (0x20). Run down in inspection mode.
                     </td>
                   </tr>
                   <tr>
@@ -5535,7 +5535,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">UBICACION = 0</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Botonera de Foso:</b> Byte 2, Bits 0..2 = 0x00. Dispositivo instalado en el foso (EN 81-20).
+                      <b>Pit Station:</b> Byte 2, Bits 0..2 = 0x00. Emergency inspection station located in shaft pit (EN 81-20).
                     </td>
                   </tr>
                   <tr>
@@ -5543,7 +5543,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">UBICACION = 1</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Botonera Cuarto Poleas:</b> Byte 2, Bits 0..2 = 0x01. Dispositivo instalado en el cuarto de poleas superior.
+                      <b>Pulley Room Station:</b> Byte 2, Bits 0..2 = 0x01. Inspection station located in upper secondary pulley room.
                     </td>
                   </tr>
                 </tbody>
@@ -5552,18 +5552,18 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           </div>
     
-          <h2>6. Bloque 5: Bus de Maniobra Múltiple — Dúplex / Triplex ($M00 a $M03)</h2>
-          <p>Comunicación peer-to-peer de alta velocidad entre cuadros de maniobra independientes emparejados en batería.</p>
+          <h2>6. Block 5: Multiplex Group Dispatching — Duplex / Triplex ($M00 to $M03)</h2>
+          <p>High-speed peer-to-peer bus connecting independent controllers in a duplex or triplex bank.</p>
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #8b5cf6;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#8b5cf6;font-size:1.1rem;">Trama 5.0 — Tipo 0: Posición, Paro y Llamadas de Bajada Compartidas</h3>
-              <span class="badge" style="background:#8b5cf6;color:#fff;">ID: $M00..$M03 | Tipo = 0</span>
+              <h3 style="margin:0;color:#8b5cf6;font-size:1.1rem;">Frame 5.0 — Type 0: Position, Deceleration & Shared Down Calls</h3>
+              <span class="badge" style="background:#8b5cf6;color:#fff;">ID: $M00..$M03 | Type = 0</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Cada ascensor comunica a sus compañeros su cota exacta, si está disponible y qué llamadas de bajada va a atender.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Each car broadcasts its exact floor position, availability status, and assigned downward hall calls to companion cars.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -5676,8 +5676,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -5686,7 +5686,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">miID</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Identificador Ascensor:</b> Byte 0, Bits 0..3. Número de ascensor en la batería: 0 = Ascensor A, 1 = B, 2 = C.
+                      <b>Elevator ID:</b> Byte 0, Bits 0..3. Car index in bank: 0 = Car A, 1 = Car B, 2 = Car C.
                     </td>
                   </tr>
                   <tr>
@@ -5694,7 +5694,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ASIM</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Asimetría de Plantas:</b> Byte 1, Bits 5..7. Desfase de plantas entre huecos no alineados.
+                      <b>Floor Offset:</b> Byte 1, Bits 5..7. Asymmetric floor offset between unaligned shaft basements.
                     </td>
                   </tr>
                   <tr>
@@ -5702,7 +5702,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PLANTA</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Piso Actual:</b> Byte 1, Bits 0..4. Cota de parada del ascensor emisor.
+                      <b>Current Floor:</b> Byte 1, Bits 0..4. Current position of companion elevator.
                     </td>
                   </tr>
                   <tr>
@@ -5710,7 +5710,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PARO</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Zona de Parada:</b> Byte 2. Estado del selector de desaceleración y paro (SenyalParo + 1).
+                      <b>Stopping Zone:</b> Byte 2. Deceleration and stopping selector state (SenyalParo + 1).
                     </td>
                   </tr>
                   <tr>
@@ -5718,7 +5718,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ERR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Código de Avería Compañero:</b> Byte 3. Fallo activo (si marca avería, el compañero asume automáticamente sus llamadas).
+                      <b>Companion Fault Code:</b> Byte 3. Active fault code (if one car faults, the companion automatically takes over its calls).
                     </td>
                   </tr>
                   <tr>
@@ -5726,7 +5726,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">DN_00..31</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Llamadas Bajada Asignadas:</b> Bytes 4..7. Máscara de llamadas de bajada que este ascensor ha aceptado atender.
+                      <b>Assigned Down Calls:</b> Bytes 4..7. 32-bit mask of downward hall calls assigned to this car.
                     </td>
                   </tr>
                 </tbody>
@@ -5735,18 +5735,18 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
     
           </div>
     
-          <h2>7. Bloque 6: Puente de Variador Fuji iCOM (CANopen Lift CiA 417)</h2>
-          <p>Canal CAN dedicado al control de tracción directa con el variador de frecuencia Fuji Frenic Lift.</p>
+          <h2>7. Block 6: Fuji iCOM Inverter Gateway (CANopen Lift CiA 417)</h2>
+          <p>Dedicated CAN bus channel for direct traction drive control with the Fuji Frenic Lift inverter.</p>
     
           <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Trama 6.0 — COB-ID 0x501: Telemetría Eléctrica de Tracción</h3>
+              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Frame 6.0 — COB-ID 0x501: Traction Electrical Telemetry</h3>
               <span class="badge" style="background:#059669;color:#fff;">COB-ID: 0x501 | Fuji &rarr; EDEL</span>
             </div>
-            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Telemetría en tiempo real enviada por el variador hacia el cuadro para supervisión y registro de consumo.</p>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Real-time motor telemetry transmitted by the Fuji drive to the controller for speed and current monitoring.</p>
             
             <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
-              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
                 <thead>
                   <tr style="background:rgba(2,132,199,0.15);">
                     <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
@@ -5859,8 +5859,8 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <table class="doc-table" style="width:100%;margin:0;">
                 <thead>
                   <tr style="background:rgba(255,255,255,0.04);">
-                    <th style="width:120px;text-align:center;">Acrónimo</th>
-                    <th style="text-align:left;">Función Eléctrica y Descripción de la Señal (Ancho Completo)</th>
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -5869,7 +5869,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FREQ</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Frecuencia de Salida:</b> Bytes 0..1. Hz * 100 entregados al motor por el ondulador IGBT (Ej: 5000 = 50.00 Hz).
+                      <b>Output Frequency:</b> Bytes 0..1. Real electrical Hz * 100 delivered by IGBT inverter (e.g., 5000 = 50.00 Hz).
                     </td>
                   </tr>
                   <tr>
@@ -5877,7 +5877,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CURR</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Corriente Eficaz de Motor:</b> Bytes 2..3. Amperios * 10 consumidos por las bobinas del estator (Ej: 135 = 13.5 A).
+                      <b>Motor RMS Current:</b> Bytes 2..3. Stator phase current in Amps * 10 (e.g., 142 = 14.2 A).
                     </td>
                   </tr>
                   <tr>
@@ -5885,7 +5885,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">VDC</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Tensión de Bus DC:</b> Bytes 4..5. Voltaje continuo medido en los condensadores de filtrado de potencia (Ej: 560 V).
+                      <b>DC Bus Voltage:</b> Bytes 4..5. DC filter capacitor voltage in Volts (e.g., 560 VDC).
                     </td>
                   </tr>
                   <tr>
@@ -5893,7 +5893,7 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
                       <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TORQ</code>
                     </td>
                     <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
-                      <b>Par Motor Desarrollado:</b> Bytes 6..7. % de par nominal desarrollado en tiempo real.
+                      <b>Motor Output Torque:</b> Bytes 6..7. Real-time torque developed as % of nominal rating.
                     </td>
                   </tr>
                 </tbody>
@@ -5901,11 +5901,12 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
             </div>
     
           </div>
-    <h2>8. Cryptographic Specification: TokenCustom, Cifrado() & CRC Polynomial</h2>
-          <p>La maniobra incorpora un motor de seguridad criptográfica por hardware distribuido entre la placa base y todos los periféricos CAN para asegurar licencias y evitar el clonado de placas:</p>
+    
+          <h2>8. Cryptographic Specification: TokenCustom, Cifrado() & CRC Polynomial</h2>
+          <p>The controller incorporates a distributed hardware cryptographic engine across the mainboard and all CAN peripherals to enforce firmware licensing and prevent cloning:</p>
 
-          <h3>8.1. Formulación Matemática de Cifrado()</h3>
-          <p>Implementada en <code>Sources/LCD.c:2291</code> y <code>Sources/E2PROM.c</code>:</p>
+          <h3>8.1. Mathematical Formulation of Cifrado()</h3>
+          <p>Implemented in <code>Sources/LCD.c:2291</code> and <code>Sources/E2PROM.c</code>:</p>
           <div class="code-block">
 unsigned short Cifrado(unsigned short inFirma, unsigned short inAleat, unsigned char inTipo)
 {	
@@ -5927,10 +5928,10 @@ unsigned short Cifrado(unsigned short inFirma, unsigned short inAleat, unsigned 
     return cifrado;
 }
           </div>
-          <p><b>Mecanismo de Permutación No Lineal:</b> En Modo 0, los bits 3, 7 y 11 forman un índice <code>key ∈ [0..7]</code> sobre la matriz pseudoaleatoria <code>RDM[8]</code>. Los bits restantes de <code>inAleat</code> se desplazan y compactan eliminando correlación algebraica antes de la operación XOR final.</p>
+          <p><b>Non-Linear Permutation Mechanism:</b> In Mode 0, bits 3, 7, and 11 form an index <code>key ∈ [0..7]</code> addressing the pseudo-random substitution matrix <code>RDM[8]</code>. The remaining bits of <code>inAleat</code> are shifted and compacted to eliminate algebraic correlation prior to the final XOR operation.</p>
 
-          <h3>8.2. Algoritmo Polinómico CRC-8 y Jerarquía de Claves</h3>
-          <p>Definido en <code>Sources/Defines.h:343</code> y ejecutado en <code>Sources/Remote.c:82</code>:</p>
+          <h3>8.2. CRC-8 Polynomial Algorithm & Key Hierarchy</h3>
+          <p>Defined in <code>Sources/Defines.h:343</code> and executed in <code>Sources/Remote.c:82</code>:</p>
           <div class="code-block">
 #define TOKEN_POLY          0x1D    // Polinomio generador CRC-8-SAE J1850 (x^8 + x^4 + x^3 + x^2 + 1)
 #define TOKEN_KMASTER_CAB   0x6D    // Clave Raíz Maestra Bus Cabina
@@ -5952,42 +5953,43 @@ unsigned char CRC(unsigned char inPoly, unsigned char inInit, unsigned char inDa
 }
           </div>
 
-          <h3>8.3. Derivación de Claves Secretas y Reto Continuo en Bus CAN</h3>
-          <p>Durante el arranque (<code>Sources/main.c:10827</code>), el identificador único de obra <code>TOKEN_ID</code> se procesa junto con las claves maestras:</p>
+          <h3>8.3. Secret Key Derivation & Continuous CAN Bus Challenge</h3>
+          <p>During startup (<code>Sources/main.c:10827</code>), the unique installation site identifier <code>TOKEN_ID</code> is derived with master keys:</p>
           <div class="code-block">
 TokenCustom.KSecretaCab = CRC(TOKEN_POLY, TOKEN_KMASTER_CAB, (TOKEN_ID >> 8) ^ (TOKEN_ID & 0xFF));
 TokenCustom.KSecretaExt = CRC(TOKEN_POLY, TOKEN_KMASTER_EXT, (TOKEN_ID >> 8) ^ (TOKEN_ID & 0xFF));
           </div>
-          <p><b>Reto Continuo en Bus CAN:</b> La placa base emite la Trama 7 cada 500ms con <code>DATA[1] = Contador ^ 0x5A</code>, <code>DATA[2..3] = Contador ^ TOKEN_ID</code> y <code>DATA[4] = CRC(...)</code>. Cada periférico sella su respuesta en el Byte 7 con <code>DATA[7] = CRC(0x1D, KSecreta, TipoTrama ^ Contador)</code>. La placa base valida este sello con una ventana deslizante de 5 estados (<code>TOKEN_RxWINDOW = 5</code>), bloqueando cualquier tarjeta no autorizada con <code>INCOMPATIBILIDAD FIRMA</code>.</p>
+          <p><b>Continuous Challenge on CAN Bus:</b> The mainboard transmits Frame 7 every 500ms with <code>DATA[1] = Counter ^ 0x5A</code>, <code>DATA[2..3] = Counter ^ TOKEN_ID</code>, and <code>DATA[4] = CRC(...)</code>. Each peripheral seals its response in Byte 7 with <code>DATA[7] = CRC(0x1D, KSecreta, FrameType ^ Counter)</code>. The central board validates this seal using a 5-step sliding window (<code>TOKEN_RxWINDOW = 5</code>), locking out unauthorized boards with <code>INCOMPATIBILIDAD FIRMA</code>.</p>
 
-          <h2>9. Validación y Despliegue en Servidor (Flujo CI/CD)</h2>
-          <p>Para asegurar un 100% de rigor técnico, disponibilidad continua y sincronización instantánea de los cambios, el portal se gestiona mediante un flujo automatizado de 6 fases:</p>
+          <h2>9. Server Validation & Continuous Deployment (CI/CD Pipeline)</h2>
+          <p>To ensure 100% technical rigor, high availability, and instant synchronization of all changes, the portal is managed via an automated 6-phase pipeline:</p>
 
           <div class="card-grid">
             <div class="card">
-              <h3>1. Verificación Pre-Commit de Sintaxis</h3>
-              <p>Cada archivo JavaScript y Python se comprueba automáticamente antes del staging mediante <code>node -c app.js</code>, <code>node -c data_es.js</code>, <code>node -c encyclopedia.js</code> y <code>node -c interactive_tools.js</code>, garantizando cero errores de sintaxis.</p>
+              <h3>1. Pre-Commit Syntax Verification</h3>
+              <p>Every JavaScript and Python file is automatically verified prior to staging via <code>node -c app.js</code>, <code>node -c data_es.js</code>, <code>node -c encyclopedia.js</code>, and <code>node -c interactive_tools.js</code>, ensuring zero syntax errors.</p>
             </div>
             <div class="card">
-              <h3>2. Sincronización al Espejo Local</h3>
-              <p>Los archivos modificados en el directorio de desarrollo se copian de forma síncrona al repositorio local de despliegue (<code>C:\Users\ecommerce\envz\elevator-encyclopedia\</code>) mediante PowerShell, asegurando la concordancia de binarios y esquemas.</p>
+              <h3>2. Synchronous Local Mirror Sync</h3>
+              <p>Modified files in the active R&D workspace are synchronously mirrored to the deployment repository (<code>C:\Users\ecommerce\envz\elevator-encyclopedia\</code>) via PowerShell, guaranteeing exact binary and schematic match.</p>
             </div>
             <div class="card">
-              <h3>3. Flujo Git Commit & Push</h3>
-              <p>Las mejoras se confirman con commits atómicos descriptivos y se envían a la rama <code>main</code> del repositorio remoto oficial en GitHub (<code>https://github.com/yorgopetsas/edel-elevator-docs.git</code>).</p>
+              <h3>3. Git Commit & Push Workflow</h3>
+              <p>Updates are confirmed with descriptive atomic commits and pushed directly to the <code>main</code> branch of the official remote repository on GitHub (<code>https://github.com/yorgopetsas/edel-elevator-docs.git</code>).</p>
             </div>
             <div class="card">
-              <h3>4. Despliegue Estático en GitHub Pages</h3>
-              <p>GitHub Actions compila automáticamente el sitio estático y lo publica en la red CDN global en <code>https://yorgopetsas.github.io/edel-elevator-docs/</code> con aceleración HTTP/2 y cifrado SSL.</p>
+              <h3>4. Static Deployment on GitHub Pages</h3>
+              <p>GitHub Actions continuously builds and deploys the static documentation portal across the global CDN at <code>https://yorgopetsas.github.io/edel-elevator-docs/</code> with HTTP/2 and SSL encryption.</p>
             </div>
             <div class="card">
-              <h3>5. Servidor Local Autónomo (server.js)</h3>
-              <p>Para ordenadores de banco en fábrica o portátiles de asistencia técnica en hueco sin acceso a Internet, un servidor Node.js (<code>server.js</code>) sirve la totalidad del portal en <code>http://localhost:3000</code>.</p>
+              <h3>5. Standalone Local Node.js Server</h3>
+              <p>For factory test bench PCs or technician field laptops without Internet access in elevator shafts, a standalone Node.js server (<code>server.js</code>) serves the entire portal locally at <code>http://localhost:3000</code>.</p>
             </div>
             <div class="card">
-              <h3>6. Validación Autónoma con Browser Subagents</h3>
-              <p>Subagentes de navegación comprueban el despliegue en tiempo real con cadenas de invalidación de caché (<code>?v=hash</code>), asegurando el funcionamiento correcto de las 13 herramientas interactivas y la compatibilidad multidispositivo.</p>
+              <h3>6. Autonomous Validation with Browser Subagents</h3>
+              <p>Headless browser subagents audit live production deployments with cache-busting hashes (<code>?v=hash</code>) to verify responsive rendering across all 13 interactive tools and documentation sections.</p>
             </div>
+
           </div>
         </div>
     
