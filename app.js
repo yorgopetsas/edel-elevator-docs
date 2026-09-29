@@ -1828,6 +1828,64 @@ Firmware Version String Format (current: v0.6.2):
             </div>
           </div>
     
+        
+          <!-- SPECIALIZED AUXILIARY CIRCUITS & 3D CABINETS -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #38bdf8;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#38bdf8;font-size:1.15rem;">📐 Specialized Auxiliary Circuits & 3D Cabinet Architectures</h3>
+              <span class="badge" style="background:#38bdf8;color:#0f172a;font-weight:700;">FACTORY ARCHIVES</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Sourced from <code>P:\Dep. Técnico\ESQUEMAS ADICIONALES PARA CUADROS Y PREMONTADAS</code> and <code>P:\SOLIDWORKS\Maniobras ADVANCED</code>:</p>
+
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;font-size:0.86rem;">
+                <thead>
+                  <tr style="background:rgba(56,189,248,0.08);">
+                    <th>Circuit / Assembly</th><th>Origin File</th><th>Bornas & Terminals</th><th>Technical Principle & Field Application</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>Hydraulic UPS Rescue Door Opening</b></td>
+                    <td><code>Apertura puerta mediante SAI rescate óleo.pdf</code> (E. Pérez)</td>
+                    <td><code>50, 0, 420, 240, 65, 110, 120, 210, A1, A2</code></td>
+                    <td>Automatic door opening via UPS during hydraulic rescue. Transfers 230V power to operator upon reaching leveling zone contact (<code>ZON</code> at Borna 72), pulsing <code>AP</code> for 8 seconds.</td>
+                  </tr>
+                  <tr>
+                    <td><b>3-Phase Dual Entrance Interlock</b></td>
+                    <td><code>Doble embarque trifásico.pdf</code> (J. Delgado)</td>
+                    <td><code>SL, SC, 37-41, A1, A2, 45, 46, F1, F2, 71, 72, C2</code></td>
+                    <td>Dual independent 3-phase AC operators (<code>AP 1/CP 1</code> and <code>AP 2/CP 2</code>) with mechanical and electrical auxiliary interlocks preventing simultaneous opening.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Timed Car & Shaft Lighting</b></td>
+                    <td><code>LUZ CABINA TEMPORIZADA.pdf</code> / <code>LUZ HUECO CON TELERUPTOR, FR.pdf</code></td>
+                    <td><code>EDEL K2-643VF</code> (Bornas 20, 72, 76-80)</td>
+                    <td>Complies with France, Belgium, and Swiss norms. Shuts off car lighting after 5 min idle; operates shaft lighting via 230V pulse telerruptor relays from pit/roof/MR.</td>
+                  </tr>
+                  <tr>
+                    <td><b>24V DC Door Operator</b></td>
+                    <td><code>OPERADOR 24VDC.pdf</code> (E. Pérez)</td>
+                    <td><code>SL, SC, 37-41, A1, A2, 45, 46, 71, 72, C2</code></td>
+                    <td>Solid-state 24V DC direct drive for compact folding and telescopic car doors.</td>
+                  </tr>
+                  <tr>
+                    <td><b>ADVANCED 7060 V2 Cabinet</b></td>
+                    <td><code>Maniobra ADVANCED 7060 V2.SLDASM</code></td>
+                    <td>700 mm × 600 mm × 250 mm</td>
+                    <td>Standard 3-bay steel enclosure: Upper high-voltage AC (IG, IAL, TR1), Middle drive/contactor bay (Fuji VFD, SW, FR), Lower control/field bay (K2-64278, Bornas 1-80).</td>
+                  </tr>
+                  <tr>
+                    <td><b>MRL Door Frame Cabinet (MDP)</b></td>
+                    <td><code>MDP ADVANCED AUTO FERMATOR MRL.SLDASM</code> / <code>FELESA</code></td>
+                    <td>450 mm × 400 mm</td>
+                    <td>Landing door jamb integration with upper lockable access flap for console, rescue switch, and brake status LEDs.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
       `,
 
@@ -3787,6 +3845,76 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               <b>Official Brake Supervision with Fuji Frenic Lift (Software v1751+):</b><br>
               • <b>Alarm Contact 30C-30B:</b> Wired in series with the EDEL safety loop. If the VFD detects a brake microswitch discrepancy, contact 30C-30B opens, the inverter latches into <code>error bbE</code>, and the controller halts with <code>Fallo 51</code> (safety chain missing).<br>• <b>Reset Procedure:</b> After adjusting mechanical switch clearances, clear the lockout by setting parameter <code>H95 = 111</code>.
             </div>
+
+          <!-- ASYNCHRONOUS & PM GEARLESS PRODUCTION MATRICES -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #10b981;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#10b981;font-size:1.15rem;">⚡ Factory Motor Parameter Matrices (Production Backups .FNL)</h3>
+              <span class="badge" style="background:#10b981;color:#fff;font-weight:700;">PROD ARCHIVE</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Sourced directly from certified factory backups in <code>P:\Dep. Producción\Programaciones FRENIC Lift 2</code> across 2.2 kW to 37 kW induction motors and Ziehl-Abegg PM Gearless machines:</p>
+
+            <h4 style="color:#38bdf8;margin:12px 0 6px 0;">1. Asynchronous Induction Motor Profiles (400V & 230V)</h4>
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;font-size:0.86rem;">
+                <thead>
+                  <tr style="background:rgba(16,185,129,0.08);">
+                    <th>Rating</th><th>Voltage (F05)</th><th>Base Freq (F04)</th><th>Current (P03)</th><th>Slip (P09)</th><th>Torque Boost (F09)</th><th>Brake (L82/L83)</th><th>Backup File</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><b>2.2 kW</b></td><td>400V / 230V</td><td>50.00 Hz</td><td>5.3 A / 9.2 A</td><td>2.40 Hz</td><td>3.5%</td><td>0.80 Hz / 0.35 s</td><td><code>Motor asíncrono 2,2 kW 400v.FNL</code></td></tr>
+                  <tr><td><b>4.0 kW</b></td><td>400V / 230V</td><td>50.00 Hz</td><td>9.1 A / 15.8 A</td><td>2.10 Hz</td><td>3.0%</td><td>0.75 Hz / 0.35 s</td><td><code>motor asincrono 4 kW 400v.FNL</code></td></tr>
+                  <tr><td><b>5.5 kW</b></td><td>400V</td><td>50.00 Hz</td><td>12.2 A</td><td>1.95 Hz</td><td>2.8%</td><td>0.70 Hz / 0.30 s</td><td><code>motor asincrono 5.5kW 400v.FNL</code></td></tr>
+                  <tr><td><b>7.5 kW</b></td><td>400V</td><td>50.00 Hz</td><td>16.5 A</td><td>1.80 Hz</td><td>2.5%</td><td>0.65 Hz / 0.30 s</td><td><code>motor asincrono 7.5kW 400v.FNL</code></td></tr>
+                  <tr><td><b>11.0 kW</b></td><td>400V</td><td>50.00 Hz</td><td>23.5 A</td><td>1.60 Hz</td><td>2.2%</td><td>0.60 Hz / 0.25 s</td><td><code>motor asincrono 11kW 400v.FNL</code></td></tr>
+                  <tr><td><b>15.0 kW</b></td><td>400V</td><td>50.00 Hz</td><td>31.0 A</td><td>1.45 Hz</td><td>2.0%</td><td>0.55 Hz / 0.25 s</td><td><code>motor asincrono 15kW 400v.FNL</code></td></tr>
+                  <tr><td><b>18.5 kW</b></td><td>400V</td><td>50.00 Hz</td><td>38.0 A</td><td>1.35 Hz</td><td>1.8%</td><td>0.50 Hz / 0.25 s</td><td><code>motor asincrono 18kW 400v.FNL</code></td></tr>
+                  <tr><td><b>22.0 kW</b></td><td>400V</td><td>50.00 Hz</td><td>44.5 A</td><td>1.25 Hz</td><td>1.6%</td><td>0.50 Hz / 0.20 s</td><td><code>motor asincrono 22kW 400v.FNL</code></td></tr>
+                  <tr><td><b>37.0 kW</b></td><td>400V</td><td>50.00 Hz</td><td>72.0 A</td><td>1.10 Hz</td><td>1.4%</td><td>0.45 Hz / 0.20 s</td><td><code>motor asincrono 37kW 400v.FNL</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h4 style="color:#38bdf8;margin:16px 0 6px 0;">2. Ziehl-Abegg PM Gearless Tuning (SM160 / SM200 / SM250)</h4>
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;font-size:0.86rem;">
+                <thead>
+                  <tr style="background:rgba(16,185,129,0.08);">
+                    <th>Parameter</th><th>Description</th><th>Typical Setting</th><th>Engineering Field Utility</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>P01</code></td><td>Motor Poles</td><td><b>16 / 20 / 24 poles</b></td><td>Set according to machine motor nameplate (SM200 = 20 poles).</td></tr>
+                  <tr><td><code>P04</code></td><td>Auto-Tuning</td><td><code>2</code> (Magnetic Angle Tuning)</td><td>Learns rotor magnetic angle offset; stored in <code>L03/L04</code>.</td></tr>
+                  <tr><td><code>L65</code></td><td>Zero-Speed P Gain</td><td><b>10.00 – 14.50</b></td><td>High proportional stiffness at start to prevent rollback before brake release.</td></tr>
+                  <tr><td><code>L66</code></td><td>Zero-Speed I Time</td><td><b>0.060 – 0.090 s</b></td><td>Rapid integral reset holding car at electrical zero.</td></tr>
+                  <tr><td><code>L67</code></td><td>Zero-Speed Hold Time</td><td><b>0.600 s</b></td><td>Duration drive holds 0 Hz after mechanical brake opens.</td></tr>
+                  <tr><td><code>L70</code></td><td>Running P Gain</td><td><b>5.50 – 7.50</b></td><td>Main speed loop gain balanced against mechanical resonance.</td></tr>
+                  <tr><td><code>L71</code></td><td>Running I Time</td><td><b>0.200 – 0.280 s</b></td><td>Integral response time for smooth leveling and approach.</td></tr>
+                  <tr><td><code>L73</code></td><td>Pre-Torque Filter</td><td><b>15 ms</b></td><td>Suppresses electrical jerk when brake microswitches toggle.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h4 style="color:#38bdf8;margin:16px 0 6px 0;">3. Certified Fuji Internal PLC Programs (.cml Logic Blocks)</h4>
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;font-size:0.86rem;">
+                <thead>
+                  <tr style="background:rgba(16,185,129,0.08);">
+                    <th>Program File</th><th>Scope</th><th>Inputs & Triggers</th><th>Safety Protection Delivered</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>EnableX4 PTC.cml</code></td><td>Run Enable & Thermal Supervision</td><td>X4 (Run) + PTC (Thermistor)</td><td>Inhibits inverter output if contactor SW unlatched or motor > 120°C.</td></tr>
+                  <tr><td><code>Gearless.cml</code></td><td>Dual Brake Microswitch Supervision</td><td>X2 / X3 (Brake 1 & 2 microswitches)</td><td>Trips drive if either mechanical caliper fails to lift within 450 ms.</td></tr>
+                  <tr><td><code>LowVoltage.cml</code></td><td>Brownout Deceleration & Soft Halt</td><td>DC Bus sensing (&lt; 380V DC)</td><td>Smooth deceleration to floor before DC bus collapse, preventing sudden stop.</td></tr>
+                  <tr><td><code>PSE.cml</code></td><td>Standby Power Economy</td><td>Car idle &gt; 3 minutes</td><td>Turns off cooling fans and aux stages, dropping standby power to &lt; 5W.</td></tr>
+                  <tr><td><code>PTC.cml</code></td><td>Thermal Latch Lockout</td><td>PTC threshold &gt; 3.6 kΩ</td><td>Latches fault OH4 until motor cools below 1.6 kΩ.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
           </div>
     
         </div>
