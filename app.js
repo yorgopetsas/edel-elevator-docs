@@ -3534,12 +3534,12 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
         <div class="doc-section">
           <div class="doc-header">
             <span class="badge badge-purple">Section 31</span>
-            <h1>31. Multi-Device CAN Frame Matrix, TokenCustom Cryptography & Server Deployment</h1>
-            <p>Comprehensive R&D engineering documentation detailing the complete CAN bus frame specifications across all 8 peripheral devices, the mathematical implementation of <code>Cifrado()</code> and polynomial CRC-8 (<code>0x1D</code>) licensing security, and the server validation and continuous deployment pipeline.</p>
+            <h1>31. Comprehensive CAN Bus Frame Dictionary, Physical Specs & TokenCustom Cryptography</h1>
+            <p>Exhaustive technical handbook containing over 20 bit-level frame tables across all 6 CAN subsystems in EDEL controllers. Includes authentic physical layer timings (256 kbps, TSEG1/2=4, 29-bit ID), speech triggers, and field electrical legends.</p>
           
             <div style="display:flex;gap:10px;margin-top:14px;">
               <button onclick="window.openInteractiveTool('tool-can-checker')" class="action-btn-primary" style="background:linear-gradient(135deg,#0284c7,#06b6d4);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(2,132,199,0.35);">
-                <span>🔬</span> Open Interactive Frame Decoder & Topology Tool 5.10
+                <span>🔬</span> Open Interactive CAN Frame Decoder (Tool 5.10)
               </button>
             </div>
           </div>
@@ -3547,155 +3547,838 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
           <div class="callout callout-human">
             <div class="callout-icon">🛰️</div>
             <div class="callout-content">
-              <h4>System-Wide CAN Bus Telemetry & Cryptographic Verification Overview</h4>
-              <p>The EDEL elevator controller functions as a distributed real-time network. The central Mainboard (K2-64278 / K3-74278) coordinates multiple microcontrollers across the elevator car, landing floors, motor drive, and shaft encoder via isolated 250 kbps MSCAN buses. Every transmitted packet is verified cryptographically using rolling challenge-response counters and a CRC-8 polynomial engine (<code>TOKEN_POLY = 0x1D</code>) to guarantee safety certification compliance (EN 81-20/50) and completely prevent unauthorized board cloning or firmware tampering.</p>
+              <h4>High-Availability Elevator CAN Bus Architecture</h4>
+              <p>The EDEL controller uses a multi-tier CAN bus architecture (ISO 11898) at 256 kbps connecting the Central Mainboard (K2-64278) with car electronics (KRN / ADVANCED), landings (mCAN), Fuji traction inverter, and shaft absolute encoder. Every packet carries 8 payload bytes protected by rolling challenge-response counters and cryptographic anti-tamper hashing.</p>
             </div>
           </div>
 
-          <h2>1. Matriz Completa de Tramas por Dispositivo (All 8 Devices)</h2>
-          <p>The table below consolidates the exact message identifiers, frame types, and byte-by-byte payload architectures extracted directly from the authentic C firmware source codes in <code>P:\I+D\SOFTWARE\</code>:</p>
+          <h2>1. Official Physical Layer & Bus Timing Specification (Data Link)</h2>
+          <p>Extracted from authentic EDEL engineering specifications for car displays and voice synthesis:</p>
 
           <div class="table-container">
             <table class="doc-table">
               <thead>
                 <tr>
-                  <th style="min-width:140px;">Device & Model</th>
-                  <th style="min-width:100px;">PCB Part #</th>
-                  <th style="min-width:160px;">Firmware Path</th>
-                  <th style="min-width:130px;">CAN ID & Direction</th>
-                  <th style="min-width:100px;">Type (Byte 0)</th>
-                  <th style="min-width:320px;">8-Byte Payload Structural Breakdown (DATA[0..7])</th>
+                  <th>Parámetro Físico CAN</th>
+                  <th>Valor Oficial EDEL</th>
+                  <th>Significado Eléctrico / Práctico para el Instalador</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><b>Mainboard Master Controller</b></td>
-                  <td>K2-64278<br>K3-74278</td>
-                  <td><code>K2-64278\...\Sources\Cabina.c</code><br><code>Sources\Exterior.c</code></td>
-                  <td><code>$XBD</code> (0x24584244)<br><span class="badge" style="background:#0284c7;color:#fff;">Downlink TX</span><br><code>$XTR</code> (Landing TX)</td>
-                  <td>
-                    <code>0</code> = Normal<br>
-                    <code>1</code> = Special/Firma<br>
-                    <code>3</code> = Challenge<br>
-                    <code>7</code> = TokenCustom
-                  </td>
-                  <td>
-                    <b>Type 0 (Normal Status):</b> D0=<code>0</code> | D1=Door commands (A1/A2/CP/PP/TelOut) | D2=Floor index 0..31 + Arrows ⬆️⬇️ + Gong 🔔 | D3..D6=32-bit Car Call mask | D7=Audio triggers (Voice PA/CP/Reap/Mute).<br>
-                    <b>Type 1 (Special Modes):</b> D0=<code>1</code> | D1=Special flags (Retractable cam, Firefighters, Inspection, VIP) | D2=Target floor | D3=Speed (Fast/Slow) | D4=Level zone | D5..D6=Virtual Console.<br>
-                    <b>Type 3 (Challenge):</b> Dynamic rolling seed <code>TCNT</code> and <code>Cifrado()</code> verification.<br>
-                    <b>Type 7 (TokenCustom):</b> D0=<code>7</code> | D1=<code>ContadorCab ^ 0x5A</code> | D2..D3=<code>ContadorCab ^ TokenID</code> | D4=<code>CRC(0x1D, KSecretaCab, D1^D2^D3)</code>.
-                  </td>
+                  <td><b>Velocidad de Bus (Baudrate)</b></td>
+                  <td><code>256 kbps</code></td>
+                  <td>Velocidad de transmisión balanceada sobre par trenzado apantallado (CAN-H / CAN-L). Resistencia de fin de línea obligatoria de 120 Ω en cada extremo del hueco.</td>
                 </tr>
                 <tr>
-                  <td><b>Full Cabin Board</b></td>
-                  <td>K2-64290<br>(KRN / 64411C)</td>
-                  <td><code>K2-64290 (CABINA)\...\Sources\MSCan.c</code></td>
-                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
-                  <td><code>0</code> = Cabin Inputs</td>
-                  <td>
-                    <b>D0:</b> <code>0x00</code> (Frame Type 0).<br>
-                    <b>D1:</b> Digital inputs bitmask: Overload 110% (Borna 23), Inspection (26), Full Load 80% (28), Limit switch Close FCC (29), Limit switch Open FCA (30), Reopening button (31), Firefighter key (33), Close Door PB (34).<br>
-                    <b>D2:</b> Apron safety edge (35), Photocell light curtain 1, Photocell 2, Emergency phone button.<br>
-                    <b>D3..D6:</b> 32-bit registered car call buttons bitmask.<br>
-                    <b>D7:</b> TokenCustom rolling CRC byte <code>CRC(0x1D, KSecretaCab, 0x00 ^ ContadorCab)</code>.
-                  </td>
+                  <td><b>Formato de Identificador</b></td>
+                  <td><code>Extendido 29 bits</code></td>
+                  <td>Máscara binaria aceptada para displays: <code>00100100010xyz010000100100010</code>. Los bits <code>xyz</code> seleccionan la variante de protocolo (<code>$XBD</code>, <code>$YBD</code>, <code>$ZBD</code>). Tramas con otros IDs se descartan.</td>
                 </tr>
                 <tr>
-                  <td><b>Cabin v2 ADVANCED</b></td>
-                  <td>K2-64291<br>(ADVANCED)</td>
-                  <td><code>K2-64291 (CABINA v2)\...\Sources\MSCAN.c</code></td>
-                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
-                  <td><code>5</code> = ADVANCED I/O</td>
-                  <td>
-                    <b>D0:</b> <code>0x05</code>.<br>
-                    <b>D1..D2:</b> High-density safety interlocks, car top inspection station switches, and safety gear status.<br>
-                    <b>D3..D6:</b> COP car call pushbuttons.<br>
-                    <b>D7:</b> Dynamic TokenCustom CRC byte.
-                  </td>
+                  <td><b>Segmentos de Bit (MSCAN)</b></td>
+                  <td><code>TSEG1 = 4, TSEG2 = 4, SAMP = 1</code></td>
+                  <td>Configuración de sincronismo interno del microcontrolador (Freescale HCS12 / S12X). 1 muestra por bit en el punto de muestreo del 50%.</td>
                 </tr>
                 <tr>
-                  <td><b>Modular COP BotCAN</b></td>
-                  <td>K2-64292<br>K2-64295</td>
-                  <td><code>K2-64292 (BOTCAN v2)\...\Sources\MSCAN.c</code></td>
-                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
-                  <td><code>4</code> = BotCAN Fixture</td>
-                  <td>
-                    <b>D0:</b> <code>0x04</code>.<br>
-                    <b>D1:</b> Bit 7=Master (1) / Slave (0) | Bit 0=Full load 80% | Bit 1=Reopening | Bit 2=Close Door PB | Bit 3=Firefighter key.<br>
-                    <b>D2:</b> Sub-ID index (<code>0x01</code>).<br>
-                    <b>D3..D4:</b> Decimal pushbuttons <code>PulsadoresDC</code> (floors P00..P15).<br>
-                    <b>D5..D6:</b> Decimal pushbuttons (floors P16..P31).<br>
-                    <b>D7:</b> Dynamic TokenCustom CRC byte <code>CRC(0x1D, KSecretaCab, 0x04 ^ Contador)</code>.
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Shaft Tape Position Encoder</b></td>
-                  <td>K2-64296<br>(EDELEncoder)</td>
-                  <td><code>K2-64296 (ENCODER)\...\Sources\MSCAN.c</code></td>
-                  <td><code>$XBN</code> (0x2458424E)<br><span class="badge" style="background:#059669;color:#fff;">Uplink TX</span></td>
-                  <td>
-                    <code>2</code> = Position<br>
-                    <code>3</code> = Challenge Resp<br>
-                    <code>250</code> = Save Token ID
-                  </td>
-                  <td>
-                    <b>Type 2 (Telemetry):</b> D0=<code>0x02</code> | D1..D4=<b>32-bit signed absolute height in mm</b> (Byte 1 LSB .. Byte 4 MSB | sign) | D5..D6=<b>16-bit signed car speed in mm/s</b> (Byte 5 LSB, Byte 6 MSB) | D7=Discrete inputs (Zero zone FZP, FNI, FNS).<br>
-                    <b>Type 3:</b> Challenge-response signature verification status (<code>respFirma</code>).<br>
-                    <b>Type 250:</b> Token ID registration (D2..D3 = TokenID).
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Landing Indicator & Call Boards</b></td>
-                  <td>K2-64280<br>K2-64281 (mCAN-12)</td>
-                  <td><code>K2-64280 (EXTERIORES)\...\Sources\MSCAN.c</code></td>
-                  <td><code>$XTR</code> (Downlink)<br><code>$X01..$X3F</code> (Uplink)</td>
-                  <td>
-                    <code>$XTR</code> Types 0..3<br>
-                    <code>$Xnn</code> Call frames
-                  </td>
-                  <td>
-                    <b>Downlink $XTR:</b> D0=<code>(id_CAN&lt;&lt;3)|type</code> | D1..D4=32-bit landing call registration LEDs | D5=Floor index display | D6=Operating, Open door, Up, Down, Gong | D7=Display fault, Revision, Audio mute.<br>
-                    <b>Uplink $X01..$X3F:</b> D0=Bit 7 Firefighters | Bit 6 Up Call | Bit 5 Down Call | Bits 0..4 Floor number (0..31) | D7=TokenCustom CRC.
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Inverter Telemetry Gateway</b></td>
-                  <td>K2-64299<br>(iCOM)</td>
-                  <td><code>K2-64299 (iCOM)\...\source\MSCAN.c</code><br><code>CANOpenLift.c</code></td>
-                  <td>
-                    <code>$XBD</code> (RX)<br>
-                    <code>$XBN</code> / <code>$XBV</code> (TX)<br>
-                    <code>0x501/502/602</code> (Fuji)
-                  </td>
-                  <td>
-                    EDEL & CANopen Lift CiA 417
-                  </td>
-                  <td>
-                    <b>EDEL CAN Side:</b> RX <code>$XBD</code> (drive commands & Virtual Console keystrokes); TX <code>$XBN</code> (Fuji alarm code & drive status); TX <code>$XBV</code> (VT100 Virtual Console character matrix stream).<br>
-                    <b>Fuji CANopen Lift Side:</b> COB-ID <code>0x501</code> (Keystrokes: UP/DOWN/LEFT/RIGHT/OK); COB-ID <code>0x502</code> (Virtual Console character matrix <code>ESC E</code> Clear, <code>ESC Y</code> Cursor); COB-ID <code>0x602</code> (SDO: S14 reset, M14 status, X00 alarm, W10 detected speed).
-                  </td>
-                </tr>
-                <tr>
-                  <td><b>Multiplex Group Dispatcher</b></td>
-                  <td>K2-64275MX<br>(Duplex/Triplex)</td>
-                  <td><code>K2-64278\...\Sources\Multiple.c</code></td>
-                  <td><code>$M00..$M03</code><br><span class="badge" style="background:#8b5cf6;color:#fff;">Peer-to-Peer</span></td>
-                  <td><code>0..2</code> = Dispatch</td>
-                  <td>
-                    <b>Type 0:</b> D0=<code>0</code> | D1=Car current floor | D2=Next stopping floor | D3=Active fault code | D4=Car availability flag (0x80) | D5=Landing down call mask | D6..D7=Arbitration token.<br>
-                    <b>Type 1:</b> Up call mask, target assignment, motion direction.<br>
-                    <b>Type 2:</b> Asymmetric floor call mask.
-                  </td>
+                  <td><b>Longitud de Datos (DLC)</b></td>
+                  <td><code>8 Bytes</code> estándar</td>
+                  <td>Todas las tramas de control, pulsadores, telemetría y seguridad transmiten invariablemente una trama de 8 bytes (DATA[0..7]).</td>
                 </tr>
               </tbody>
             </table>
           </div>
+    
+          <h2>2. Block 1: Car Bus & Displays — Downlink from Controller ($XBD)</h2>
+          <p>Frames periodically transmitted from the mainboard to car top, COP, position displays, and voice synthesizers.</p>
+    
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #0284c7;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#0284c7;">Trama 1.0 — Tipo 0: Trama Periódica Principal (Piso, Flechas, Puertas y Audio de Voz)</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XBD | Tipo = 0</span>
+            </div>
+            <p>Emisión cíclica rápida (cada 20–40 ms). Informa del estado de los operadores de puerta, sentido de marcha, posición actual de cabina y disparo de pistas de voz.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th style="width:70px;">Byte</th>
+                    <th style="width:200px;">Nombre Campo</th>
+                    <th>Estructura Bit a Bit y Señales</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>Byte 0</b></td>
+                    <td><b>Tipo de Trama</b></td>
+                    <td><code>0x00</code> (Constante <code>TRAMA_CAB_TX_NORMAL = 0</code>).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 1</b></td>
+                    <td><b>Operadores de Puerta y Predirección</b></td>
+                    <td>
+                      <b>Bit 0:</b> <code>A1</code> (Abrir Operador 1)<br>
+                      <b>Bit 1:</b> <code>A2</code> (Abrir Operador 2)<br>
+                      <b>Bit 2:</b> <code>CP</code> (Cerrar Puertas forzado)<br>
+                      <b>Bit 4:</b> <code>PP^</code> (Próxima Partida Subir - Predirección)<br>
+                      <b>Bit 5:</b> <code>PPv</code> (Próxima Partida Bajar - Predirección)<br>
+                      <b>Bit 6:</b> <code>TEL_OUT</code> (Línea de audio teléfono emergencia activada)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 2</b></td>
+                    <td><b>Piso Actual y Flechas</b></td>
+                    <td>
+                      <b>Bits 0..4:</b> <code>PLANTA</code> (Cota de piso actual 0..31 en binario EDCBA, con asimetría sumada)<br>
+                      <b>Bit 5:</b> <code>Fv</code> (Flecha de Bajada iluminada en display)<br>
+                      <b>Bit 6:</b> <code>F^</code> (Flecha de Subida iluminada en display)<br>
+                      <b>Bit 7:</b> <code>GONG</code> (Disparo de campana acústica de llegada a planta)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 3</b></td>
+                    <td><b>Llamadas Registradas (P0..P7)</b></td>
+                    <td>Bitmask de pulsadores de cabina confirmados (1 = LED del pulsador iluminado en botonera COP).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 4</b></td>
+                    <td><b>Llamadas Registradas (P8..P15)</b></td>
+                    <td>Bitmask de pulsadores de cabina confirmados (Pisos 8 al 15).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 5</b></td>
+                    <td><b>Llamadas Registradas (P16..P23)</b></td>
+                    <td>Bitmask de pulsadores de cabina confirmados (Pisos 16 al 23).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 6</b></td>
+                    <td><b>Llamadas Registradas (P24..P31)</b></td>
+                    <td>Bitmask de pulsadores de cabina confirmados (Pisos 24 al 31).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 7</b></td>
+                    <td><b>Disparadores Síntesis de Voz</b></td>
+                    <td>
+                      <b>Bit 0:</b> <code>KO</code> (Audio "Fuera de Servicio" por flanco de subida, icono pantalla activo)<br>
+                      <b>Bit 1:</b> <code>KG</code> (Audio "Exceso de Carga" por flanco de subida, icono pantalla activo)<br>
+                      <b>Bit 2:</b> <code>PA</code> (Audio "Puertas Abiertas" por flanco de subida)<br>
+                      <b>Bit 3:</b> <code>CP</code> (Audio "Cerrando Puertas" por flanco de subida)<br>
+                      <b>Bit 4:</b> <code>SEN</code> (Audio "Subiendo" o "Bajando" según <code>PP^/PPv</code>)<br>
+                      <b>Bit 5:</b> <code>REAP</code> (Beep acústico de reapertura por fotocélula cortada)<br>
+                      <b>Bit 7:</b> <code>MUTE</code> (1 = Silenciar altavoz de cabina)
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-info" style="margin-top:12px;">
+              <b>Leyenda Eléctrica y Funcional para Instaladores:</b>
+              <ul style="margin:6px 0 0 18px;padding:0;line-height:1.5;">
+                <li><code>A1 / A2</code>: Relés de maniobra que comandan la apertura de la puerta principal (Operador 1) o pasante (Operador 2).</li>
+                <li><code>CP</code>: Orden de cierre forzado a los operadores de puerta tras vencer el tiempo de espera.</li>
+                <li><code>PP^ / PPv</code>: Flechas de próxima partida. Por flanco de subida de cualquiera de estos bits, el sintetizador de voz reproduce el mensaje del número de planta en la que se encuentra la cabina.</li>
+                <li><code>SEN</code>: Mensaje vocal direccional. Si <code>PP^</code> y <code>PPv</code> estuvieran activos a la vez, el audio se inhibe automáticamente.</li>
+                <li><code>MUTE</code>: Activo en modo reposo nocturno o ahorro para evitar ruidos molestos a los vecinos de plantas superiores.</li>
+              </ul>
+            </div>
+          </div>
+    
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #7c3aed;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#7c3aed;">Trama 1.1 — Tipo 1: Modos Especiales (Inspección, Bomberos, Ahorro OFF y Velocidades)</h3>
+              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XBD | Tipo = 1</span>
+            </div>
+            <p>Informa a la cabina y periféricos sobre estados de seguridad excepcionales, conmutadores de revisión, modo bomberos y régimen de marcha.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th style="width:70px;">Byte</th>
+                    <th style="width:200px;">Nombre Campo</th>
+                    <th>Estructura Bit a Bit y Señales</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>Byte 0</b></td>
+                    <td><b>Tipo de Trama</b></td>
+                    <td><code>0x01</code> (Constante <code>TRAMA_CAB_TX_FIRMA = 1</code>).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 1..2</b></td>
+                    <td><b>Reservado / Antiguo Hash</b></td>
+                    <td>Fijado a <code>0x00</code> (antiguo hash estático sustituido por TokenCustom).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 3</b></td>
+                    <td><b>Modos Operativos y de Seguridad</b></td>
+                    <td>
+                      <b>Bit 1:</b> <code>PA</code> (Puerta Abierta activa en maniobra)<br>
+                      <b>Bit 2:</b> <code>VIP</code> (Servicio Exclusivo / Prioritario en cabina)<br>
+                      <b>Bit 3:</b> <code>INSP</code> (<b>¡Modo Inspección / Revisión de Techo activo!</b>)<br>
+                      <b>Bit 4:</b> <code>EVAC</code> (Evacuación de emergencia bomberos norma EN 81-73)<br>
+                      <b>Bit 5:</b> <code>LEVA</code> (Salida de leva retráctil activada)<br>
+                      <b>Bit 6:</b> <code>EM / BOMB</code> (Fase de Bomberos o Emergencia activa)<br>
+                      <b>Bit 7:</b> <code>OFF</code> (Modo Ahorro de Energía: Apagar pantalla / Backlight de display)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 4</b></td>
+                    <td><b>Configuración Salidas</b></td>
+                    <td>Byte de configuración dinámica de salidas de cabina (<code>OutputConfig()</code>).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 5</b></td>
+                    <td><b>Consola Virtual iCOM</b></td>
+                    <td>Pulsación remota de botones del variador Fuji Frenic Lift / Modo Consola Virtual VT100.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 6</b></td>
+                    <td><b>Planta Destino y Velocidad</b></td>
+                    <td>
+                      <b>Bits 0..4:</b> Planta destino del viaje en curso (<code>IrAPlanta + asimetria</code>)<br>
+                      <b>Bit 5:</b> <code>0x20</code> = Viaje activo en ejecución<br>
+                      <b>Bit 6:</b> <code>V.RAP</code> (Velocidad Rápida nominal activa)<br>
+                      <b>Bit 7:</b> <code>V.LEN</code> (Velocidad Lenta / Nivelación activa)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 7</b></td>
+                    <td><b>Nivelación y Parada</b></td>
+                    <td>
+                      <b>Bit 0:</b> Cabina detenida y perfectamente a nivel de piso (<code>NivelPiso == 1</code>)<br>
+                      <b>Bit 1:</b> Señal de llegada a planta<br>
+                      <b>Bit 2:</b> Temporizador de reapertura habilitado
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-info" style="margin-top:12px;">
+              <b>Leyenda Eléctrica y Funcional para Instaladores:</b>
+              <ul style="margin:6px 0 0 18px;padding:0;line-height:1.5;">
+                <li><code>INSP</code> (Byte 3, Bit 3 = <code>0x08</code>): Conmutador de Revisión accionado en el techo de cabina. Bloquea llamadas ordinarias y conmuta la velocidad a régimen de inspección.</li>
+                <li><code>OFF</code> (Byte 3, Bit 7 = <code>0x80</code>): Relé temporizado de luz de cabina desconectado. Apaga la retroiluminación del display para ahorro energético.</li>
+                <li><code>EM / BOMB</code> (Byte 3, Bit 6 = <code>0x40</code>): Contacto de llave de bomberos accionado. La pantalla muestra pictograma de bombero e inhabilita las llamadas de usuarios.</li>
+                <li><code>V.RAP / V.LEN</code>: Permite saber si el variador está traccionando a velocidad de crucero o si ha iniciado la rampa de deceleración hacia la planta de destino.</li>
+              </ul>
+            </div>
+          </div>
+    
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#059669;">Trama 1.2 — Tipo 2: Comando a Encoder de Hueco (TRAMA_CAB_TX_ENCODER)</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $XBD | Tipo = 2</span>
+            </div>
+            <p>Orden emitida por la maniobra hacia el cabezal lector de cinta de hueco K2-64296 para calibrar o resetear cotas milimétricas.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x02</code> (Constante <code>TRAMA_CAB_TX_ENCODER</code>).</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Comando Calibración</td><td><code>0x01</code> = Puesta a cero encoder; <code>0x02</code> = Ajuste por pulsador de cabina; <code>0x03</code> = Beep de confirmación cota.</td></tr>
+                  <tr><td><b>Byte 2..7</b></td><td>Relleno</td><td><code>0x00</code> (Sincronismo).</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-info" style="margin-top:8px;">
+              <b>Leyenda:</b> Utilizado durante la puesta en marcha con encoder de faja perforada para memorizar las paradas de cada piso desde la botonera de revisión.
+            </div>
+          </div>
 
-          <h2>2. Especificación Criptográfica: TokenCustom, Cifrado() y CRC Polinómico</h2>
-          <p>The controller incorporates a multi-tier cryptographic hardware protection engine across the Mainboard and all CAN peripherals to enforce firmware licensing and prevent circuit board cloning:</p>
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#d97706;">Trama 1.3 — Tipo 3: Reto Criptográfico Anti-Copia (TRAMA_CAB_TX_CREARFIRMA)</h3>
+              <span class="badge" style="background:#d97706;color:#fff;">ID: $XBD | Tipo = 3</span>
+            </div>
+            <p>Interrogación periódica que la placa central lanza a los periféricos. Si una placa es clonada y no calcula la firma matemática, la maniobra se bloquea tras 3 intentos.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x03</code> (Constante <code>TRAMA_CAB_TX_CREARFIRMA</code>).</td></tr>
+                  <tr><td><b>Byte 1..2</b></td><td>Firma Semilla</td><td><code>theFirma = Cifrado(firma, theAleat, 0)</code> (Valor de reto).</td></tr>
+                  <tr><td><b>Byte 3..4</b></td><td>Número Aleatorio</td><td>Semilla temporal generada por el timer hardware del microcontrolador.</td></tr>
+                  <tr><td><b>Byte 5..7</b></td><td>Relleno</td><td><code>0x00</code>.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-          <h3>2.1. Mathematical Specification of Cifrado()</h3>
-          <p>Located in <code>Sources/LCD.c:2291</code> and <code>Sources/E2PROM.c</code>:</p>
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#0284c7;">Trama 1.4 — Tipo 5: Configuración de Display Secundario (TRAMA_CAB_EXT_TX_SECDISPLAY)</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XBD | Tipo = 5</span>
+            </div>
+            <p>Parametrización para pantallas instaladas en segundo embarque o columnas auxiliares.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x05</code>.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Selector Embarque</td><td><code>0x00</code> = Embarque Principal; <code>0x01</code> = Segundo Embarque.</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Desfase de Planta</td><td>Offset a sumar a la planta visualizada (útil en plantas intermedias o altillos).</td></tr>
+                  <tr><td><b>Byte 3..7</b></td><td>Caracteres Especiales</td><td>Mapeo de iconos para garaje (-1, -2), entreplanta (E), etc.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#64748b;">Trama 1.5 — Tipo 6: Control de Botonera Decimal (TRAMA_CAB_TX_BOTDEC)</h3>
+              <span class="badge" style="background:#64748b;color:#fff;">ID: $XBD | Tipo = 6</span>
+            </div>
+            <p>Control de botoneras de teclado numérico matricial (acceso por PIN o selección de piso con 2 dígitos).</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x06</code>.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Dígito Presionado</td><td>Carácter ASCII (<code>'0'..'9'</code>, <code>'-'</code>, <code>'*'</code>).</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Temporizador</td><td>Tiempo restante en décimas de segundo antes de enviar la orden de viaje.</td></tr>
+                  <tr><td><b>Byte 3</b></td><td>Aviso Acústico</td><td><code>1</code> = Bip de tecla registrada en zumbador de botonera.</td></tr>
+                  <tr><td><b>Byte 4..7</b></td><td>Relleno</td><td><code>0x00</code>.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #ef4444;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#ef4444;">Trama 1.6 — Tipo 7: Token Criptográfico Rodante (TRAMA_CAB_TX_TOKEN)</h3>
+              <span class="badge" style="background:#ef4444;color:#fff;">ID: $XBD | Tipo = 7</span>
+            </div>
+            <p>Transmisión de sincronismo cada 500 ms del motor de seguridad <b>TokenCustom</b> para bus de cabina.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Criptográfico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x07</code> (Constante <code>TRAMA_CAB_TX_TOKEN</code>).</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Contador XOR Aux</td><td><code>TokenCustom.ContadorCab ^ TOKEN_KAUX_CAB</code> (Patrón XOR <code>0x5A</code>).</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Contador XOR ID High</td><td><code>TokenCustom.ContadorCab ^ (TOKEN_ID >> 8)</code>.</td></tr>
+                  <tr><td><b>Byte 3</b></td><td>Contador XOR ID Low</td><td><code>TokenCustom.ContadorCab ^ (TOKEN_ID & 0xFF)</code>.</td></tr>
+                  <tr><td><b>Byte 4</b></td><td>Sello Polinómico CRC-8</td><td><code>CRC(0x1D, KSecretaCab, Byte1 ^ Byte2 ^ Byte3)</code>.</td></tr>
+                  <tr><td><b>Byte 5..7</b></td><td>Reservado</td><td><code>0x00</code>.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-info" style="margin-top:8px;">
+              <b>Leyenda:</b> Si la placa de techo de cabina no está emparejada con el identificador de obra <code>TOKEN_ID</code> del cuadro, se produce el error <i>Incompatibilidad de Firma</i> y la maniobra no arranca.
+            </div>
+          </div>
+    
+          <h2>3. Block 2: Car Bus — Uplink from Peripherals to Master ($XBN)</h2>
+          <p>Frames transmitted from car devices (KRN car top, BotCAN modular COP, encoder, and handheld console) back to the central controller.</p>
+    
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #059669;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#059669;">Trama 2.0 — Tipo 0: Placa Cabina KRN / K2-64290 (Pulsadores, Pesacargas y Fotocélulas)</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $XBN | Tipo = 0</span>
+            </div>
+            <p>Es la trama más crítica de cabina: transmite el estado de todos los contactos de seguridad de puertas, conmutador de revisión y llamadas de cabina.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th style="width:70px;">Byte</th>
+                    <th style="width:200px;">Nombre Campo</th>
+                    <th>Estructura Bit a Bit y Contactos Eléctricos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>Byte 0</b></td>
+                    <td><b>Tipo de Trama</b></td>
+                    <td><code>0x00</code> (Placa estándar KRN / PCB 64411C).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 1</b></td>
+                    <td><b>Seguridades y Operador</b></td>
+                    <td>
+                      <b>Bit 0:</b> <code>CAB_EXCESO_CARGA</code> (Pesacargas contacto 110% sobrecarga - Borna 23)<br>
+                      <b>Bit 1:</b> <code>CAB_INSPECCION</code> (Conmutador Techo: 1 = Normal, 0 = Revisión - Borna 26)<br>
+                      <b>Bit 2:</b> <code>CAB_COMPLETO</code> (Pesacargas contacto 80% cabina completa - Borna 28)<br>
+                      <b>Bit 3:</b> <code>CAB_FC_CERRAR</code> (Final de carrera puertas cerradas FCC - Borna 29)<br>
+                      <b>Bit 4:</b> <code>CAB_FC_ABRIR</code> (Final de carrera puertas abiertas FCA - Borna 30)<br>
+                      <b>Bit 5:</b> <code>CAB_REAPERTURA</code> (Fotocélula / Barrera fotoeléctrica - Borna 31)<br>
+                      <b>Bit 6:</b> <code>CAB_BOMBEROS</code> (Llave de bomberos en cabina - Borna 33)<br>
+                      <b>Bit 7:</b> <code>CAB_PULSADOR_CERRAR</code> (Pulsador cerrar puertas de botonera - Borna 34)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 2</b></td>
+                    <td><b>Entradas Auxiliares Cabina</b></td>
+                    <td>
+                      <b>Bit 0:</b> <code>CAB_PISADERA</code> (Contacto móvil de seguridad pisadera - Borna 35)<br>
+                      <b>Bit 1:</b> <code>CAB_FOTOCELULA_1</code> (Barrera fotoeléctrica operador 2)<br>
+                      <b>Bit 2:</b> <code>CAB_FOTOCELULA_2</code> (Tercera barrera auxiliar)<br>
+                      <b>Bit 3:</b> <code>CAB_TELEFONO_IN</code> (Pulsador de socorro / alarma acústica de cabina)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 3..6</b></td>
+                    <td><b>Pulsadores de Cabina (P0..P31)</b></td>
+                    <td>Matriz de 32 bits con el contacto eléctrico directo de cada pulsador de piso presionado (1 = contacto cerrado).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Byte 7</b></td>
+                    <td><b>Sello Criptográfico</b></td>
+                    <td>Firma dinámica de autenticidad <code>CRC(0x1D, KSecretaCab, 0x00 ^ ContadorCab)</code>.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-info" style="margin-top:12px;">
+              <b>Leyenda Eléctrica y Bornas de Conexión:</b>
+              <ul style="margin:6px 0 0 18px;padding:0;line-height:1.5;">
+                <li><code>Borna 23 (Sobrecarga)</code>: Contacto normalmente abierto (NA). Al activarse, la maniobra enciende la luz de exceso, emite el audio KG y no permite el arranque.</li>
+                <li><code>Borna 26 (Inspección)</code>: Contacto de conmutador de leva de techo. Al conmutar, corta la maniobra normal y transfiere el mando a la botonera de techo.</li>
+                <li><code>Borna 31 (Fotocélula)</code>: Contacto NC/NA configurable según parámetro de placa. Provoca reapertura inmediata de puertas al ser interrumpida.</li>
+              </ul>
+            </div>
+          </div>
+    
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#0284c7;">Trama 2.1 — Tipo 1: Display SERVIATES (Estado de Bloqueos)</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XBN | Tipo = 1</span>
+            </div>
+            <p>Retorna el estado de llavines o códigos de bloqueo introducidos en pantallas de cabina SERVIATES.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x01</code>.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Bandera de Bloqueo</td><td><b>Bit 0:</b> <code>1</code> = Solicitud de activación de bloqueo de ascensor por código PIN.</td></tr>
+                  <tr><td><b>Byte 2..7</b></td><td>Datos de Bloqueo</td><td>Códigos hexadecimales de autenticación.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#64748b;">Trama 2.2 — Tipo 2: Placa de Expansión de E/S Cabina</h3>
+              <span class="badge" style="background:#64748b;color:#fff;">ID: $XBN | Tipo = 2</span>
+            </div>
+            <p>Transmitida por módulos de ampliación de entradas en instalaciones de gran altura o maniobras con accesos restringidos.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x02</code>.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Entradas Auxiliares 1</td><td>Estado digital de entradas adicionales E1 a E8.</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Entradas Auxiliares 2</td><td>Estado de entradas E9 a E16 (Bit 7: Flag de Token seguro).</td></tr>
+                  <tr><td><b>Byte 3..7</b></td><td>Validación Token</td><td>Sello de hardware legítimo.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#d97706;">Trama 2.3 — Tipo 3: Respuesta de Autenticación de Firma Cabina</h3>
+              <span class="badge" style="background:#d97706;color:#fff;">ID: $XBN | Tipo = 3</span>
+            </div>
+            <p>Respuesta matemática devuelta por la placa de techo ante la interrogación de la Trama 1.3.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x03</code>.</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Resultado de la Firma</td><td><code>0x00</code> = <code>RESP_FIRMA_OK</code>; <code>0x01</code> = <code>RESP_FIRMA_ALREADY</code>; <code>0x02</code> = <code>RESP_FIRMA_ERROR</code>.</td></tr>
+                  <tr><td><b>Byte 3..7</b></td><td>Resultado Hash</td><td>Hash calculado por la CPU esclava de cabina.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#059669;">Trama 2.4 — Tipo 4: Módulos de Pulsadores BotCAN-v2</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $XBN | Tipo = 4</span>
+            </div>
+            <p>Utilizada por botoneras modulares de cabina de la serie K2-64292 / K2-64295 conectadas en bus local.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x04</code>.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Señales Locales</td><td>Bit 0=Completo 80%; Bit 1=Reapertura fotocélula; Bit 2=Pulsador Cerrar; Bit 3=Llave bomberos; Bit 7=Placa Maestra.</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Sub-ID Placa</td><td>Dirección dip-switch del módulo en cascada.</td></tr>
+                  <tr><td><b>Byte 3..6</b></td><td>Pulsadores</td><td>Matriz de llamadas de botonera decimal o pulsadores estándar.</td></tr>
+                  <tr><td><b>Byte 7</b></td><td>Sello Token</td><td>Sello polinómico de seguridad anti-clonado.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #7c3aed;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#7c3aed;">Trama 2.5 — Tipo 5: Placa Cabina v2 ADVANCED (Botonera Inspección Techo Subir/Bajar)</h3>
+              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XBN | Tipo = 5</span>
+            </div>
+            <p>Transmisión de alta fiabilidad desde placas K2-64291 con control integrado de los pulsadores de subida/bajada de revisión.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x05</code>.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Pulsadores Revisión Techo</td><td>
+                    <b>Bit 1:</b> Conmutador General Inspección (1 = Normal, 0 = Revisión)<br>
+                    <b>Bit 6:</b> <code>PULS_INSP_BAJAR</code> (Pulsador Bajar de caja de revisión techo presionado)<br>
+                    <b>Bit 7:</b> <code>PULS_INSP_SUBIR</code> (Pulsador Subir de caja de revisión techo presionado)
+                  </td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Contactos de Seguridad</td><td>Pesacargas, finales de carrera y barreras ópticas.</td></tr>
+                  <tr><td><b>Byte 3..6</b></td><td>Llamadas</td><td>Pulsadores COP de cabina.</td></tr>
+                  <tr><td><b>Byte 7</b></td><td>Sello Token</td><td>Verificación criptográfica.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-info" style="margin-top:8px;">
+              <b>Leyenda:</b> Permite al operario desplazar la cabina a velocidad de inspección desde la botonera superior de techo sin puentear seguridades mecánicas.
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#0284c7;">Trama 2.6 — Tipo 6: Terminal Portátil Consola CAN 16x4</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XBN | Tipo = 6</span>
+            </div>
+            <p>Flujo bidireccional entre la herramienta de diagnóstico de mano del ascensorista y la CPU central.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x06</code>.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Código Tecla</td><td><code>0xFF</code> = Inicio sesión LCD; <code>0xFE</code> = Handshake acceso; Otros = Código de tecla (ENTER, ESC, UP, DOWN, etc.).</td></tr>
+                  <tr><td><b>Byte 2..3</b></td><td>Claves Validación</td><td>Autenticación dinámica con clave <code>CONS_PROKEY_CUSTOM</code>.</td></tr>
+                  <tr><td><b>Byte 4..7</b></td><td>Parámetros</td><td>Edición de temporizaciones, tipos de motor y menús.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#ef4444;">Trama 2.7 — Tipo 7: Estado de Variador Fuji iCOM</h3>
+              <span class="badge" style="background:#ef4444;color:#fff;">ID: $XBN | Tipo = 7</span>
+            </div>
+            <p>Retransmisión del estado del convertidor de frecuencia de tracción Fuji Frenic Lift hacia el bus principal.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x07</code>.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Estado Inverter</td><td><code>0x01</code> = Inverter en línea y listo para traccionar.</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Código Alarma Fuji</td><td>Código interno de avería del variador (<code>Drive.AlarmCode</code>: OC, OU, LU, etc.).</td></tr>
+                  <tr><td><b>Byte 3..7</b></td><td>Telemetría</td><td>Corriente de motor y frecuencia de salida.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#64748b;">Trama 2.8 — Tipo 250 (0xFA): Registro Automático de Hardware</h3>
+              <span class="badge" style="background:#64748b;color:#fff;">ID: $XBN | Tipo = 250</span>
+            </div>
+            <p>Intercambio de alta inicial para vincular una placa de recambio con el número de serie del cuadro.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0xFA</code> (250 decimal).</td></tr>
+                  <tr><td><b>Byte 1..2</b></td><td>Número de Serie</td><td>Número de fabricación del microcontrolador de la placa.</td></tr>
+                  <tr><td><b>Byte 3..7</b></td><td>Clave de Emparejamiento</td><td>Firma para alta permanente en EEPROM.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+    
+          <h2>4. Block 3: Landing Bus — Downlink to Hall Displays ($XTR)</h2>
+          <p>Frames transmitted from the controller down the shaft pair to landing call buttons and floor indicators.</p>
+
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #0284c7;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#0284c7;">Trama 3.0 — Tipo 0: Registro de Llamadas de Bajada y Posición en Rellano</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XTR | Tipo = 0</span>
+            </div>
+            <p>Actualiza la posición del display de pasillo y enciende los LEDs de registro de llamada de bajada.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Canal e ID</td><td><code>(id_CAN << 3) | 0</code> (Constante <code>TRAMA_EXT_TX_REGBAJADA = 0</code>).</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Puertas y Predirección</td><td>Bit 0=A1; Bit 1=A2; Bit 2=CP; Bit 4=PP^; Bit 5=PPv.</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Posición y Flechas</td><td>Bits 0..4=Planta actual (0..31); Bit 5=Flecha Bajada; Bit 6=Flecha Subida; Bit 7=Gong.</td></tr>
+                  <tr><td><b>Byte 3..6</b></td><td>Registro Bajada</td><td>Bitmask de 32 bits con los LEDs de bajada encendidos en los rellanos.</td></tr>
+                  <tr><td><b>Byte 7</b></td><td>Estado Rellano</td><td>Bit 0=Ascensor ocupado; Bit 1=Fuera de servicio / Revisión; Bit 2=Completo.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-info" style="margin-top:8px;">
+              <b>Leyenda:</b> Apaga la iluminación de los pulsadores de bajada en cuanto la cabina arriba al piso y abre puertas.
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#059669;">Trama 3.1 — Tipo 1: Registro de Llamadas de Subida en Rellano</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $XTR | Tipo = 1</span>
+            </div>
+            <p>Enciende los LEDs de confirmación de llamada en pulsadores exteriores de subida.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Canal e ID</td><td><code>(id_CAN << 3) | 1</code> (Constante <code>TRAMA_EXT_TX_REGSUBIDA = 1</code>).</td></tr>
+                  <tr><td><b>Byte 3..6</b></td><td>Registro Subida</td><td>Bitmask de 32 bits con los LEDs de subida encendidos en cada planta.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#7c3aed;">Tramas 3.2 y 3.3 — Tipos 2 y 3: Registro Llamadas Segundo Embarque</h3>
+              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XTR | Tipos = 2 y 3</span>
+            </div>
+            <p>Gobiernan los LEDs de registro de llamadas en las botoneras de rellano del segundo acceso (pasillo posterior).</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Trama</th><th>Constante Firmware</th><th>Función</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Tipo 2</b></td><td><code>TRAMA_EXT_TX_AUXBAJADA</code></td><td>Enciende LEDs de pulsadores de bajada del segundo embarque.</td></tr>
+                  <tr><td><b>Tipo 3</b></td><td><code>TRAMA_EXT_TX_AUXSUBIDA</code></td><td>Enciende LEDs de pulsadores de subida del segundo embarque.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#d97706;">Trama 3.4 — Tipo 4: Firma de Rellano (TRAMA_EXT_TX_CREARFIRMA)</h3>
+              <span class="badge" style="background:#d97706;color:#fff;">ID: $XTR | Tipo = 4</span>
+            </div>
+            <p>Reto criptográfico de autenticidad periódico enviado por el cuadro a las placas de rellano.</p>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #ef4444;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#ef4444;">Trama 3.5 — Tipo 6: Token de Rellano (TRAMA_EXT_TX_TOKEN)</h3>
+              <span class="badge" style="background:#ef4444;color:#fff;">ID: $XTR | Tipo = 6</span>
+            </div>
+            <p>Sincronismo rolling <code>TokenCustom</code> para supervisar la legitimidad de las placas mCAN de rellano.</p>
+          </div>
+    
+          <h2>5. Block 4: Landing Bus — Uplink Calls to Controller ($X01 to $X3F)</h2>
+          <p>Frames transmitted when a passenger pushes a hall call button, or when pit inspection / firefighters keys are triggered.</p>
+
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #059669;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#059669;">Trama 4.0 — Tipo 0: Pulsación de Llamada Estándar en Rellano</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $X01..$X3F | Tipo = 0</span>
+            </div>
+            <p>Emitida en el instante en que un usuario acciona el botón de rellano.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>t_trama = 0x00</code> (Llamada estándar).</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Planta y Dirección</td><td>
+                    <b>Bits 0..4:</b> <code>floor</code> (Número de planta física 0..31 del pulsador accionado)<br>
+                    <b>Bit 5:</b> <code>0x20</code> = Pulsador de <b>BAJAR</b> accionado<br>
+                    <b>Bit 6:</b> <code>0x40</code> = Pulsador de <b>SUBIR</b> accionado<br>
+                    <b>Bit 7:</b> <code>0x80</code> = Contacto de llave de bomberos activado en esa planta
+                  </td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Seguridad Token</td><td>Bit 7: Presencia de módulo seguro Token.</td></tr>
+                  <tr><td><b>Byte 3..7</b></td><td>Sello CRC</td><td>Firma polinómica.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-info" style="margin-top:8px;">
+              <b>Leyenda:</b> En maniobras universales simples (un solo botón), el pulsador reporta por defecto en el bit 5 (bajada). En maniobras selectivas en subida y bajada, cada botón conmuta su bit correspondiente.
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#0284c7;">Trama 4.1 — Tipo 1: Llamada de Segundo Embarque / Servicio Exclusivo</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $X01..$X3F | Tipo = 1</span>
+            </div>
+            <p>Llamadas procedentes de la botonera exterior trasera o llavines de acceso VIP/exclusivo en plantas privadas.</p>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#ef4444;">Trama 4.2 — Tipo 2: Llave de Bomberos / Bomberos Alternativo de Rellano</h3>
+              <span class="badge" style="background:#ef4444;color:#fff;">ID: $X01..$X3F | Tipo = 2</span>
+            </div>
+            <p>Conmutador normativo de llamada de bomberos en planta baja o planta de rescate alternativa.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x02</code>.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Contacto Eléctrico</td><td><b>Bit 7:</b> <code>1</code> = Llave de bomberos girada a posición activa.</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Modo Bomberos</td><td><code>0x00</code> = Bomberos Principal; <code>0x01</code> = Bomberos Alternativo (evacuación a piso secundario).</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #7c3aed;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#7c3aed;">Trama 4.4 — Tipo 4: Botonera de Inspección de Foso y Cuarto de Poleas</h3>
+              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $X01..$X3F | Tipo = 4</span>
+            </div>
+            <p>Supervisa las botoneras de revisión exigidas por EN 81-20 instaladas en el foso o en el cuarto de poleas.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo Trama</td><td><code>0x04</code>.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Pulsadores de Inspección</td><td>
+                    <b>Bit 5:</b> <code>0x20</code> = Pulsador de <b>BAJAR</b> accionado<br>
+                    <b>Bit 6:</b> <code>0x40</code> = Pulsador de <b>SUBIR</b> accionado<br>
+                    <b>Bit 7:</b> <code>0x80</code> = Conmutador General de Inspección accionado (1 = Foso/Poleas en revisión)
+                  </td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Ubicación</td><td><code>0x00</code> = Botonera de Foso; <code>0x01</code> = Botonera de Cuarto de Poleas.</td></tr>
+                  <tr><td><b>Byte 3..7</b></td><td>Seguridad Token</td><td>Protección anti-manipulación.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-info" style="margin-top:8px;">
+              <b>Leyenda:</b> La botonera de foso tiene prioridad de parada sobre la de cabina. Si un operario conmuta revisión en el foso, la maniobra se bloquea automáticamente para evitar movimientos imprevistos desde cabina.
+            </div>
+          </div>
+    
+          <h2>6. Block 5: Multiplex Group Dispatching — Duplex / Triplex ($M00 to $M03)</h2>
+          <p>High-speed peer-to-peer bus connecting independent controllers in a duplex or triplex bank.</p>
+
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #8b5cf6;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#8b5cf6;">Trama 5.0 — Tipo 0: Posición, Paro y Llamadas de Bajada Compartidas</h3>
+              <span class="badge" style="background:#8b5cf6;color:#fff;">ID: $M00..$M03 | Tipo = 0</span>
+            </div>
+            <p>Cada ascensor comunica a sus compañeros su cota exacta, si está disponible y qué llamadas de bajada va a atender.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo e ID Ascensor</td><td><code>(0 << 4) | miID</code> (miID: 0=Ascensor A, 1=B, 2=C).</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Planta y Asimetría</td><td>Bits 0..4=Planta actual (0..31); Bits 5..7=Asimetría de pisos.</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Señal de Parada</td><td>Estado del selector de zona de paro (<code>SenyalParo + 1</code>).</td></tr>
+                  <tr><td><b>Byte 3</b></td><td>Código Avería</td><td>Código de fallo activo (si el ascensor falla, el compañero absorbe sus llamadas de rellano).</td></tr>
+                  <tr><td><b>Byte 4..7</b></td><td>Llamadas Bajada</td><td>Bitmask de 32 bits de llamadas de bajada asignadas a esta cabina.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#0284c7;">Trama 5.1 — Tipo 1: Llamadas de Subida y Dinámica de Movimiento</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $M00..$M03 | Tipo = 1</span>
+            </div>
+            <p>Comparte la dirección de marcha y estado de ocupación para calcular el ascensor más idóneo por algoritmo ETA.</p>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Tipo e ID</td><td><code>(1 << 4) | miID</code>.</td></tr>
+                  <tr><td><b>Byte 1..4</b></td><td>Llamadas Subida</td><td>Bitmask de 32 bits con llamadas de subida asignadas.</td></tr>
+                  <tr><td><b>Byte 5</b></td><td>Piso Destino</td><td>Planta a la que se dirige físicamente la cabina (<code>IrAPlanta</code>).</td></tr>
+                  <tr><td><b>Byte 6</b></td><td>Dinámica</td><td>
+                    <b>Bit 0:</b> Cabina en espera libre<br>
+                    <b>Bits 1..2:</b> Sentido de marcha (<code>0x02</code> = Subiendo, <code>0x06</code> = Bajando, <code>0x00</code> = Parado)<br>
+                    <b>Bit 3:</b> <code>0x08</code> = Ascensor en movimiento<br>
+                    <b>Bit 4:</b> Cabina libre sin llamadas de cabina pendientes<br>
+                    <b>Bit 5:</b> <code>0x20</code> = Señal de Completo activa
+                  </td></tr>
+                  <tr><td><b>Byte 7</b></td><td>Arbitraje</td><td>Token aleatorio para desempatar llamadas simultáneas.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#64748b;">Trama 5.2 — Tipo 2: Asimetría de Plantas en Batería</h3>
+              <span class="badge" style="background:#64748b;color:#fff;">ID: $M00..$M03 | Tipo = 2</span>
+            </div>
+            <p>Informa de plantas donde una cabina no tiene acceso físico (por ejemplo, ascensor que no baja al sótano garaje).</p>
+          </div>
+    
+          <h2>7. Block 6: Fuji iCOM Inverter Gateway (CANopen Lift CiA 417)</h2>
+          <p>Dedicated CAN bus channel for direct traction drive control with the Fuji Frenic Lift inverter.</p>
+
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #059669;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#059669;">Trama 6.0 — COB-ID 0x501: Telemetría Eléctrica de Tracción</h3>
+              <span class="badge" style="background:#059669;color:#fff;">Fuji Frenic Lift &rarr; EDEL</span>
+            </div>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Magnitud Eléctrica</th><th>Unidad y Escala</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0..1</b></td><td>Frecuencia Real de Salida</td><td>Hertzios con 2 decimales (<code>Hz * 100</code>). Ej: <code>5000</code> = 50.00 Hz.</td></tr>
+                  <tr><td><b>Byte 2..3</b></td><td>Corriente Eficaz de Motor</td><td>Amperios con 1 decimal (<code>A * 10</code>). Ej: <code>142</code> = 14.2 A.</td></tr>
+                  <tr><td><b>Byte 4..5</b></td><td>Tensión de Bus DC</td><td>Voltios de corriente continua en condensadores de potencia. Ej: <code>560</code> V.</td></tr>
+                  <tr><td><b>Byte 6..7</b></td><td>Par Motor Desarrollado</td><td>Porcentaje sobre el par nominal del motor (<code>% * 10</code>).</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #ef4444;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#ef4444;">Trama 6.1 — COB-ID 0x502: Diagnóstico y Alarmas del Variador</h3>
+              <span class="badge" style="background:#ef4444;color:#fff;">Fuji Frenic Lift &rarr; EDEL</span>
+            </div>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Función</th><th>Detalle Eléctrico</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Código Alarma Activa</td><td><code>0</code> = OK; <code>1</code> = Sobrecorriente OC1; <code>2</code> = Sobretensión OU1; etc.</td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Temperatura IGBT</td><td>Grados Celsius (°C) en el disipador de potencia.</td></tr>
+                  <tr><td><b>Byte 2</b></td><td>Relé Térmico Electrónico</td><td>% de saturación térmica acumulada en el bobinado del motor.</td></tr>
+                  <tr><td><b>Byte 3</b></td><td>Bornas Digitales Entrada</td><td>Estado de entradas físicas del variador: <code>FWD</code>, <code>REV</code>, <code>EN</code>, <code>X1..X5</code>.</td></tr>
+                  <tr><td><b>Byte 4</b></td><td>Salidas a Relé</td><td>Estado de relé de freno electromecánico y contactor de potencia.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:24px;border-left:4px solid #0284c7;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#0284c7;">Trama 6.2 — COB-ID 0x602: Órdenes de Marcha y Consigna de Velocidad</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">EDEL &rarr; Fuji Frenic Lift</span>
+            </div>
+            <div class="table-container">
+              <table class="doc-table">
+                <thead><tr><th>Byte</th><th>Comando</th><th>Detalle de Maniobra</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Byte 0</b></td><td>Palabra de Control (Low)</td><td>
+                    <b>Bit 0:</b> Habilitación de etapa de potencia (Inverter Enable)<br>
+                    <b>Bit 1:</b> Orden Marcha Subir (<code>FWD</code>)<br>
+                    <b>Bit 2:</b> Orden Marcha Bajar (<code>REV</code>)<br>
+                    <b>Bit 3:</b> Desbloqueo de freno mecánico
+                  </td></tr>
+                  <tr><td><b>Byte 1</b></td><td>Curva S de Aceleración</td><td>Selección de rampa suave para confort de marcha.</td></tr>
+                  <tr><td><b>Byte 2..3</b></td><td>Consigna de Velocidad</td><td>Velocidad deseada en rpm de máquina o mm/s.</td></tr>
+                  <tr><td><b>Byte 4..7</b></td><td>Distancia a Destino</td><td>Cota milimétrica para parada directa sin marcha lenta prolongada.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+    <h2>8. Cryptographic Specification: TokenCustom, Cifrado() & CRC Polynomial</h2>
+          <p>La maniobra incorpora un motor de seguridad criptográfica por hardware distribuido entre la placa base y todos los periféricos CAN para asegurar licencias y evitar el clonado de placas:</p>
+
+          <h3>8.1. Formulación Matemática de Cifrado()</h3>
+          <p>Implementada en <code>Sources/LCD.c:2291</code> y <code>Sources/E2PROM.c</code>:</p>
           <div class="code-block">
 unsigned short Cifrado(unsigned short inFirma, unsigned short inAleat, unsigned char inTipo)
 {	
@@ -3703,12 +4386,12 @@ unsigned short Cifrado(unsigned short inFirma, unsigned short inAleat, unsigned 
     unsigned char key;
     unsigned short cifrado = 0;
 
-    if(!inTipo)	// Mode 0: PIN 1 / Current Signature Verification (Bits 3, 7, 11)
+    if(!inTipo)	// Modo 0: Verificación PIN 1 / Firma Actual (Bits 3, 7, 11)
     {
         key = ((inAleat & 0x0008) >> 3) | ((inAleat & 0x0080) >> 6) | ((inAleat & 0x0800) >> 9);
         inAleat = (inAleat & 0x0007) | ((inAleat & 0x0070) >> 1) | ((inAleat & 0x0700) >> 2) | ((inAleat & 0xF000) >> 3);
     }
-    else        // Mode 1: PIN 2 / New Signature Generation (Bits 0, 4, 8)
+    else        // Modo 1: Generación PIN 2 / Nueva Firma (Bits 0, 4, 8)
     {
         key = (inAleat & 0x0001) | ((inAleat & 0x0010) >> 3) | ((inAleat & 0x0100) >> 6);
         inAleat = ((inAleat & 0x000E) >> 1) | ((inAleat & 0x00E0) >> 2) | ((inAleat & 0xFE00) >> 3);
@@ -3717,17 +4400,17 @@ unsigned short Cifrado(unsigned short inFirma, unsigned short inAleat, unsigned 
     return cifrado;
 }
           </div>
-          <p><b>Non-Linear Permutation Mechanics:</b> In Mode 0, bits 3, 7, and 11 are isolated to form a 3-bit index <code>key ∈ [0..7]</code> into the pseudo-random matrix <code>RDM[8]</code>. The remaining bits of <code>inAleat</code> are shifted and compacted to eliminate linear algebraic predictability, before performing the 3-way XOR operation.</p>
+          <p><b>Mecanismo de Permutación No Lineal:</b> En Modo 0, los bits 3, 7 y 11 forman un índice <code>key ∈ [0..7]</code> sobre la matriz pseudoaleatoria <code>RDM[8]</code>. Los bits restantes de <code>inAleat</code> se desplazan y compactan eliminando correlación algebraica antes de la operación XOR final.</p>
 
-          <h3>2.2. The Polynomial CRC-8 Algorithm & Key Hierarchy</h3>
-          <p>Defined in <code>Sources/Defines.h:343</code> and executed in <code>Sources/Remote.c:82</code>:</p>
+          <h3>8.2. Algoritmo Polinómico CRC-8 y Jerarquía de Claves</h3>
+          <p>Definido en <code>Sources/Defines.h:343</code> y ejecutado en <code>Sources/Remote.c:82</code>:</p>
           <div class="code-block">
-#define TOKEN_POLY          0x1D    // CRC-8-SAE J1850 ($x^8 + x^4 + x^3 + x^2 + 1$)
-#define TOKEN_KMASTER_CAB   0x6D    // Master Root Key for Cabin Bus
-#define TOKEN_KMASTER_EXT   0x3B    // Master Root Key for Landing Bus
-#define TOKEN_KAUX_CAB      0x5A    // Alternating synchronization XOR pattern
-#define TOKEN_KAUX_EXT      0xA5    // Complementary synchronization XOR pattern
-#define TOKEN_RxWINDOW      5       // Anti-replay sliding window tolerance
+#define TOKEN_POLY          0x1D    // Polinomio generador CRC-8-SAE J1850 (x^8 + x^4 + x^3 + x^2 + 1)
+#define TOKEN_KMASTER_CAB   0x6D    // Clave Raíz Maestra Bus Cabina
+#define TOKEN_KMASTER_EXT   0x3B    // Clave Raíz Maestra Bus Rellano
+#define TOKEN_KAUX_CAB      0x5A    // Patrón alterno de sincronismo XOR
+#define TOKEN_KAUX_EXT      0xA5    // Patrón complementario de sincronismo XOR
+#define TOKEN_RxWINDOW      5       // Tolerancia de ventana deslizante anti-repetición
 
 unsigned char CRC(unsigned char inPoly, unsigned char inInit, unsigned char inData)
 {
@@ -3742,45 +4425,45 @@ unsigned char CRC(unsigned char inPoly, unsigned char inInit, unsigned char inDa
 }
           </div>
 
-          <h3>2.3. Secret Key Derivation & Live Dynamic Challenge</h3>
-          <p>During MCU startup (<code>Sources/main.c:10827</code>), the unique 16-bit installation identifier (<code>TOKEN_ID</code>) is hashed against the master root keys:</p>
+          <h3>8.3. Derivación de Claves Secretas y Reto Continuo en Bus CAN</h3>
+          <p>Durante el arranque (<code>Sources/main.c:10827</code>), el identificador único de obra <code>TOKEN_ID</code> se procesa junto con las claves maestras:</p>
           <div class="code-block">
 TokenCustom.KSecretaCab = CRC(TOKEN_POLY, TOKEN_KMASTER_CAB, (TOKEN_ID >> 8) ^ (TOKEN_ID & 0xFF));
 TokenCustom.KSecretaExt = CRC(TOKEN_POLY, TOKEN_KMASTER_EXT, (TOKEN_ID >> 8) ^ (TOKEN_ID & 0xFF));
           </div>
-          <p><b>Live CAN Handshake:</b> The Master broadcasts Downlink Frame 7 every 500ms with <code>DATA[1] = Contador ^ 0x5A</code>, <code>DATA[2..3] = Contador ^ TOKEN_ID</code>, and <code>DATA[4] = CRC(...)</code>. Every peripheral node seals its uplink transmission with <code>DATA[7] = CRC(0x1D, KSecreta, TipoTrama ^ Contador)</code>. The Master verifies this within a 5-frame sliding window (<code>TOKEN_RxWINDOW = 5</code>), rejecting unauthorized boards with <code>INCOMPATIBILIDAD FIRMA</code>.</p>
+          <p><b>Reto Continuo en Bus CAN:</b> La placa base emite la Trama 7 cada 500ms con <code>DATA[1] = Contador ^ 0x5A</code>, <code>DATA[2..3] = Contador ^ TOKEN_ID</code> y <code>DATA[4] = CRC(...)</code>. Cada periférico sella su respuesta en el Byte 7 con <code>DATA[7] = CRC(0x1D, KSecreta, TipoTrama ^ Contador)</code>. La placa base valida este sello con una ventana deslizante de 5 estados (<code>TOKEN_RxWINDOW = 5</code>), bloqueando cualquier tarjeta no autorizada con <code>INCOMPATIBILIDAD FIRMA</code>.</p>
 
-          <h2>3. Validación y Despliegue en Servidor (CI/CD Pipeline)</h2>
-          <p>To ensure 100% technical accuracy, continuous availability, and rapid deployment of documentation updates, the portal operates under an automated 5-stage deployment pipeline:</p>
+          <h2>9. Validación y Despliegue en Servidor (Flujo CI/CD)</h2>
+          <p>Para asegurar un 100% de rigor técnico, disponibilidad continua y sincronización instantánea de los cambios, el portal se gestiona mediante un flujo automatizado de 6 fases:</p>
 
           <div class="card-grid">
             <div class="card">
-              <h3>1. Pre-Commit Syntax Validation</h3>
-              <p>Every JavaScript and Python file undergoes automated syntax verification before staging using <code>node -c app.js</code>, <code>node -c data_es.js</code>, <code>node -c encyclopedia.js</code>, and <code>node -c interactive_tools.js</code>, guaranteeing zero syntax errors.</p>
+              <h3>1. Verificación Pre-Commit de Sintaxis</h3>
+              <p>Cada archivo JavaScript y Python se comprueba automáticamente antes del staging mediante <code>node -c app.js</code>, <code>node -c data_es.js</code>, <code>node -c encyclopedia.js</code> y <code>node -c interactive_tools.js</code>, garantizando cero errores de sintaxis.</p>
             </div>
             <div class="card">
-              <h3>2. Mirror Synchronization</h3>
-              <p>Source files in the primary repository are synchronized to the local standalone deployment repository (<code>C:\Users\ecommerce\envz\elevator-encyclopedia\</code>) via automated PowerShell scripts, maintaining directory structure and binary asset integrity.</p>
+              <h3>2. Sincronización al Espejo Local</h3>
+              <p>Los archivos modificados en el directorio de desarrollo se copian de forma síncrona al repositorio local de despliegue (<code>C:\Users\ecommerce\envz\elevator-encyclopedia\</code>) mediante PowerShell, asegurando la concordancia de binarios y esquemas.</p>
             </div>
             <div class="card">
-              <h3>3. Git Commit & Push Pipeline</h3>
-              <p>Changes are committed with descriptive, atomic commit messages and pushed upstream to the official GitHub Pages remote repository (<code>https://github.com/yorgopetsas/edel-elevator-docs.git</code>) on branch <code>main</code>.</p>
+              <h3>3. Flujo Git Commit & Push</h3>
+              <p>Las mejoras se confirman con commits atómicos descriptivos y se envían a la rama <code>main</code> del repositorio remoto oficial en GitHub (<code>https://github.com/yorgopetsas/edel-elevator-docs.git</code>).</p>
             </div>
             <div class="card">
-              <h3>4. GitHub Pages Static Build</h3>
-              <p>GitHub Actions automatically triggers a static deployment build. The web portal is hosted globally on GitHub's CDN at <code>https://yorgopetsas.github.io/edel-elevator-docs/</code> with SSL encryption and HTTP/2 acceleration.</p>
+              <h3>4. Despliegue Estático en GitHub Pages</h3>
+              <p>GitHub Actions compila automáticamente el sitio estático y lo publica en la red CDN global en <code>https://yorgopetsas.github.io/edel-elevator-docs/</code> con aceleración HTTP/2 y cifrado SSL.</p>
             </div>
             <div class="card">
-              <h3>5. Local Static Server (server.js)</h3>
-              <p>For factory bench computers and offline field laptops, a local Node.js static server (<code>server.js</code>) serves the entire application at <code>http://localhost:3000</code> with zero external internet dependencies.</p>
+              <h3>5. Servidor Local Autónomo (server.js)</h3>
+              <p>Para ordenadores de banco en fábrica o portátiles de asistencia técnica en hueco sin acceso a Internet, un servidor Node.js (<code>server.js</code>) sirve la totalidad del portal en <code>http://localhost:3000</code>.</p>
             </div>
             <div class="card">
-              <h3>6. Browser Subagent Verification</h3>
-              <p>Autonomous browser subagents execute live end-to-end testing with cache-busting query strings (<code>?v=commit_hash</code>), confirming DOM rendering, interactive tools, search indexing, and mobile responsiveness.</p>
+              <h3>6. Validación Autónoma con Browser Subagents</h3>
+              <p>Subagentes de navegación comprueban el despliegue en tiempo real con cadenas de invalidación de caché (<code>?v=hash</code>), asegurando el funcionamiento correcto de las 13 herramientas interactivas y la compatibilidad multidispositivo.</p>
             </div>
           </div>
         </div>
-
+    
       `
     }
   },
