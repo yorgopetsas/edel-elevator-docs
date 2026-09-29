@@ -450,6 +450,89 @@ Door State Logic (Control_Puertas):
               </tbody>
             </table>
           </div>
+        
+          <!-- OPERADOR FERMATOR VVVF5 -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #06b6d4;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#06b6d4;font-size:1.15rem;">🚪 Fermator VVVF4+ / VVVF5 Door Drive — Pinouts & DIP Switch Setup</h3>
+              <span class="badge" style="background:#06b6d4;color:#fff;font-weight:700;">FERMATOR VVVF5</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Official technical specifications based on Fermator Group manual DOC-TC.AS.IN.V00001.ES for interconnection with EDEL car boards K2-64290 / K2-64291:</p>
+
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;">
+                <thead>
+                  <tr style="background:rgba(6,182,212,0.08);">
+                    <th style="width:120px;">DIP Switch</th>
+                    <th style="width:180px;">Official EDEL Setting</th>
+                    <th>Function & Engineering Rationale</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>DIP 1</b></td>
+                    <td><code>OFF: 2 Entradas</code></td>
+                    <td>Independent control of Open (A1) and Close (CP) commands via EDEL car relays. (ON = 1-wire close-only mode).</td>
+                  </tr>
+                  <tr>
+                    <td><b>DIP 2</b></td>
+                    <td><code>ON / OFF</code></td>
+                    <td>Opening direction: Set according to left-hand or right-hand opening (inverts motor rotation).</td>
+                  </tr>
+                  <tr>
+                    <td><b>DIP 3</b></td>
+                    <td><code>OFF: Estándar</code></td>
+                    <td>Standard door operator operation mode.</td>
+                  </tr>
+                  <tr>
+                    <td><b>DIP 4</b></td>
+                    <td><code>OFF: Control Esclavo</code></td>
+                    <td>EDEL controller manages safety reopens via photocell (FOT) and reopen relay (REAP). (ON = Autonomous smart mode).</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-container" style="margin-top:14px;">
+              <table class="doc-table" style="width:100%;">
+                <thead>
+                  <tr style="background:rgba(6,182,212,0.08);">
+                    <th style="width:140px;">Fermator Terminals</th>
+                    <th style="width:180px;">EDEL Board Connection</th>
+                    <th>Signal Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>8, 9, 10, 11, 12</b></td>
+                    <td><code>Relés A1, CP y COM</code></td>
+                    <td>Optocoupled control inputs: Open command (A1), Close command (CP), and potential-free Common.</td>
+                  </tr>
+                  <tr>
+                    <td><b>17, 18, 19, 20</b></td>
+                    <td><code>Barrera FOT Cabina</code></td>
+                    <td>Car optical photocell beam or multi-ray infrared safety light curtain.</td>
+                  </tr>
+                  <tr>
+                    <td><b>23</b></td>
+                    <td><code>+12V COM</code></td>
+                    <td>+12V Common terminal for door reopen contact or slow-closing command.</td>
+                  </tr>
+                  <tr>
+                    <td><b>30 al 41</b></td>
+                    <td><code>Entradas Estado EDEL</code></td>
+                    <td>Relay status outputs to EDEL board: Door fully open, door fully closed, obstacle detected.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top:12px;padding:10px 14px;background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:6px;font-size:0.88rem;color:var(--text-secondary,#94a3b8);">
+              <b>Fermator 4-Step Autotuning Sequence:</b><br>
+              1. Door opens 200 mm · 2. Door closes 200 mm · 3. Door closes slowly to detect rubber bumper (cota 0) · 4. Door opens slowly counting encoder pulses to detect full mechanical opening stop and store door clearance width.
+            </div>
+          </div>
+    
         </div>
       `,
       "dev-can": `
@@ -1670,6 +1753,81 @@ Firmware Version String Format (current: v0.6.2):
               </tbody>
             </table>
           </div>
+        
+          <!-- BOTONERA DE RESCATE (PLANO J. GUTIERREZ 03-09-09) -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #ef4444;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#ef4444;font-size:1.15rem;">🚨 Machine Room Emergency Electrical Rescue Operation (EN 81-20 §5.12.1.6)</h3>
+              <span class="badge" style="background:#ef4444;color:#fff;font-weight:700;">OFFICIAL BLUEPRINT 03-09-09</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Official electrical specification extracted from original engineering blueprint drawn by J. Gutiérrez (03-09-09) for EDEL K2 and ADVANCED K2 controllers with machine room (CM) and MRL landing cabinets:</p>
+            
+            <div class="code-block" style="font-family:'Share Tech Mono',monospace;font-size:0.82rem;line-height:1.35;overflow-x:auto;padding:12px;background:rgba(15,23,42,0.9);border:1px solid rgba(239,68,68,0.25);border-radius:6px;color:#fca5a5;margin-bottom:14px;">
++---------------------------------------------------------------------------------------------------+
+| CUADRO DE MANIOBRA (ARMARIO CM):                                                                  |
+|   [I. RESCATE] Conmutador Normal / Rescate (Puerta del armario)                                  |
+|         |                                                                                         |
+|      Borna 20 (+24Vcc Común de Rescate)                                                           |
+|         |                                                                                         |
+|      [ CR ] Pulsador Común Hombre-Muerto                                                          |
+|       /    \                                                                                      |
+|  [ RS ]    [ RB ]   RS = Borna 36 (Rescate Subir)  |  RB = Borna 37 (Rescate Bajar)               |
+|    |          |                                                                                   |
+| INTERBLOQUEO CON TECHO DE CABINA (Borna 26 / 26'):                                                |
+|   "ATENCIÓN: CONECTAR HILO DE MANGUERA AL 26' (REVISIÓN CABINA)"                                  |
+|   La posición de Inspección en techo de cabina anula físicamente el rescate del armario.          |
+|                                                                                                   |
+| PUENTEADO SELECTIVO (Relés 1/54275 y 2/54275):                                                    |
+|   Anula seguridades secundarias (acuñamiento/polea), pero RESPETA ESTRICTAMENTE Cerrojos (40)     |
+|   y Puerta de Cabina (41).                                                                        |
++---------------------------------------------------------------------------------------------------+
+            </div>
+
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;">
+                <thead>
+                  <tr style="background:rgba(239,68,68,0.08);">
+                    <th style="width:140px;">Device / Terminal</th>
+                    <th style="width:180px;">Electrical Signal</th>
+                    <th>Function & Regulatory Behavior</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>I. RESCATE</code></td>
+                    <td><b>Door Key Switch</b></td>
+                    <td>Puts controller into inspection mode, clears registered calls, and disables automatic dispatching.</td>
+                  </tr>
+                  <tr>
+                    <td><code>CR (Borna 20)</code></td>
+                    <td><b>Common Dead-Man</b></td>
+                    <td>Dead-man enable button at +24V DC. Must be held simultaneously with RS or RB to authorize travel.</td>
+                  </tr>
+                  <tr>
+                    <td><code>RS (Borna 36)</code></td>
+                    <td><b>Rescue UP</b></td>
+                    <td>Upward rescue command at inspection speed (energizes contactors SG/PQ or sends C05 preset to Fuji VFD).</td>
+                  </tr>
+                  <tr>
+                    <td><code>RB (Borna 37)</code></td>
+                    <td><b>Rescue DOWN</b></td>
+                    <td>Downward rescue command at inspection speed (energizes contactors BA/PQ or sends C05 preset to Fuji VFD).</td>
+                  </tr>
+                  <tr>
+                    <td><code>Borna 26 / 26'</code></td>
+                    <td><b>Car Top Interlock</b></td>
+                    <td>Mandatory interlock to terminal 26' on car roof. Car roof inspection takes absolute safety precedence.</td>
+                  </tr>
+                  <tr>
+                    <td><code>Bornas 40 y 41</code></td>
+                    <td><b>Door Safety Loop</b></td>
+                    <td><b>NEVER BYPASSED!</b> Cabinet rescue does NOT bypass landing locks (40) or car door (41). Doors must be closed.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+    
         </div>
       `,
 
@@ -3528,6 +3686,109 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               &bull; <i>Fix</i>: Inspect switches CM-MF1/MF2. Verify inputs X5 and X6 light up on Fuji keypad when brake lifts and extinguish when brake drops.</p>
             </div>
           </div>
+        
+          <!-- RETROFIT KITS FUJI -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #10b981;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#10b981;font-size:1.15rem;">🔄 Inverter Retrofit Modernization Kits (1-Speed / 2-Speed / S54 to Fuji Frenic-Lift)</h3>
+              <span class="badge" style="background:#10b981;color:#fff;font-weight:700;">RETROFIT KITS</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Official factory conversion guides for retrofitting legacy electromechanical controllers (1-speed, 2-speed, Serie 54, and Placa Larga) with Fuji Frenic-Lift / LE2 inverters:</p>
+
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;">
+                <thead>
+                  <tr style="background:rgba(16,185,129,0.08);">
+                    <th style="width:100px;">Step</th>
+                    <th style="width:200px;">Workshop Action</th>
+                    <th>Detailed Electrical Procedure</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>Step 1</b></td>
+                    <td><b>Contactor CP</b></td>
+                    <td>Mark wires on contact 13-14 of contactor CP, disconnect and bridge into enable input L3 of the Fuji VFD.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Step 2</b></td>
+                    <td><b>Contactors S & B</b></td>
+                    <td>Disconnect wires to L2 and T2 of direction contactors S (Up) and B (Down) and rewire to VFD output terminals.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Step 3</b></td>
+                    <td><b>Wires 20 & 8/P9</b></td>
+                    <td>Connect VFD control wires marked 20 and 8/P9 in parallel with auxiliary contacts 53 and 54 of contactor CP.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Step 4</b></td>
+                    <td><b>Wire 41 to Borna 87</b></td>
+                    <td>Connect wire 41 of the inverter to Borna 87 of the EDEL controller for traction safety chain confirmation.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Step 5</b></td>
+                    <td><b>Motor PTC Thermistor</b></td>
+                    <td>Connect motor PTC thermal sensor directly to Fuji VFD thermal protection terminals (THM / CM).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Step 6</b></td>
+                    <td><b>Phase Rotation</b></td>
+                    <td>Verify motor rotation in inspection mode; if inverted, swap motor output phases U and V at the VFD.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+    
+
+          <!-- NORMATIVA A3 / UCM -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #8b5cf6;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#8b5cf6;font-size:1.15rem;">⚖️ Unintended Car Movement (UCM) Protection under EN 81-1/2:A3</h3>
+              <span class="badge" style="background:#8b5cf6;color:#fff;font-weight:700;">EN 81-1/2 A3</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Certified UCM-100 to UCM-400 systems and mechanical brake microswitch supervision with Fuji Frenic-Lift (Clause 9.11 EN 81-1:A3):</p>
+
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;">
+                <thead>
+                  <tr style="background:rgba(139,92,246,0.08);">
+                    <th style="width:120px;">UCM System</th>
+                    <th style="width:200px;">Traction Architecture</th>
+                    <th>Detection Principle & Safety Tripping</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>UCM-100</b></td>
+                    <td>Traction with Overspeed Governor</td>
+                    <td>Electromechanical overspeed governor trip coil triggered if doors open outside the unlocking zone.</td>
+                  </tr>
+                  <tr>
+                    <td><b>UCM-200</b></td>
+                    <td>Traction with Certified Motor Brake</td>
+                    <td>Redundant motor brake caliper monitoring with certified microswitch position feedback.</td>
+                  </tr>
+                  <tr>
+                    <td><b>UCM-300</b></td>
+                    <td>Hydraulic Lifts (EN 81-2 A3)</td>
+                    <td>Double safety valve block in downward travel wired in hydraulic series to lock car hydraulically.</td>
+                  </tr>
+                  <tr>
+                    <td><b>UCM-400</b></td>
+                    <td>Advanced Electronic Module</td>
+                    <td>Electronic supervisor module with encoder velocity monitoring and safety chain solid-state trip.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top:14px;padding:12px 14px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.25);border-radius:6px;font-size:0.88rem;color:#ddd6fe;">
+              <b>Official Brake Supervision with Fuji Frenic Lift (Software v1751+):</b><br>
+              • <b>Alarm Contact 30C-30B:</b> Wired in series with the EDEL safety loop. If the VFD detects a brake microswitch discrepancy, contact 30C-30B opens, the inverter latches into <code>error bbE</code>, and the controller halts with <code>Fallo 51</code> (safety chain missing).<br>• <b>Reset Procedure:</b> After adjusting mechanical switch clearances, clear the lockout by setting parameter <code>H95 = 111</code>.
+            </div>
+          </div>
+    
         </div>
       `,
       "dev-can-matrix-crypto": `
