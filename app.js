@@ -1886,6 +1886,68 @@ Firmware Version String Format (current: v0.6.2):
             </div>
           </div>
 
+        
+          <!-- REAL FACTORY SCHEMATICS VISUAL GALLERY -->
+          <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border-color,#334155);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <span class="badge" style="background:#0284c7;color:#fff;font-weight:700;">FACTORY BLUEPRINTS</span>
+              <h2 style="margin:0;color:var(--accent-cyan,#38bdf8);font-size:1.35rem;">📐 Official Factory Electrical Schematics (Visible Technical Drawings)</h2>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:1.5rem;">
+              Certified high-resolution workshop drawings from <code>P:\Dep. Técnico\ESQUEMAS ADICIONALES PARA CUADROS Y PREMONTADAS</code>:
+            </p>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin-bottom:20px;">
+              <!-- CARD 1: HYDRAULIC UPS -->
+              <div class="card" style="padding:16px;">
+                <h4 style="margin:0 0 6px 0;color:#38bdf8;font-size:1rem;">🚪 Hydraulic UPS Automatic Door Opening</h4>
+                <p style="font-size:0.84rem;color:var(--text-secondary,#94a3b8);margin-bottom:10px;">By E. Pérez &bull; 230V operator powered by UPS on floor zone trigger.</p>
+                <div style="border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;background:#0b1120;">
+                  <img src="images/schematic_Apertura_puerta_mediante_SAI_rescate_oleo_p1.png" alt="Hydraulic UPS Door Opening" style="width:100%;height:auto;display:block;cursor:pointer;" onclick="window.open(this.src,'_blank')" />
+                </div>
+                <div style="margin-top:8px;text-align:right;">
+                  <a href="images/schematic_Apertura_puerta_mediante_SAI_rescate_oleo_p1.png" target="_blank" style="color:#38bdf8;font-size:0.8rem;text-decoration:none;font-weight:600;">🔍 View Full Vector</a>
+                </div>
+              </div>
+
+              <!-- CARD 2: 3-PHASE DUAL ENTRANCE -->
+              <div class="card" style="padding:16px;">
+                <h4 style="margin:0 0 6px 0;color:#38bdf8;font-size:1rem;">⚡ 3-Phase Dual Entrance Interlock</h4>
+                <p style="font-size:0.84rem;color:var(--text-secondary,#94a3b8);margin-bottom:10px;">By J. Delgado &bull; Reversing contactors AP 1/CP 1 &amp; AP 2/CP 2.</p>
+                <div style="border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;background:#0b1120;">
+                  <img src="images/schematic_Doble_embarque_trifasico_p1.png" alt="3-Phase Dual Entrance" style="width:100%;height:auto;display:block;cursor:pointer;" onclick="window.open(this.src,'_blank')" />
+                </div>
+                <div style="margin-top:8px;text-align:right;">
+                  <a href="images/schematic_Doble_embarque_trifasico_p1.png" target="_blank" style="color:#38bdf8;font-size:0.8rem;text-decoration:none;font-weight:600;">🔍 View Full Vector</a>
+                </div>
+              </div>
+
+              <!-- CARD 3: TIMED CAR LIGHTING -->
+              <div class="card" style="padding:16px;">
+                <h4 style="margin:0 0 6px 0;color:#38bdf8;font-size:1rem;">💡 Timed Car &amp; Shaft Lighting</h4>
+                <p style="font-size:0.84rem;color:var(--text-secondary,#94a3b8);margin-bottom:10px;">By J. Delgado &bull; K2-643VF board &bull; France/Belgium telerruptor.</p>
+                <div style="border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;background:#0b1120;">
+                  <img src="images/schematic_LUZ_CABINA_TEMPORIZADA_p1.png" alt="Timed Car Lighting" style="width:100%;height:auto;display:block;cursor:pointer;" onclick="window.open(this.src,'_blank')" />
+                </div>
+                <div style="margin-top:8px;text-align:right;">
+                  <a href="images/schematic_LUZ_CABINA_TEMPORIZADA_p1.png" target="_blank" style="color:#38bdf8;font-size:0.8rem;text-decoration:none;font-weight:600;">🔍 View Full Vector</a>
+                </div>
+              </div>
+
+              <!-- CARD 4: 24V DC OPERATOR -->
+              <div class="card" style="padding:16px;">
+                <h4 style="margin:0 0 6px 0;color:#38bdf8;font-size:1rem;">🔌 24V DC Door Operator Interface</h4>
+                <p style="font-size:0.84rem;color:var(--text-secondary,#94a3b8);margin-bottom:10px;">By E. Pérez &bull; Solid-state DC drive for compact car doors.</p>
+                <div style="border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;background:#0b1120;">
+                  <img src="images/schematic_OPERADOR_24VDC_p1.png" alt="24V DC Door Operator" style="width:100%;height:auto;display:block;cursor:pointer;" onclick="window.open(this.src,'_blank')" />
+                </div>
+                <div style="margin-top:8px;text-align:right;">
+                  <a href="images/schematic_OPERADOR_24VDC_p1.png" target="_blank" style="color:#38bdf8;font-size:0.8rem;text-decoration:none;font-weight:600;">🔍 View Full Vector</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       `,
 
