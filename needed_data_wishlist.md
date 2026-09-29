@@ -90,7 +90,21 @@ To achieve **100% engineering completeness, field troubleshooting depth, and fac
 
 ---
 
-## 8. Submission Instructions & Integration Workflow
+---
+
+## 8. Newly Identified Requirements & Upcoming Standardized Product (*Nuevas Necesidades Identificadas*)
+
+Following the complete review of the Visio2 electrical blueprints for the classic pre-wired installation (K2 / ADVANCED), the following 5 requirements are established to achieve 100% legacy customer support depth and ensure immediate readiness for the upcoming standardized installation:
+
+| Item Code | Component | Format | Technical Scope & Engineering Objective | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **DOC-D05** | **Real-Site Fuji Frenic-Lift Parameter Dumps** | `.fnc`, `.prm`, or Excel | Live site parameter files from commissioned jobs: <br>1. **Gearless PM Synchronous** with EnDat/SinCos encoder.<br>2. **Geared Induction** with incremental encoder.<br>Includes verified zero-speed anti-rollback loop gains (`L65`–`L73`) and brake pickup pre-torque. | 🆕 **NEW REQUIREMENT** |
+| **DOC-D06** | **Door Operator Specific Wiring Sheets** | PDF / Wiring Table | Pin-to-pin wiring sheets and DIP setup for the most prevalent door drives: **Fermator VVVF4+ / VF7**, **Wittur Hydra / Supra**, and **Selcom** paired with car board `K2-64290/91` (`A1`, `A2`, `CP`, `FOT`, `REAP`). | 🆕 **NEW REQUIREMENT** |
+| **DOC-D07** | **Load Weigher Wiring & Calibration Guides** | PDF / Technical Sheet | Terminal-to-terminal wiring, wire color codes, and calibration sheets for **Dinacell OMEGA**, **MICELECT LM-3D**, and direct `K2-64296` load weighing connections (preventing false `KG` overload trips). | 🆕 **NEW REQUIREMENT** |
+| **DOC-D08** | **K3 Hydraulic Valve Block Wiring (GMV / Blain)** | PDF / Schematic | Electrical solenoid coil and oil thermostat wiring schematics for **GMV 3010** and **Blain EV100** power units controlled by `K3-74278` autonomous controllers. | 🆕 **NEW REQUIREMENT** |
+| **DOC-N01** | **New Standardized Electrical Installation (Next-Gen)** | PDF / Visio / Manual | Full technical documentation, harness schematics, and wiring blueprints for the new standardized electrical installation replacing the classic system: pre-assembled quick connectors, new shaft bus, centralized safety hub, and comparison guide. | 🆕 **NEW REQUIREMENT** |
+
+## 9. Submission Instructions & Integration Workflow
 
 When you have any of the above materials available:
 1. **File Locations**: Place documents, parameter sheets, or photos directly in the project folder or provide the file paths (e.g., in `P:\I+D\...` or local folders).
