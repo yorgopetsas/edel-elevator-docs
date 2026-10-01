@@ -1,3 +1,10 @@
+/* Global Root Containment */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
 /* ==========================================================================
    EDEL Elevator Documentation System — Design System & Stylesheet
    ========================================================================== */
@@ -2490,3 +2497,59 @@ body.auth-locked > *:not(#authOverlay) {
   color: var(--text-muted);
 }
 
+
+
+/* ==========================================================================
+   Schematic Visual Cards & Sizing Control
+   ========================================================================== */
+.schematic-card {
+  max-width: 680px !important;
+  width: 100% !important;
+  margin: 1.5rem auto !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.schematic-card img {
+  max-width: 100% !important;
+  max-height: 360px !important;
+  height: auto !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+/* Strict Layout Containment */
+.main-container {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.content-area {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+#docBody {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.doc-section, .card {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+/* Tables scroll ONLY within their own container */
+.table-container {
+  max-width: 100% !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+}
