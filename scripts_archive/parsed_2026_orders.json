@@ -1,0 +1,497 @@
+[
+  {
+    "file": "export-yorgo7.csv",
+    "header": {
+      "cod_cliente": "2742",
+      "order_no": "260237",
+      "date": "23/01/2026",
+      "delivery_date": "13/03/2026",
+      "seller": "JOSE LUIS DELGADO",
+      "att": "",
+      "reference": "R-1129/25 TRIPLEX IZQUIERDO"
+    },
+    "totals": {
+      "raw_totals": [
+        "17387,75",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "21039,18"
+      ]
+    },
+    "items": [
+      {
+        "code": "CUADRO",
+        "desc": "MANIOBRA ESPECIAL ADAP. SILVA VF GEAR. 22 KW 45 A.",
+        "price": "9290,80",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "6039,02"
+      },
+      {
+        "code": "C60CPET0005M",
+        "desc": "TRIPLEX K2 CABLE COMUNICACION Y SOFTWARE 5m.",
+        "price": "114,32",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "74,31"
+      },
+      {
+        "code": "C60ADIEP002P",
+        "desc": "I.E.P. ADVANCED COMPLETA EN81.20 2VEL/VF - 2P",
+        "price": "1714,68",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "1114,54"
+      },
+      {
+        "code": "C60ADIEP00XP",
+        "desc": "SUP. X PARADA IEP ADVANCED COMPLETA EN81.20",
+        "price": "71,02",
+        "qty": "6,00",
+        "dto": "35,00",
+        "total": "276,98"
+      },
+      {
+        "code": "C60CPED4X160",
+        "desc": "MANG. ACOMETIDA MOTOR 16MM VARIADOR - 5M",
+        "price": "127,97",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "83,18"
+      },
+      {
+        "code": "C22170003050",
+        "desc": "KIT POSICIONAMIENTO POR ENCODER SIN CORREA-NETO",
+        "price": "400,00",
+        "qty": "1,00",
+        "dto": "0,00",
+        "total": "400,00"
+      },
+      {
+        "code": "C1805E0000XM",
+        "desc": "MTRS. CINTA DENTADA PARA POSICION. ENCODER EDEL",
+        "price": "2,97",
+        "qty": "32,00",
+        "dto": "20,00",
+        "total": "76,03"
+      },
+      {
+        "code": "C6099A000015",
+        "desc": "ABONO KIT POSICIONAMIENTO POR IMANES",
+        "price": "-108,20",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "-70,33"
+      },
+      {
+        "code": "C6099P000415",
+        "desc": "SISTEMA CV/FC ALTA VELOCIDAD POR PATINES",
+        "price": "328,58",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "213,58"
+      },
+      {
+        "code": "C6099P000270",
+        "desc": "INSTALACION SELECTIVA SUBIDA/BAJADA (X PARADA)",
+        "price": "16,30",
+        "qty": "8,00",
+        "dto": "35,00",
+        "total": "84,76"
+      },
+      {
+        "code": "C6000R000000",
+        "desc": "ROSARIO TIRA LED 5050 12W/M PARA 2 PARADAS",
+        "price": "126,30",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "82,10"
+      },
+      {
+        "code": "C6099R000000",
+        "desc": "SUPLEMENTO X PARADA TIRA LED 5050 12W/M",
+        "price": "20,35",
+        "qty": "6,00",
+        "dto": "35,00",
+        "total": "79,37"
+      },
+      {
+        "code": "C6099P000070",
+        "desc": "CONTACTO SEGURIDAD EXTRA EN INSTALACION",
+        "price": "26,58",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "17,28"
+      },
+      {
+        "code": "C6099P000130",
+        "desc": "EXCESO INTERCONEXIÓN MDP SUP. 5 Mts. (POR METRO)",
+        "price": "24,50",
+        "qty": "3,00",
+        "dto": "35,00",
+        "total": "47,78"
+      },
+      {
+        "code": "C6099P000105",
+        "desc": "INSTALACION HUECO DISPLAY CAN-BUS (X PLANTA)",
+        "price": "16,31",
+        "qty": "8,00",
+        "dto": "35,00",
+        "total": "84,81"
+      },
+      {
+        "code": "C40000010106",
+        "desc": "SINTESIS DE VOZ EDEL MK-791",
+        "price": "378,81",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "246,23"
+      },
+      {
+        "code": "C6099P000095",
+        "desc": "DERIVACIONES CAJA REVISION MAS LARGAS (x METRO)",
+        "price": "29,54",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "19,20"
+      },
+      {
+        "code": "C28100100105",
+        "desc": "METRO TIRA LED 12W/METRO (CON ACCESORIOS)",
+        "price": "7,30",
+        "qty": "2,00",
+        "dto": "35,00",
+        "total": "9,49"
+      },
+      {
+        "code": "CBOTONERA",
+        "desc": "CONJUNTO BOTONERA ESPECIAL SEGÚN CARACTERISTICAS",
+        "price": "4005,20",
+        "qty": "1,00",
+        "dto": "35,00",
+        "total": "2603,38"
+      },
+      {
+        "code": "C23020001006",
+        "desc": "DISPLAY TFT 5.6\" GIOTTO CAN EDEL. PROGR + S.VOZ",
+        "price": "331,55",
+        "qty": "1,00",
+        "dto": "20,00",
+        "total": "265,24"
+      },
+      {
+        "code": "C23020001012",
+        "desc": "DISPLAY TFT 7'' GIOTTO CAN BUS EDEL PROGRAMADO",
+        "price": "342,00",
+        "qty": "3,00",
+        "dto": "20,00",
+        "total": "820,80"
+      },
+      {
+        "code": "MOTOR",
+        "desc": "MAQUINA CEGI ACT 320",
+        "price": "6025,00",
+        "qty": "1,00",
+        "dto": "20,00",
+        "total": "4820,00"
+      }
+    ]
+  },
+  {
+    "file": "export-yorgo8.csv",
+    "header": {
+      "cod_cliente": "1000381",
+      "order_no": "260394",
+      "date": "04/02/2026",
+      "delivery_date": "02/03/2026",
+      "seller": "ABBOU, HASSAN",
+      "att": "Nik Calcoen",
+      "reference": "Home Huy, Ordernr. 60451"
+    },
+    "totals": {
+      "raw_totals": [
+        "17459,37",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "800,00",
+        "18259,37"
+      ]
+    },
+    "items": [
+      {
+        "code": "CUADRO",
+        "desc": "ADAPTATION VARIATEUR 11 kW, 25A À MAN, EXISTANTE",
+        "price": "3068,17",
+        "qty": "1,00",
+        "dto": "25,00",
+        "total": "2301,13"
+      },
+      {
+        "code": "C60CPED4Y100",
+        "desc": "EXCESO ACOMETIDA MOTOR 10MM VF (x METRO)",
+        "price": "17,79",
+        "qty": "1,00",
+        "dto": "38,00",
+        "total": "11,03"
+      },
+      {
+        "code": "C60CPED4X100",
+        "desc": "MANG. ACOMETIDA MOTOR 10MM VARIADOR - 5M",
+        "price": "127,97",
+        "qty": "1,00",
+        "dto": "38,00",
+        "total": "79,34"
+      },
+      {
+        "code": "MOTOR",
+        "desc": "MACHINE ACT 320 GEARLESS",
+        "price": "5263,38",
+        "qty": "1,00",
+        "dto": "20,00",
+        "total": "4210,70"
+      },
+      {
+        "code": "BANCADA",
+        "desc": "CHÂSSIS ESPICIAL 1250 KG",
+        "price": "1994,22",
+        "qty": "1,00",
+        "dto": "20,00",
+        "total": "1595,38"
+      },
+      {
+        "code": "C25010001500",
+        "desc": "OPTION D'OUVERTURE MANUELLE DU FREIN",
+        "price": "170,10",
+        "qty": "1,00",
+        "dto": "18,00",
+        "total": "139,48"
+      },
+      {
+        "code": "PUERTAS",
+        "desc": "Modèle : Premium. Vantail : Fiber filled. P/F E120",
+        "price": "2224,24",
+        "qty": "3,00",
+        "dto": "15,00",
+        "total": "5671,81"
+      },
+      {
+        "code": "PUERTAS",
+        "desc": "Modèle : Premium PM. Vantail : Fiber filled.",
+        "price": "3343,53",
+        "qty": "1,00",
+        "dto": "15,00",
+        "total": "2842,00"
+      },
+      {
+        "code": "C18020000044",
+        "desc": "Y108191SND10 CABLE SEALE 8X19+1 DE 10mm ( 1 MT. )",
+        "price": "3,33",
+        "qty": "120,00",
+        "dto": "20,00",
+        "total": "319,68"
+      },
+      {
+        "code": "C18010000015",
+        "desc": "SERRE CÂBLE PARA CABLE 9-10mm",
+        "price": "0,44",
+        "qty": "16,00",
+        "dto": "20,00",
+        "total": "5,63"
+      },
+      {
+        "code": "C29010000003",
+        "desc": "LIMITADOR GERVALL 200MM P.SIMPLE E.S/B V.N.0.9M/S",
+        "price": "184,07",
+        "qty": "1,00",
+        "dto": "20,00",
+        "total": "147,26"
+      },
+      {
+        "code": "C29040000100",
+        "desc": "10.206.00 PROTECTION LIMITEUR GERVALL 200MM PLASTIQUE",
+        "price": "16,49",
+        "qty": "1,00",
+        "dto": "20,00",
+        "total": "13,19"
+      },
+      {
+        "code": "C29030000007",
+        "desc": "POULIE TENDEUSE D-200 DESCENTE (POL. PA6+FI.VERRE)",
+        "price": "111,83",
+        "qty": "1,00",
+        "dto": "20,00",
+        "total": "89,46"
+      },
+      {
+        "code": "C18020000070",
+        "desc": "Y1TYL6GSGD06 CABLE TYCLIFT 6G GALVANIZADO 6MM ( 1 MT. )",
+        "price": "1,60",
+        "qty": "26,00",
+        "dto": "20,00",
+        "total": "33,28"
+      },
+      {
+        "code": "C5099M000045",
+        "desc": "CONTACTOR SILENCIOSO VF ADV. (SUPLEMENTO)",
+        "price": "72,45",
+        "qty": "1,00",
+        "dto": "100,00",
+        "total": "0,00"
+      }
+    ]
+  },
+  {
+    "file": "export-yorgo9.csv",
+    "header": {
+      "cod_cliente": "14",
+      "order_no": "262984",
+      "date": "25/09/2026",
+      "delivery_date": "08/10/2026",
+      "seller": "EDUARDO MARTÍNEZ",
+      "att": "Sr. Gimenez",
+      "reference": "VORAPARC 3"
+    },
+    "totals": {
+      "raw_totals": [
+        "13146,37",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "0,00",
+        "15907,11"
+      ]
+    },
+    "items": [
+      {
+        "code": "C5021C04F018",
+        "desc": "MAN. EDEL K2 CCM RED. L2 380 V 19A 7,5kW S110",
+        "price": "2692,43",
+        "qty": "5,00",
+        "dto": "30,00",
+        "total": "9423,51"
+      },
+      {
+        "code": "C4108FL20000",
+        "desc": "TECLADO SIMPLE VARIADOR FRENIC LIFT 2",
+        "price": "71,46",
+        "qty": "5,00",
+        "dto": "20,00",
+        "total": "285,84"
+      },
+      {
+        "code": "C22170003010",
+        "desc": "KIT DETECTOR POR IMANES VF (2 PARADAS)",
+        "price": "80,89",
+        "qty": "5,00",
+        "dto": "30,00",
+        "total": "283,12"
+      },
+      {
+        "code": "C22170003015",
+        "desc": "KIT DETECTOR POR IMANES VF (X PARADA)",
+        "price": "3,41",
+        "qty": "20,00",
+        "dto": "30,00",
+        "total": "47,74"
+      },
+      {
+        "code": "C22170003030",
+        "desc": "KIT BIESTABLES CON SOPORTE E IMANES",
+        "price": "70,47",
+        "qty": "5,00",
+        "dto": "30,00",
+        "total": "246,65"
+      },
+      {
+        "code": "C33169350006",
+        "desc": "TRANSFORMADOR 350VA MULTITENSIÓN 81.20 V2",
+        "price": "134,38",
+        "qty": "-5,00",
+        "dto": "20,00",
+        "total": "-537,52"
+      },
+      {
+        "code": "C33169350020",
+        "desc": "TRANSFORMADOR 350VA MULTITENSIÓN 81.20 SEC.80V",
+        "price": "134,38",
+        "qty": "5,00",
+        "dto": "20,00",
+        "total": "537,52"
+      },
+      {
+        "code": "C16020400000",
+        "desc": "BOT. PLACA SQ CEHAM ROJO 2 PARADAS",
+        "price": "187,14",
+        "qty": "5,00",
+        "dto": "30,00",
+        "total": "654,99"
+      },
+      {
+        "code": "C16990400000",
+        "desc": "SUP. X PARADA PULS. SQ LUM. ROJO",
+        "price": "21,14",
+        "qty": "20,00",
+        "dto": "30,00",
+        "total": "295,96"
+      },
+      {
+        "code": "C230164330B0",
+        "desc": "DISPLAY MINI LCD EDEL K2 64330B BINARIO",
+        "price": "82,40",
+        "qty": "5,00",
+        "dto": "20,00",
+        "total": "329,60"
+      },
+      {
+        "code": "C16990200200",
+        "desc": "PLAFON EMERG. 81.20 MODELO BAR MONTADO EN BOT.",
+        "price": "31,34",
+        "qty": "5,00",
+        "dto": "30,00",
+        "total": "109,69"
+      },
+      {
+        "code": "C16990110000",
+        "desc": "GRABADO ANAGRAMA CABINA FRESADO Y PINTADO",
+        "price": "53,07",
+        "qty": "5,00",
+        "dto": "30,00",
+        "total": "185,75"
+      },
+      {
+        "code": "C1601049SQ02",
+        "desc": "BOT. PISO SQ PULS. LLAMADA C/REGISTRO",
+        "price": "35,86",
+        "qty": "30,00",
+        "dto": "30,00",
+        "total": "753,06"
+      },
+      {
+        "code": "C16990110005",
+        "desc": "GRABADO ANAGRAMA RELLANO FRESADO Y PINTADO",
+        "price": "25,26",
+        "qty": "30,00",
+        "dto": "30,00",
+        "total": "530,46"
+      }
+    ]
+  }
+]

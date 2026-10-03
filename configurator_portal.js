@@ -200,169 +200,526 @@
     });
   };
 
-  // 6. GENERADOR DE LISTA DE MATERIALES (BOM)
+  // 6. GENERADOR DE LISTA DE MATERIALES (BOM) Y CÁLCULO ECONÓMICO OFICIAL EDEL
   window.cfgBuildBOM = function(s) {
     const bom = [];
     const warns = window.cfgValidateRules(s);
+    const totalHueco = (parseFloat(s.medida_ultima_parada) || 0) + (s.floor_meters || []).reduce(function(a, b) { return a + (parseFloat(b.meters) || 0); }, 0);
 
     // 1. Maniobra K2
     if (s.active_maniobra) {
       const matches = window.cfgFilterManiobras(s);
       let selected = matches.find(function(m) { return m.sku === s.selected_man_sku; }) || matches[0];
-      if (selected) {
+      
+      let manRef = "C5021C04F015";
+      let manName = "MAN. EDEL K2 CCM 380V 14.3A 5.5kW";
+      let manPrice = 2400.07;
+      let manDto = 35.0;
+
+      if (s.selected_man_sku === "CUADRO-SILVA" || (s.motor_type === "GEARLESS" && parseFloat(s.kw) >= 20)) {
+        manRef = "CUADRO";
+        manName = "MANIOBRA ESPECIAL ADAP. SILVA VF GEARLESS 22 KW 45 A.";
+        manPrice = 9290.80;
+        manDto = 35.0;
+      } else if (selected && selected.ref && selected.ref !== "-") {
+        manRef = selected.ref;
+        manName = selected.name;
+        if (parseFloat(selected.kw) >= 15 || parseFloat(selected.amp) >= 32) {
+          manPrice = 3450.00;
+          manDto = 35.0;
+        } else if (parseFloat(selected.kw) >= 7.5 || parseFloat(selected.amp) >= 18) {
+          manPrice = 2692.43;
+          manDto = 30.0;
+        } else {
+          manPrice = 2400.07;
+          manDto = 35.0;
+        }
+      } else if (parseFloat(s.kw) >= 7.5 || parseFloat(s.consumo_a) >= 18) {
+        manRef = "C5021C04F018";
+        manName = "MAN. EDEL K2 CCM RED. L2 380 V 19A 7,5kW S110";
+        manPrice = 2692.43;
+        manDto = 30.0;
+      }
+
+      bom.push({
+        cat: "1. Cuadro de Maniobra",
+        ref: manRef,
+        nombre: manName,
+        price: manPrice,
+        dto: manDto,
+        qty: 1,
+        nota: (selected ? selected.room : s.wardrobe_el) + " • " + s.motor_volt + "V • " + s.consumo_a + "A • " + s.motor_type + " " + s.gearstype
+      });
+
+      // Teclado simple Fuji Frenic Lift 2
+      bom.push({
+        cat: "1. Cuadro de Maniobra",
+        ref: "C4108FL20000",
+        nombre: "TECLADO SIMPLE VARIADOR FRENIC LIFT 2",
+        price: 71.46,
+        dto: 20.0,
+        qty: 1,
+        nota: "Consola frontal de parametrización y monitorización de bus"
+      });
+
+      // Transformador 350VA Multitensión EN 81.20 Sec. 80V
+      bom.push({
+        cat: "1. Cuadro de Maniobra",
+        ref: "C33169350020",
+        nombre: "TRANSFORMADOR 350VA MULTITENSIÓN EN 81.20 SEC. 80V",
+        price: 134.38,
+        dto: 20.0,
+        qty: 1,
+        nota: "Secundario aislado 80V para serie de seguridad y rectificador de freno"
+      });
+
+      // Comunicación Dúplex / Triplex
+      if (s.mabra === "TRIPLEX" || s.client.toLowerCase().includes("triplex")) {
         bom.push({
           cat: "1. Cuadro de Maniobra",
-          ref: selected.ref || selected.sku,
-          nombre: selected.name,
+          ref: "C60CPET0005M",
+          nombre: "TRIPLEX K2 CABLE COMUNICACION Y SOFTWARE 5m",
+          price: 114.32,
+          dto: 35.0,
           qty: 1,
-          nota: selected.room + " • " + selected.volt + "V • " + selected.amp + "A • " + (selected.gearstype || '') + " " + (selected.gears || '')
+          nota: "Interconexión serie CAN Triplex y algoritmo de asignación de llamadas"
         });
-      } else {
+      } else if (s.mabra === "DUPLEX") {
         bom.push({
           cat: "1. Cuadro de Maniobra",
-          ref: "K2-CUSTOM",
-          nombre: "Cuadro K2 " + s.man_type + " " + s.wardrobe_el + " " + s.mabra + " " + s.motor_type + " (" + s.consumo_a + "A / " + s.motor_volt + "V)",
+          ref: "C33336427500",
+          nombre: "PLACA COMUNICACIÓN DUPLEX K2-64275",
+          price: 60.81,
+          dto: 35.0,
           qty: 1,
-          nota: "Configuración personalizada según parámetros eléctricos"
+          nota: "Tarjeta de comunicación dúplex bus diferencial"
         });
       }
+
+      // Contactores silenciosos
+      if (s.extras_iep["contactores_silenciosos"] || s.wardrobe_el === "SCM" || s.wardrobe_el === "MDP") {
+        bom.push({
+          cat: "1. Cuadro de Maniobra",
+          ref: "C5099M000045",
+          nombre: "CONTACTOR SILENCIOSO VF ADVANCED (< 45 dB)",
+          price: 72.45,
+          dto: 25.0,
+          qty: 2,
+          nota: "Bajo nivel acústico para instalación en rellano habitado"
+        });
+      }
+
+      // Rescate automático
       if (s.rescate && s.rescate !== "NO") {
         bom.push({
           cat: "1. Cuadro de Maniobra",
           ref: "K2-64285",
-          nombre: "Módulo Rescate Automático (" + s.rescate + ") con cargador y acumuladores",
+          nombre: "MÓDULO RESCATE AUTOMÁTICO (" + s.rescate + ") CON BATERÍAS",
+          price: 380.00,
+          dto: 35.0,
           qty: 1,
-          nota: "Integrado en armario de maniobra"
+          nota: "Evacuación controlada por descompensación o SAI"
         });
       }
     }
 
-    // 2. IEP
+    // 2. IEP (Instalación Eléctrica Premontada EN 81-20)
     if (s.active_iep) {
-      const totalHueco = (parseFloat(s.medida_ultima_parada) || 0) + (s.floor_meters || []).reduce(function(a, b) { return a + (parseFloat(b.meters) || 0); }, 0);
+      // Base IEP 2 Paradas
       bom.push({
         cat: "2. Instalación Eléctrica Premontada",
-        ref: "IEP-81.20-KIT",
-        nombre: "Kit IEP Premontada EN 81.20 (" + s.install_type + " • " + s.stops + " paradas)",
+        ref: "C60ADIEP002P",
+        nombre: "I.E.P. ADVANCED COMPLETA EN 81.20 2VEL/VF - 2P",
+        price: 1714.68,
+        dto: 35.0,
         qty: 1,
-        nota: "Total Hueco: " + totalHueco.toFixed(1) + "m • " + s.cuadro_maquinas
+        nota: "Arnés preensamblado con conectores rápidos y bornero centralizado"
       });
+
+      // Suplemento x parada extra
+      const extraStops = Math.max(0, parseInt(s.stops, 10) - 2);
+      if (extraStops > 0) {
+        bom.push({
+          cat: "2. Instalación Eléctrica Premontada",
+          ref: "C60ADIEP00XP",
+          nombre: "SUPLEMENTO X PARADA IEP ADVANCED COMPLETA EN 81.20",
+          price: 71.02,
+          dto: 35.0,
+          qty: extraStops,
+          nota: extraStops + " pisos adicionales de manguera y derivaciones rápidas"
+        });
+      }
+
+      // Rosario LED 5050 Hueco EN 81-20 (50 lux techo, 20 lux hueco)
+      bom.push({
+        cat: "2. Instalación Eléctrica Premontada",
+        ref: "C6000R000000",
+        nombre: "ROSARIO TIRA LED 5050 12W/M PARA 2 PARADAS (EN 81.20)",
+        price: 126.30,
+        dto: 35.0,
+        qty: 1,
+        nota: "Iluminación continua de hueco certificada EN 81-20 §5.2.1.4.2"
+      });
+      if (extraStops > 0) {
+        bom.push({
+          cat: "2. Instalación Eléctrica Premontada",
+          ref: "C6099R000000",
+          nombre: "SUPLEMENTO X PARADA TIRA LED 5050 12W/M",
+          price: 20.35,
+          dto: 35.0,
+          qty: extraStops,
+          nota: "Prolongación continua estanca por planta"
+        });
+      }
+
+      // Acometida Motor Variador
+      if (parseFloat(s.kw) >= 18 || parseFloat(s.consumo_a) >= 35) {
+        bom.push({
+          cat: "2. Instalación Eléctrica Premontada",
+          ref: "C60CPED4X160",
+          nombre: "MANG. ACOMETIDA MOTOR 16MM VARIADOR - 5M",
+          price: 127.97,
+          dto: 35.0,
+          qty: 1,
+          nota: "Cable apantallado clase 5 con apantallamiento EMC para alta potencia"
+        });
+      } else {
+        bom.push({
+          cat: "2. Instalación Eléctrica Premontada",
+          ref: "C60CPED4X100",
+          nombre: "MANG. ACOMETIDA MOTOR 10MM VARIADOR - 5M",
+          price: 127.97,
+          dto: 38.0,
+          qty: 1,
+          nota: "Cable apantallado especial variador de frecuencia hasta 15 kW"
+        });
+      }
+
+      // Manguera plana de maniobra
+      const mangueraMeters = Math.max(15, Math.ceil(totalHueco * 1.25) || 24);
+      bom.push({
+        cat: "2. Instalación Eléctrica Premontada",
+        ref: "C310924G0005",
+        nombre: "MANGUERA PLANA DE MANIOBRA 24G x 0.75 mm²",
+        price: 5.07,
+        dto: 35.0,
+        qty: mangueraMeters,
+        nota: "Manguera colgante extra-flexible con fiadores textiles y de acero"
+      });
+
+      // Caja de revisión de techo
+      bom.push({
+        cat: "2. Instalación Eléctrica Premontada",
+        ref: "C1373REV270D",
+        nombre: "CAJA REVISIÓN TECHO CABINA EDEL 240-D",
+        price: 240.23,
+        dto: 35.0,
+        qty: 1,
+        nota: "Botonera de inspección EN 81-20 con conmutador normal/revisión y toma 230V"
+      });
+
+      // Posicionamiento en hueco
       if (s.position_1 === "Kit encoder Hueco" || s.motor_type === "GEARLESS") {
         bom.push({
           cat: "2. Instalación Eléctrica Premontada",
-          ref: "K2-64296",
-          nombre: "ENC-10 SSI — Kit Encoder Absoluto en Hueco",
+          ref: "C22170003050",
+          nombre: "KIT POSICIONAMIENTO POR ENCODER SIN CORREA (SSI)",
+          price: 400.00,
+          dto: 0.0,
           qty: 1,
-          nota: "Sensor magnético lineal y banda perforada"
+          nota: "Cabezal de lectura absoluta en hueco sin resbalamiento (Precio Neto)"
         });
-      } else if (s.position_1) {
+        const cintaMeters = Math.max(12, Math.ceil(totalHueco + 4) || 28);
         bom.push({
           cat: "2. Instalación Eléctrica Premontada",
-          ref: "K2-POS-01",
-          nombre: s.position_1,
+          ref: "C1805E0000XM",
+          nombre: "METROS CINTA DENTADA PARA POSICION. ENCODER EDEL",
+          price: 2.97,
+          dto: 20.0,
+          qty: cintaMeters,
+          nota: "Cinta dentada perforada fijada entre foso y techo de hueco"
+        });
+      } else {
+        bom.push({
+          cat: "2. Instalación Eléctrica Premontada",
+          ref: "C22170003010",
+          nombre: "KIT DETECTOR POR IMANES VF (2 PARADAS)",
+          price: 80.89,
+          dto: 30.0,
           qty: 1,
-          nota: s.position_2 || "Posicionamiento estándar"
+          nota: "Sensores magnéticos de pantalla y cambio de velocidad"
+        });
+        if (extraStops > 0) {
+          bom.push({
+            cat: "2. Instalación Eléctrica Premontada",
+            ref: "C22170003015",
+            nombre: "KIT DETECTOR POR IMANES VF (X PARADA)",
+            price: 3.41,
+            dto: 30.0,
+            qty: extraStops,
+            nota: extraStops + " juegos de imanes de parada y nivelación"
+          });
+        }
+        bom.push({
+          cat: "2. Instalación Eléctrica Premontada",
+          ref: "C22170003030",
+          nombre: "KIT BIESTABLES CON SOPORTE E IMANES",
+          price: 70.47,
+          dto: 30.0,
+          qty: 1,
+          nota: "Detectores biestables para sincronización de cambio de extremos"
+        });
+      }
+
+      // Extras IEP
+      if (s.extras_iep["contacto_foso"]) {
+        bom.push({
+          cat: "2. Instalación Eléctrica Premontada",
+          ref: "C6099P000070",
+          nombre: "CONTACTO SEGURIDAD ESCALERA FOSO CON REARME ELÉCTRICO",
+          price: 26.58,
+          dto: 35.0,
+          qty: 1,
+          nota: "EN 81-20 §5.2.2.4 para escalera móvil de acceso al foso"
+        });
+      }
+      if (s.extras_iep["pesacargas"]) {
+        bom.push({
+          cat: "2. Instalación Eléctrica Premontada",
+          ref: "K2-64305",
+          nombre: "PESACARGAS DIGITAL " + s.extras_iep["pesacargas"] + " CON RELÉS DE SOBRECARGA",
+          price: 215.00,
+          dto: 30.0,
+          qty: 1,
+          nota: "Conexión a placa de cabina K2-64280 con señales 0-10V y contacto 110%"
         });
       }
       if (s.kit_apertura_vf) {
         bom.push({
           cat: "2. Instalación Eléctrica Premontada",
           ref: "K2-64288",
-          nombre: "Kit Apertura de Emergencia Operador Puertas VF",
+          nombre: "KIT APERTURA EMERGENCIA OPERADOR PUERTAS VF",
+          price: 185.00,
+          dto: 35.0,
           qty: 1,
-          nota: "Batería y convertidor 230V para rescate de pasajeros"
+          nota: "Alimentación auxiliar monofásica 230V para rescate de pasajeros"
         });
-      }
-      // Extras seleccionados
-      if (s.extras_iep["contacto_foso"]) {
-        bom.push({ cat: "2. Instalación Eléctrica Premontada", ref: "IEP-EXT-01", nombre: "Contacto Escalera Foso con Rearme Eléctrico", qty: 1, nota: "EN 81-20 §5.2.2.4" });
-      }
-      if (s.extras_iep["puls_alarma_iluminado"]) {
-        bom.push({ cat: "2. Instalación Eléctrica Premontada", ref: "IEP-EXT-02", nombre: "Pulsador Alarma Iluminado bajo Cabina y Foso", qty: 1, nota: "EN 81-20 §5.4.10" });
-      }
-      if (s.extras_iep["pesacargas"]) {
-        bom.push({ cat: "2. Instalación Eléctrica Premontada", ref: "K2-64305", nombre: "Pesacargas Digital " + s.extras_iep["pesacargas"] + " con relés de sobrecarga", qty: 1, nota: "Conexión a placa techo cabina K2-64280" });
-      }
-      if (s.extras_iep["contactores_silenciosos"]) {
-        bom.push({ cat: "2. Instalación Eléctrica Premontada", ref: "IEP-EXT-03", nombre: "Contactores Silenciosos de Maniobra (< 45 dB)", qty: 2, nota: "Para cuadro SCM en rellano residencial" });
       }
     }
 
     // 3. Botoneras
     if (s.active_botoneras) {
-      const refCab = s.bot_voz ? "K2-64290" : "K2-64291";
+      const extraStops = Math.max(0, parseInt(s.stops, 10) - 2);
+
+      // Botonera de Cabina Placa SQ Ceham Rojo 2P
       bom.push({
         cat: "3. Botoneras",
-        ref: refCab,
-        nombre: "Botonera de Cabina (" + s.bot_modelo + ") — Acabado: " + s.bot_acabado,
+        ref: "C16020400000",
+        nombre: "BOTONERA CABINA PLACA SQ CEHAM ROJO 2P",
+        price: 187.14,
+        dto: 30.0,
         qty: 1,
-        nota: "LED " + s.bot_color + (s.bot_voz ? " • Síntesis Voz (" + s.bot_voz_idioma + ")" : "")
+        nota: "Placa frontal en acero inoxidable satinado con pulsadores micro-movimiento"
       });
-      if (s.bot_display_cabina && s.bot_display_cabina !== "Ninguno") {
-        const refDisp = { "TFT-02": "K2-64320", "LCD-H04": "K2-64300", "DRC-03": "K2-64310" }[s.bot_display_cabina] || "K2-DISP";
+
+      if (extraStops > 0) {
         bom.push({
           cat: "3. Botoneras",
-          ref: refDisp,
-          nombre: "Display Cabina: " + s.bot_display_cabina,
-          qty: 1,
-          nota: "Montaje horizontal en placa de cabina"
+          ref: "C16990400000",
+          nombre: "SUP. X PARADA PULS. SQ LUMINOSO ROJO CABINA",
+          price: 21.14,
+          dto: 30.0,
+          qty: extraStops,
+          nota: extraStops + " pulsadores rasantes con braille y aro luminoso rojo"
         });
       }
-      const refPiso = s.bot_piso_com === "CAN-BUS" ? "K2-64281 (mCAN-12)" : "K2-BOT-PISO";
+
+      // Plafón de emergencia 81.20 modelo BAR
       bom.push({
         cat: "3. Botoneras",
-        ref: refPiso,
-        nombre: "Botoneras de Rellano (" + s.bot_piso_type + " • " + s.bot_calls_config + ")",
-        qty: Math.max(s.stops, 1),
-        nota: s.bot_piso_com === "CAN-BUS" ? "Nodos inteligentes CAN con bus serie" : "Cableado hilo a hilo tradicional"
+        ref: "C16990200200",
+        nombre: "PLAFON EMERG. 81.20 MODELO BAR MONTADO EN BOT.",
+        price: 31.34,
+        dto: 30.0,
+        qty: 1,
+        nota: "Luz de emergencia integrada en placa con autonomía 1h (EN 81-20)"
       });
-      if (s.bot_display_piso && s.bot_display_piso !== "Ninguno") {
+
+      // Grabado anagrama cabina
+      bom.push({
+        cat: "3. Botoneras",
+        ref: "C16990110000",
+        nombre: "GRABADO ANAGRAMA CABINA FRESADO Y PINTADO",
+        price: 53.07,
+        dto: 30.0,
+        qty: 1,
+        nota: "Personalización láser/fresada del logotipo de empresa en cabina"
+      });
+
+      // Display de Cabina
+      if (s.bot_display_cabina === "TFT-02" || s.bot_display_cabina === "Giotto") {
         bom.push({
           cat: "3. Botoneras",
-          ref: "K2-64315",
-          nombre: "Display Rellano: " + s.bot_display_piso,
-          qty: s.stops,
-          nota: s.bot_doble_embarque ? "Incluye módulos Master + Slave" : "Montaje en rellano"
+          ref: "C23020001006",
+          nombre: "DISPLAY TFT 5.6\" GIOTTO CAN EDEL PROGR. + S.VOZ",
+          price: 331.55,
+          dto: 20.0,
+          qty: 1,
+          nota: "Pantalla color TFT CAN-Bus con locución vocal de planta y gong integrado"
+        });
+      } else if (s.bot_display_cabina === "mLCD-04") {
+        bom.push({
+          cat: "3. Botoneras",
+          ref: "C230164330B0",
+          nombre: "DISPLAY MINI LCD EDEL K2 64330B BINARIO",
+          price: 82.40,
+          dto: 20.0,
+          qty: 1,
+          nota: "Indicador digital matricial azul de posición y dirección"
+        });
+      } else if (s.bot_display_cabina !== "Ninguno") {
+        bom.push({
+          cat: "3. Botoneras",
+          ref: "C23010100001",
+          nombre: "DISPLAY LCD EDEL 64300H HORIZONTAL 5.7\" AZUL",
+          price: 239.31,
+          dto: 35.0,
+          qty: 1,
+          nota: "Display LCD gráfico retroiluminado azul con entrada serie/binaria"
         });
       }
+
+      // Síntesis de voz MK-791
+      if (s.bot_voz) {
+        bom.push({
+          cat: "3. Botoneras",
+          ref: "C40000010106",
+          nombre: "SÍNTESIS DE VOZ EDEL MK-791",
+          price: 378.81,
+          dto: 35.0,
+          qty: 1,
+          nota: "Módulo acústico multilingüe: anuncio de piso, sobrecarga y puertas"
+        });
+      }
+
+      // Botoneras de Rellano
+      bom.push({
+        cat: "3. Botoneras",
+        ref: "C1601049SQ02",
+        nombre: "BOT. PISO SQ PULS. LLAMADA C/REGISTRO",
+        price: 35.86,
+        dto: 30.0,
+        qty: parseInt(s.stops, 10),
+        nota: parseInt(s.stops, 10) + " botoneras de rellano en marco con halo luminoso"
+      });
+
+      // Grabado anagrama rellano
+      bom.push({
+        cat: "3. Botoneras",
+        ref: "C16990110005",
+        nombre: "GRABADO ANAGRAMA RELLANO FRESADO Y PINTADO",
+        price: 25.26,
+        dto: 30.0,
+        qty: parseInt(s.stops, 10),
+        nota: "Marcado y rotulación personalizada por rellano"
+      });
+
+      // Display en pisos
+      if (s.bot_display_piso && s.bot_display_piso !== "Ninguno") {
+        let dispRef = "C230164330B0";
+        let dispName = "DISPLAY MINI LCD EDEL K2 64330B EN RELLANOS";
+        let dispPrice = 82.40;
+        let dispDto = 20.0;
+        if (s.bot_display_piso === "NEIT-10") {
+          dispRef = "C23020001012";
+          dispName = "DISPLAY TFT 7\'\' GIOTTO CAN BUS EDEL PROGRAMADO";
+          dispPrice = 342.00;
+          dispDto = 20.0;
+        }
+        bom.push({
+          cat: "3. Botoneras",
+          ref: dispRef,
+          nombre: dispName,
+          price: dispPrice,
+          dto: dispDto,
+          qty: parseInt(s.stops, 10),
+          nota: parseInt(s.stops, 10) + " indicadores de planta con conexión serie"
+        });
+      }
+
+      // Telefonía bidireccional EN 81-28
       if (s.bot_telefono && s.bot_telefono !== "Ninguno") {
         bom.push({
           cat: "4. Telefonía y Telemetría",
           ref: "K2-64299",
-          nombre: s.bot_telefono,
+          nombre: "MÓDULO TELEFÓNICO BIDIRECCIONAL EN 81-28 (GSM/4G)",
+          price: 320.00,
+          dto: 35.0,
           qty: 1,
-          nota: "Comunicación fónica bidireccional EN 81-28"
+          nota: "Comunicación fónica bidireccional obligatoria y telecontrol"
         });
       }
     }
 
-    return { bom: bom, warns: warns };
+    // Totales Financieros
+    let bruto = 0;
+    let base_imponible = 0;
+    bom.forEach(function(item) {
+      const uPrice = parseFloat(item.price) || 0;
+      const q = parseFloat(item.qty) || 1;
+      const d = parseFloat(item.dto) || 0;
+      const gross = uPrice * q;
+      const net = gross * (1 - d / 100.0);
+      item.gross = gross;
+      item.net = net;
+      bruto += gross;
+      base_imponible += net;
+    });
+
+    const iva = base_imponible * 0.21;
+    const total_pedido = base_imponible + iva;
+
+    return {
+      bom: bom,
+      warns: warns,
+      bruto: bruto,
+      base_imponible: base_imponible,
+      iva: iva,
+      total_pedido: total_pedido
+    };
   };
 
-  // 7. EXPORTACIÓN CSV
+  // 7. EXPORTACIÓN CSV CON DESGLOSE ECONÓMICO OFICIAL ERP
   window.cfgExportCSV = function() {
     const s = window.CFG_STATE;
     const res = window.cfgBuildBOM(s);
     const bom = res.bom;
     const warns = res.warns;
     let csv = "\uFEFF";
-    csv += "========================================================\n";
-    csv += "EDEL K2 ELEVATOR SYSTEMS — HOJA DE PEDIDO & BOM\n";
-    csv += "========================================================\n";
+    csv += "========================================================================================\n";
+    csv += "ELECTRÓNICA DE ELEVADORES S.L. — CONFIRMACIÓN DE PEDIDO & LISTA DE MATERIALES (ERP BOM)\n";
+    csv += "========================================================================================\n";
     csv += 'Cliente;"' + s.client + '"\n';
     csv += 'Num. Pedido;"' + s.num_pedido + '"\n';
-    csv += 'Referencia;"' + s.ref_pedido + '"\n';
-    csv += 'Fecha;"' + s.date + '"\n';
-    csv += 'Tipo Solicitud;"' + s.form_type + '"\n';
+    csv += 'Referencia Obra;"' + s.ref_pedido + '"\n';
+    csv += 'Fecha Confirmación;"' + s.date + '"\n';
     csv += 'Ascensor;"' + s.elevator_type + " • " + s.stops + ' Paradas • Pisos: ' + s.floor_sequence + '"\n';
-    csv += 'Uso;"' + s.uso + '"\n';
-    csv += 'Alcance;"' + [s.active_maniobra ? 'Maniobra' : '', s.active_iep ? 'IEP' : '', s.active_botoneras ? 'Botoneras' : ''].filter(Boolean).join(' + ') + '"\n\n';
-    csv += "CATEGORIA;REFERENCIA;DESCRIPCION;CANTIDAD;NOTAS TECNICAS\n";
+    csv += 'Uso & Maniobra;"' + s.uso + " • " + s.mabra + " • " + s.wardrobe_el + '"\n';
+    csv += 'Alcance Suministro;"' + [s.active_maniobra ? 'Maniobra K2' : '', s.active_iep ? 'IEP Premontada EN 81.20' : '', s.active_botoneras ? 'Botoneras y Displays' : ''].filter(Boolean).join(' + ') + '"\n\n';
+    csv += "CATEGORIA;CODIGO_ERP;DESCRIPCION_TECNICA;PRECIO_UNIT_EUR;CANTIDAD;DTO_PCT;TOTAL_NETO_EUR;NOTAS_TALLER\n";
     bom.forEach(function(b) {
-      csv += '"' + b.cat + '";"' + b.ref + '";"' + b.nombre + '";"' + b.qty + '";"' + b.nota + '"\n';
+      csv += '"' + b.cat + '";"' + b.ref + '";"' + b.nombre + '";"' + b.price.toFixed(2) + '";"' + b.qty + '";"' + b.dto.toFixed(1) + '%";"' + b.net.toFixed(2) + '";"' + b.nota + '"\n';
     });
+    csv += "\n========================================================================================\n";
+    csv += "RESUMEN ECONÓMICO DEL PEDIDO (DIVISA: EUROS)\n";
+    csv += "========================================================================================\n";
+    csv += 'TOTAL BRUTO (PVP DE CATÁLOGO);"' + res.bruto.toFixed(2) + ' €"\n';
+    csv += 'TOTAL DESCUENTO COMERCIAL APLICADO;"' + (res.bruto - res.base_imponible).toFixed(2) + ' €"\n';
+    csv += 'BASE IMPONIBLE (NETO FACTURA);"' + res.base_imponible.toFixed(2) + ' €"\n';
+    csv += 'IVA REGLAMENTARIO (21%);"' + res.iva.toFixed(2) + ' €"\n';
+    csv += 'IMPORTE TOTAL DEL PEDIDO CON IVA;"' + res.total_pedido.toFixed(2) + ' €"\n';
     if (warns.length > 0) {
-      csv += "\nAVISOS Y VERIFICACIONES TECNICAS:\n";
+      csv += "\nAVISOS Y VERIFICACIONES TÉCNICAS DE FABRICACIÓN:\n";
       warns.forEach(function(w) {
         csv += "[" + w.level.toUpperCase() + "] " + w.code + ": " + w.msg + "\n";
       });
@@ -370,7 +727,7 @@
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "EDEL_Pedido_" + (s.num_pedido || 'BOM') + "_" + s.client.replace(/\s+/g, '_') + ".csv";
+    link.download = "EDEL_Confirmacion_Pedido_" + (s.num_pedido || '2026') + "_" + s.client.replace(/\s+/g, '_') + ".csv";
     link.click();
   };
 
@@ -442,6 +799,106 @@
     window.cfgUpdateViews();
   };
 
+  window.cfgSetRealProjectPreset = function(presetKey) {
+    if (presetKey === 'voraparc2026') {
+      window.CFG_STATE.active_maniobra = true;
+      window.CFG_STATE.active_iep = true;
+      window.CFG_STATE.active_botoneras = true;
+      window.CFG_STATE.client = "EDEL Residencial — Voraparc";
+      window.CFG_STATE.num_pedido = "262984";
+      window.CFG_STATE.ref_pedido = "VORAPARC 3 (5 Ascensores)";
+      window.CFG_STATE.date = "25/09/2026";
+      window.CFG_STATE.stops = 6;
+      window.CFG_STATE.floor_sequence = "-1,0,1,2,3,4";
+      window.CFG_STATE.elevator_type = "ELECTRICO";
+      window.CFG_STATE.motor_type = "REDUCTOR";
+      window.CFG_STATE.gearstype = "VF";
+      window.CFG_STATE.mabra = "UNIVERSAL";
+      window.CFG_STATE.wardrobe_el = "CCM";
+      window.CFG_STATE.motor_volt = "380";
+      window.CFG_STATE.consumo_a = "19";
+      window.CFG_STATE.kw = "7.5";
+      window.CFG_STATE.selected_man_sku = "C5021C04F018";
+      window.CFG_STATE.position_1 = "Imanes en hueco";
+      window.CFG_STATE.bot_modelo = "SQ Ceham Rojo";
+      window.CFG_STATE.bot_display_cabina = "mLCD-04";
+      window.CFG_STATE.bot_display_piso = "mLCD-04";
+      window.CFG_STATE.bot_piso_type = "Solo Pulsador";
+      window.CFG_STATE.bot_piso_com = "CAN-BUS";
+      window.CFG_STATE.extras_iep["contacto_foso"] = true;
+    } else if (presetKey === 'triplex2026') {
+      window.CFG_STATE.active_maniobra = true;
+      window.CFG_STATE.active_iep = true;
+      window.CFG_STATE.active_botoneras = true;
+      window.CFG_STATE.client = "Modernizaciones Silva S.L.";
+      window.CFG_STATE.num_pedido = "260237";
+      window.CFG_STATE.ref_pedido = "R-1129/25 TRIPLEX IZQUIERDO";
+      window.CFG_STATE.date = "23/01/2026";
+      window.CFG_STATE.stops = 8;
+      window.CFG_STATE.floor_sequence = "0,1,2,3,4,5,6,7";
+      window.CFG_STATE.elevator_type = "ELECTRICO";
+      window.CFG_STATE.motor_type = "GEARLESS";
+      window.CFG_STATE.gearstype = "VF";
+      window.CFG_STATE.mabra = "TRIPLEX";
+      window.CFG_STATE.wardrobe_el = "CCM";
+      window.CFG_STATE.motor_volt = "400";
+      window.CFG_STATE.consumo_a = "45";
+      window.CFG_STATE.kw = "22";
+      window.CFG_STATE.selected_man_sku = "CUADRO-SILVA";
+      window.CFG_STATE.position_1 = "Kit encoder Hueco";
+      window.CFG_STATE.bot_modelo = "Especial Silva";
+      window.CFG_STATE.bot_display_cabina = "TFT-02";
+      window.CFG_STATE.bot_display_piso = "NEIT-10";
+      window.CFG_STATE.bot_voz = true;
+      window.CFG_STATE.bot_piso_com = "CAN-BUS";
+      window.CFG_STATE.extras_iep["contacto_foso"] = true;
+      window.CFG_STATE.extras_iep["pesacargas"] = "Dinacell";
+    } else if (presetKey === 'belgian2026') {
+      window.CFG_STATE.active_maniobra = true;
+      window.CFG_STATE.active_iep = true;
+      window.CFG_STATE.active_botoneras = false;
+      window.CFG_STATE.client = "Nik Calcoen (Belgium)";
+      window.CFG_STATE.num_pedido = "260394";
+      window.CFG_STATE.ref_pedido = "Home Huy, Ordernr. 60451";
+      window.CFG_STATE.date = "04/02/2026";
+      window.CFG_STATE.stops = 4;
+      window.CFG_STATE.floor_sequence = "0,1,2,3";
+      window.CFG_STATE.elevator_type = "ELECTRICO";
+      window.CFG_STATE.motor_type = "GEARLESS";
+      window.CFG_STATE.gearstype = "VF";
+      window.CFG_STATE.mabra = "UNIVERSAL";
+      window.CFG_STATE.wardrobe_el = "CCM";
+      window.CFG_STATE.motor_volt = "400";
+      window.CFG_STATE.consumo_a = "25";
+      window.CFG_STATE.kw = "11";
+      window.CFG_STATE.selected_man_sku = "C5031CM4F024";
+      window.CFG_STATE.position_1 = "Kit encoder Hueco";
+      window.CFG_STATE.extras_iep["contactores_silenciosos"] = true;
+    } else if (presetKey === 'schindler2020') {
+      window.CFG_STATE.active_maniobra = true;
+      window.CFG_STATE.active_iep = true;
+      window.CFG_STATE.active_botoneras = true;
+      window.CFG_STATE.client = "Schindler España";
+      window.CFG_STATE.num_pedido = "202914";
+      window.CFG_STATE.ref_pedido = "Velázquez 128 (Modernización K2)";
+      window.CFG_STATE.date = "15/10/2020";
+      window.CFG_STATE.stops = 7;
+      window.CFG_STATE.floor_sequence = "0,1,2,3,4,5,6";
+      window.CFG_STATE.elevator_type = "ELECTRICO";
+      window.CFG_STATE.motor_type = "REDUCTOR";
+      window.CFG_STATE.gearstype = "VF";
+      window.CFG_STATE.mabra = "UNIVERSAL";
+      window.CFG_STATE.wardrobe_el = "CCM";
+      window.CFG_STATE.motor_volt = "380";
+      window.CFG_STATE.consumo_a = "14.3";
+      window.CFG_STATE.kw = "5.5";
+      window.CFG_STATE.selected_man_sku = "C5021C04F015";
+      window.CFG_STATE.bot_display_cabina = "LCD-H04";
+    }
+    window.cfgGenerateFloorPairs(window.CFG_STATE.stops, window.CFG_STATE.floor_sequence);
+    window.cfgUpdateViews();
+  };
+
   // 9. GENERACIÓN DEL HTML DE CADA SECCIÓN
   function buildConfiguratorSections(lang) {
     const s = window.CFG_STATE;
@@ -479,6 +936,30 @@
                 </button>
                 <button type="button" class="cfg-pill-btn ` + (!s.active_maniobra && !s.active_iep && s.active_botoneras ? 'active' : '') + `" onclick="window.cfgSetPreset('bot')">
                   🎛️ Solo Botoneras
+                </button>
+              </div>
+            </div>
+
+            <div class="cfg-preset-card" style="margin-top: 14px; border-left: 4px solid var(--accent-cyan, #00d4ff);">
+              <div class="cfg-preset-header">
+                <span class="cfg-preset-icon">🏢</span>
+                <div>
+                  <h3>Plantillas de Obras Reales (Histórico &amp; Producción 2026)</h3>
+                  <p>Cargue con un solo clic especificaciones exactas de pedidos reales auditados del ERP EDEL:</p>
+                </div>
+              </div>
+              <div class="cfg-preset-buttons">
+                <button type="button" class="cfg-pill-btn ` + (s.num_pedido === '262984' ? 'active' : '') + `" onclick="window.cfgSetRealProjectPreset('voraparc2026')">
+                  🏢 Voraparc 3 (Residencial 2026 • 5 Ascensores K2 7.5kW)
+                </button>
+                <button type="button" class="cfg-pill-btn ` + (s.num_pedido === '260237' ? 'active' : '') + `" onclick="window.cfgSetRealProjectPreset('triplex2026')">
+                  ⚡ Triplex Silva (Modernización 2026 • 22 kW Gearless)
+                </button>
+                <button type="button" class="cfg-pill-btn ` + (s.num_pedido === '260394' ? 'active' : '') + `" onclick="window.cfgSetRealProjectPreset('belgian2026')">
+                  🌍 Export Bélgica (Home Huy 2026 • Gearless 11 kW)
+                </button>
+                <button type="button" class="cfg-pill-btn ` + (s.num_pedido === '202914' ? 'active' : '') + `" onclick="window.cfgSetRealProjectPreset('schindler2020')">
+                  🏗️ Schindler Velázquez (Modernización K2)
                 </button>
               </div>
             </div>
@@ -1122,14 +1603,37 @@
                 }).join('') +
               '</div>';
             }
-
+            // Tarjetas de Resumen Económico Proforma
             html += `
+              <div class="cfg-financial-cards-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 16px; margin-bottom: 16px;">
+                <div class="cfg-fin-card" style="background:var(--card-bg, #1a2332); border:1px solid var(--border-color, rgba(255,255,255,0.1)); border-radius:10px; padding:16px;">
+                  <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-secondary);">Total Bruto Catálogo (PVP)</div>
+                  <div style="font-size:1.55rem; font-weight:700; color:var(--text-primary); margin-top:4px;">` + res.bruto.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ` €</div>
+                  <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">Importe base de lista antes de descuentos</div>
+                </div>
+                <div class="cfg-fin-card" style="background:var(--card-bg, #1a2332); border:1px solid rgba(0, 212, 255, 0.4); border-radius:10px; padding:16px;">
+                  <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--accent-cyan, #00d4ff); font-weight:600;">Base Imponible (Neto ERP)</div>
+                  <div style="font-size:1.55rem; font-weight:700; color:var(--accent-cyan, #00d4ff); margin-top:4px;">` + res.base_imponible.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ` €</div>
+                  <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">Ahorro: ` + (res.bruto - res.base_imponible).toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ` €</div>
+                </div>
+                <div class="cfg-fin-card" style="background:var(--card-bg, #1a2332); border:1px solid var(--border-color, rgba(255,255,255,0.1)); border-radius:10px; padding:16px;">
+                  <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-secondary);">IVA Reglamentario (21%)</div>
+                  <div style="font-size:1.55rem; font-weight:700; color:var(--text-primary); margin-top:4px;">` + res.iva.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ` €</div>
+                  <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">Impuesto sobre el valor añadido</div>
+                </div>
+                <div class="cfg-fin-card" style="background:linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,212,255,0.15)); border:1px solid rgba(0,255,136,0.5); border-radius:10px; padding:16px;">
+                  <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--accent-green, #00ff88); font-weight:700;">Importe Total Pedido</div>
+                  <div style="font-size:1.75rem; font-weight:800; color:var(--accent-green, #00ff88); margin-top:4px;">` + res.total_pedido.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ` €</div>
+                  <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">Confirmación proforma con IVA</div>
+                </div>
+              </div>
+
               <div class="cfg-form-card" style="margin-top: 16px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
                   <div>
                     <h3 class="cfg-card-legend" style="margin-bottom:2px;">Lista de Materiales del Pedido (BOM)</h3>
                     <div style="font-size:0.85rem; color:var(--text-secondary);">
-                      Cliente: <strong>` + s.client + `</strong> • Pedido: <strong>` + s.num_pedido + `</strong> • ` + bom.length + ` componentes generados
+                      Cliente: <strong>` + s.client + `</strong> • Pedido: <strong>` + s.num_pedido + `</strong> • ` + bom.length + ` partidas presupuestadas
                     </div>
                   </div>
                   <div style="display:flex; gap: 10px;">
@@ -1149,7 +1653,10 @@
                         <th>Categoría</th>
                         <th>Referencia ERP / SKU</th>
                         <th>Descripción Técnica del Producto</th>
-                        <th style="text-align:center;">Cantidad</th>
+                        <th style="text-align:right;">PVP Unit.</th>
+                        <th style="text-align:center;">Cant.</th>
+                        <th style="text-align:center;">Dto.</th>
+                        <th style="text-align:right;">Total Neto</th>
                         <th>Notas de Taller &amp; Fabricación</th>
                       </tr>
                     </thead>
@@ -1159,7 +1666,10 @@
                           '<td><span class="cfg-cat-badge">' + item.cat + '</span></td>' +
                           '<td><strong style="color:var(--accent-cyan); font-family:var(--font-mono);">' + item.ref + '</strong></td>' +
                           '<td>' + item.nombre + '</td>' +
+                          '<td style="text-align:right; font-family:var(--font-mono);">' + item.price.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €</td>' +
                           '<td style="text-align:center;"><strong>' + item.qty + '</strong></td>' +
+                          '<td style="text-align:center; color:var(--accent-green);">' + (item.dto > 0 ? (item.dto.toFixed(0) + '%') : '<span style="color:var(--text-secondary);">Neto</span>') + '</td>' +
+                          '<td style="text-align:right; font-weight:700; color:var(--accent-cyan); font-family:var(--font-mono);">' + item.net.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €</td>' +
                           '<td style="font-size:0.85rem; color:var(--text-secondary);">' + item.nota + '</td>' +
                         '</tr>';
                       }).join('') + `
