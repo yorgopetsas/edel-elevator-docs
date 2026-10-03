@@ -337,3 +337,8 @@ const docsData_ES = {
     }
   }
 };
+
+// Expose Spanish documentation data globally on window
+if (typeof window !== 'undefined') {
+  window.docsData_ES = docsData_ES;
+}

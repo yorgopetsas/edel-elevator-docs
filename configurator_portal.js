@@ -412,7 +412,7 @@
 
   window.cfgUpdateViews = function() {
     const current = window.currentSection || 'cfg-flow';
-    if (typeof window.renderSection === 'function' && window.currentRole === 'configurator') {
+    if (typeof window.renderSection === 'function') {
       window.renderSection('configurator', current);
     }
   };
@@ -1185,36 +1185,44 @@
   function registerConfiguratorRole() {
     window.cfgGenerateFloorPairs(window.CFG_STATE.stops, window.CFG_STATE.floor_sequence);
 
-    // Registro en docsData_ES
+    const esCfg = {
+      title: "6. Configurador de Pedidos & Ingeniería",
+      nav: window.cfgNavigation.ES,
+      sections: buildConfiguratorSections('ES')
+    };
+    const enCfg = {
+      title: "6. Elevator Order Configurator",
+      nav: window.cfgNavigation.EN,
+      sections: buildConfiguratorSections('EN')
+    };
+
+    if (typeof window !== 'undefined') {
+      if (window.docsData_ES) window.docsData_ES.configurator = esCfg;
+      if (window.docsData_EN) window.docsData_EN.configurator = enCfg;
+      if (window.docsData) window.docsData.configurator = enCfg;
+    }
     if (typeof docsData_ES !== 'undefined') {
-      docsData_ES.configurator = {
-        title: "6. Configurador de Pedidos & Ingeniería",
-        nav: window.cfgNavigation.ES,
-        sections: buildConfiguratorSections('ES')
-      };
+      docsData_ES.configurator = esCfg;
     }
-
-    // Registro en docsData (EN)
     if (typeof docsData !== 'undefined') {
-      docsData.configurator = {
-        title: "6. Elevator Order Configurator",
-        nav: window.cfgNavigation.EN,
-        sections: buildConfiguratorSections('EN')
-      };
+      docsData.configurator = enCfg;
     }
 
-    // Registro en roleLocalization
     if (typeof roleLocalization !== 'undefined') {
-      roleLocalization.ES.configurator = {
-        title: "6. Configurador de Pedidos",
-        desc: "Configurador Inteligente: Maniobra K2, I.E.P. Premontada, Botoneras & BOM ERP",
-        sidebar: "Configurador de Pedidos & Ingeniería"
-      };
-      roleLocalization.EN.configurator = {
-        title: "6. Order Configurator",
-        desc: "Intelligent Configurator: K2 Controller, Pre-assembled IEP, Button Panels & BOM",
-        sidebar: "Elevator Order Configurator"
-      };
+      if (roleLocalization.ES) {
+        roleLocalization.ES.configurator = {
+          title: "6. Configurador de Pedidos",
+          desc: "Configurador Inteligente: Maniobra K2, I.E.P. Premontada, Botoneras & BOM ERP",
+          sidebar: "Configurador de Pedidos & Ingeniería"
+        };
+      }
+      if (roleLocalization.EN) {
+        roleLocalization.EN.configurator = {
+          title: "6. Order Configurator",
+          desc: "Intelligent Configurator: K2 Controller, Pre-assembled IEP, Button Panels & BOM",
+          sidebar: "Elevator Order Configurator"
+        };
+      }
     }
   }
 

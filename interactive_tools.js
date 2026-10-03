@@ -1873,53 +1873,76 @@
   }
 
   // --- 9. REGISTER TOOLS ROLE INTO GLOBAL DOCS OBJECTS ---
+  const buildToolsSections = (lang) => ({
+    "tool-dip": getDipCalculatorHtml(lang),
+    "tool-faults": getFaultDiagnosticsHtml(lang),
+    "tool-terminal": getTerminalVisualizerHtml(lang),
+    "tool-console": getConsoleSimulatorHtml(lang),
+    "tool-cheatsheets": getPrintableCheatsheetsHtml(lang),
+    "tool-shaft-calc": getShaftCalculatorHtml(lang),
+    "tool-fuji-gen": getFujiGeneratorHtml(lang),
+    "tool-safety-tracer": getSafetyTracerHtml(lang),
+    "tool-k3-hydraulic": getHydraulicOptimizerHtml(lang),
+    "tool-can-checker": getCanCheckerHtml(lang),
+    "tool-load-weigher": getLoadWeigherHtml(lang),
+    "tool-commissioning": getCommissioningWizardHtml(lang),
+    "tool-norm-checker": getNormativeCheckerHtml(lang)
+  });
+
+  window.getToolsRoleData = function(lang) {
+    const l = (lang === 'ES') ? 'ES' : 'EN';
+    return {
+      title: l === 'ES' ? "5. Herramientas de Ingeniería Interactivas" : "5. Interactive Engineering Tools",
+      nav: (window.toolsNavigation && window.toolsNavigation[l]) ? window.toolsNavigation[l] : (window.toolsNavigation ? window.toolsNavigation.ES : []),
+      sections: buildToolsSections(l)
+    };
+  };
+
+  window.getToolsSectionHtml = function(sectionId, lang) {
+    const l = (lang === 'ES') ? 'ES' : 'EN';
+    const secs = buildToolsSections(l);
+    return secs[sectionId] || '';
+  };
+
   function registerToolsRole() {
-    const buildToolsSections = (lang) => ({
-      "tool-dip": getDipCalculatorHtml(lang),
-      "tool-faults": getFaultDiagnosticsHtml(lang),
-      "tool-terminal": getTerminalVisualizerHtml(lang),
-      "tool-console": getConsoleSimulatorHtml(lang),
-      "tool-cheatsheets": getPrintableCheatsheetsHtml(lang),
-      "tool-shaft-calc": getShaftCalculatorHtml(lang),
-      "tool-fuji-gen": getFujiGeneratorHtml(lang),
-      "tool-safety-tracer": getSafetyTracerHtml(lang),
-      "tool-k3-hydraulic": getHydraulicOptimizerHtml(lang),
-      "tool-can-checker": getCanCheckerHtml(lang),
-      "tool-load-weigher": getLoadWeigherHtml(lang),
-      "tool-commissioning": getCommissioningWizardHtml(lang),
-      "tool-norm-checker": getNormativeCheckerHtml(lang)
-    });
+    const esRole = {
+      title: "5. Herramientas de Ingeniería Interactivas",
+      nav: window.toolsNavigation ? window.toolsNavigation.ES : [],
+      sections: buildToolsSections('ES')
+    };
+    const enRole = {
+      title: "5. Interactive Engineering Tools",
+      nav: window.toolsNavigation ? window.toolsNavigation.EN : [],
+      sections: buildToolsSections('EN')
+    };
 
-    // In docsData_ES
+    if (typeof window !== 'undefined') {
+      if (window.docsData_ES) window.docsData_ES.tools = esRole;
+      if (window.docsData_EN) window.docsData_EN.tools = enRole;
+      if (window.docsData) window.docsData.tools = enRole;
+    }
     if (typeof docsData_ES !== 'undefined') {
-      docsData_ES.tools = {
-        title: "5. Herramientas de Ingeniería Interactivas",
-        nav: window.toolsNavigation.ES,
-        sections: buildToolsSections('ES')
-      };
+      docsData_ES.tools = esRole;
     }
-
-    // In docsData (EN)
     if (typeof docsData !== 'undefined') {
-      docsData.tools = {
-        title: "5. Interactive Engineering Tools",
-        nav: window.toolsNavigation.EN,
-        sections: buildToolsSections('EN')
-      };
+      docsData.tools = enRole;
     }
 
-    // In roleLocalization
     if (typeof roleLocalization !== 'undefined') {
-      roleLocalization.ES.tools = {
-        title: "5. Herramientas Interactivas",
-        desc: "13 Herramientas: Selector Normativa EN 81-20/A3, DIP, Averías, Bornas, Consola, Fuji, Series 110V, Óleo K3, CAN y Puesta en Marcha",
-        sidebar: "Herramientas de Ingeniería Interactivas"
-      };
-      roleLocalization.EN.tools = {
-        title: "5. Interactive Tools",
-        desc: "13 Engineering Tools: EN 81-20/A3 Normative Checker, DIP, Faults, Terminals, Console, Fuji, Safety Series, K3, CAN & Commissioning",
-        sidebar: "Interactive Engineering Tools"
-      };
+      if (roleLocalization.ES) {
+        roleLocalization.ES.tools = {
+          title: "5. Herramientas Interactivas",
+          desc: "13 Herramientas: Selector Normativa EN 81-20/A3, DIP, Averías, Bornas, Consola, Fuji, Series 110V, Óleo K3, CAN y Puesta en Marcha",
+          sidebar: "Herramientas de Ingeniería Interactivas"
+        };
+      }
+      if (roleLocalization.EN) {
+        roleLocalization.EN.tools = {
+          title: "5. Interactive Tools",
+          desc: "13 Engineering Tools: EN 81-20/A3 Normative Checker, DIP, Faults, Terminals, Console, Fuji, Safety Series, K3, CAN & Commissioning",
+          sidebar: "Interactive Engineering Tools"
+        };
+      }
     }
   }
 

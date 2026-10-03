@@ -8049,9 +8049,10 @@ Shaft Calibration Sequence:
   }
 };
 
-// Expose English data globally
+// Expose documentation data globally
 if (typeof window !== 'undefined') {
   window.docsData_EN = docsData;
+  window.docsData = docsData;
 }
 
 // --- APP STATE & LOCALIZATION ---
@@ -8111,6 +8112,16 @@ const roleLocalization = {
       desc: "Componentes, PCBs, Dependencias y Mapa del Sistema",
       sidebar: "Enciclopedia del Ascensor"
     },
+    tools: {
+      title: "5. Herramientas Interactivas",
+      desc: "13 Herramientas: Verificador EN 81-20/A3, DIP, Averías, Bornas, Consola, Fuji, Series, K3, CAN y Puesta en Marcha",
+      sidebar: "Herramientas Interactivas de Ingeniería"
+    },
+    configurator: {
+      title: "6. Configurador de Pedidos",
+      desc: "Configurador Inteligente: Maniobra K2, I.E.P. Premontada, Botoneras & BOM ERP",
+      sidebar: "Configurador de Pedidos & Ingeniería"
+    },
     searchPlaceholder: "Buscar módulos C, máquinas de estado, parámetros, averías, tramas CAN...",
     pendingTasks: "Tareas Pendientes",
     dataWishlist: "Datos Requeridos",
@@ -8139,6 +8150,16 @@ const roleLocalization = {
       desc: "All Components, PCBs, Dependencies & System Map",
       sidebar: "Elevator Encyclopedia"
     },
+    tools: {
+      title: "5. Interactive Tools",
+      desc: "13 Engineering Tools: EN 81-20/A3 Normative Checker, DIP, Faults, Terminals, Console, Fuji, Safety Series, K3, CAN & Commissioning",
+      sidebar: "Interactive Engineering Tools"
+    },
+    configurator: {
+      title: "6. Order Configurator",
+      desc: "Intelligent Configurator: K2 Controller, Pre-assembled IEP, Button Panels & BOM",
+      sidebar: "Elevator Order Configurator"
+    },
     searchPlaceholder: "Search C modules, state machines, parameters, fault codes, CAN frames...",
     pendingTasks: "Pending Tasks",
     dataWishlist: "Needed Data",
@@ -8147,6 +8168,11 @@ const roleLocalization = {
     noResults: "No matching documentation found."
   }
 };
+
+// Expose roleLocalization globally
+if (typeof window !== 'undefined') {
+  window.roleLocalization = roleLocalization;
+}
 
 // --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -8336,6 +8362,9 @@ function setupRoleSwitchers() {
 
 function loadRole(role, preserveSectionId = null) {
   currentRole = role;
+  if (typeof window !== 'undefined') {
+    window.currentRole = role;
+  }
   document.querySelectorAll('.role-btn').forEach(b => {
     if (b.getAttribute('data-role') === role) {
       b.classList.add('active');
@@ -8353,6 +8382,34 @@ function loadRole(role, preserveSectionId = null) {
       document.getElementById('docBody').innerHTML = '<div class="callout callout-warning"><h4>Encyclopedia data not loaded.</h4></div>';
       return;
     }
+  } else if (role === 'tools') {
+    const navList = (window.toolsNavigation && window.toolsNavigation[currentLang])
+      ? window.toolsNavigation[currentLang]
+      : (window.toolsNavigation ? window.toolsNavigation.ES : []);
+    const activeData = getActiveDocsData();
+    if (activeData && activeData.tools && activeData.tools.nav && activeData.tools.nav.length > 0) {
+      roleData = activeData.tools;
+    } else if (typeof window.getToolsRoleData === 'function') {
+      roleData = window.getToolsRoleData(currentLang);
+    } else {
+      roleData = (typeof docsData !== 'undefined' && docsData.tools) || {
+        title: currentLang === 'ES' ? "5. Herramientas Interactivas de Ingeniería" : "5. Interactive Engineering Tools",
+        nav: navList,
+        sections: {}
+      };
+    }
+    if (!roleData.nav || roleData.nav.length === 0) {
+      roleData.nav = navList;
+    }
+  } else if (role === 'configurator') {
+    const navList = (window.cfgNavigation && window.cfgNavigation[currentLang])
+      ? window.cfgNavigation[currentLang]
+      : (window.cfgNavigation ? window.cfgNavigation.ES : []);
+    roleData = {
+      title: currentLang === 'ES' ? "6. Configurador de Pedidos & Ingeniería" : "6. Elevator Order Configurator",
+      nav: navList,
+      sections: {}
+    };
   } else {
     const activeData = getActiveDocsData();
     roleData = activeData[role] || docsData[role];
@@ -8510,10 +8567,15 @@ function loadRole(role, preserveSectionId = null) {
 
 function renderSection(role, sectionId) {
   currentSection = sectionId;
+  if (typeof window !== 'undefined') {
+    window.currentSection = sectionId;
+    window.currentRole = role;
+  }
   const contentBody = document.getElementById('docBody');
   document.getElementById('searchResultsArea').classList.add('hidden');
   contentBody.classList.remove('hidden');
 
+  let html = '';
   if (role === 'configurator' && typeof window.cfgGetSectionHtml === 'function') {
     html = window.cfgGetSectionHtml(sectionId, currentLang);
   } else if (role === 'encyclopedia') {
@@ -8522,6 +8584,13 @@ function renderSection(role, sectionId) {
       html = encData.sections[sectionId];
     } else {
       html = '<div class="callout callout-warning"><h4>En Construcción / Under Construction</h4><p>Esta sección de la enciclopedia se está ampliando con más información técnica.</p></div>';
+    }
+  } else if (role === 'tools' && typeof window.getToolsSectionHtml === 'function') {
+    const activeData = getActiveDocsData();
+    if (activeData && activeData.tools && activeData.tools.sections && activeData.tools.sections[sectionId]) {
+      html = activeData.tools.sections[sectionId];
+    } else {
+      html = window.getToolsSectionHtml(sectionId, currentLang);
     }
   } else {
     const activeData = getActiveDocsData();
@@ -8710,4 +8779,17 @@ function setupThemeToggle() {
     document.documentElement.setAttribute('data-theme', newTheme);
     btn.innerHTML = newTheme === 'light' ? '<span class="theme-icon">☀️</span>' : '<span class="theme-icon">🌙</span>';
   });
+}
+
+// Expose core navigation and application methods globally on window
+if (typeof window !== 'undefined') {
+  window.loadRole = loadRole;
+  window.renderSection = renderSection;
+  window.setLanguage = setLanguage;
+  window.getActiveDocsData = getActiveDocsData;
+  window.currentRole = currentRole;
+  window.currentSection = currentSection;
+  window.roleLocalization = roleLocalization;
+  window.docsData = docsData;
+  window.docsData_EN = docsData;
 }
