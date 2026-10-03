@@ -3,7 +3,7 @@
    ========================================================================== */
 
 // --- MENU DATA ENGINE FOR LCD SIMULATOR ---
-const menuTree = {
+const menuTree = (typeof window !== 'undefined' && window.fullMenuTree) ? window.fullMenuTree : {
   ES: [
     { title: "1 ESTADO ASC.", sub: [
       { title: "Firmware v0.6.2", detail: "Firmware Version: EDEL v0.6.2\nE2P Version: 0x0020\nTarget MCU: MC9S12XDT512" },
@@ -102,7 +102,9 @@ const docsData = {
       { id: "dev-cv-testing", label: "27. Automated Factory Testing & Computer Vision Benchmark Suite", icon: "🤖" },
       { id: "dev-edelconnect", label: "28. EDELConnect Telemetry & Remote Monitoring Architecture", icon: "🌐" },
       { id: "dev-consola-deep", label: "29. Programming Console — Complete Interaction Guide", icon: "🖥️" },
-      { id: "dev-fuji-vfd", label: "30. Fuji Frenic Lift VFD — Setup, Parameters & Configurations", icon: "⚡" }
+      { id: "dev-fuji-vfd", label: "30. Fuji Frenic Lift VFD — Setup, Parameters & Configurations", icon: "⚡" },
+      { id: "dev-can-matrix-crypto", label: "31. Multi-Device CAN Frame Matrix, TokenCustom Cryptography & Server Deployment", icon: "🔐" },
+      { id: "dev-maniobra-comp", label: "32. Composición de una Maniobra — Guía de Productos", icon: "📦" }
     ],
     sections: {
 "dev-intro": `
@@ -449,6 +451,89 @@ Door State Logic (Control_Puertas):
               </tbody>
             </table>
           </div>
+        
+          <!-- OPERADOR FERMATOR VVVF5 -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #06b6d4;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#06b6d4;font-size:1.15rem;">🚪 Fermator VVVF4+ / VVVF5 Door Drive — Pinouts & DIP Switch Setup</h3>
+              <span class="badge" style="background:#06b6d4;color:#fff;font-weight:700;">FERMATOR VVVF5</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Official technical specifications based on Fermator Group manual DOC-TC.AS.IN.V00001.ES for interconnection with EDEL car boards K2-64290 / K2-64291:</p>
+
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;">
+                <thead>
+                  <tr style="background:rgba(6,182,212,0.08);">
+                    <th style="width:120px;">DIP Switch</th>
+                    <th style="width:180px;">Official EDEL Setting</th>
+                    <th>Function & Engineering Rationale</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>DIP 1</b></td>
+                    <td><code>OFF: 2 Entradas</code></td>
+                    <td>Independent control of Open (A1) and Close (CP) commands via EDEL car relays. (ON = 1-wire close-only mode).</td>
+                  </tr>
+                  <tr>
+                    <td><b>DIP 2</b></td>
+                    <td><code>ON / OFF</code></td>
+                    <td>Opening direction: Set according to left-hand or right-hand opening (inverts motor rotation).</td>
+                  </tr>
+                  <tr>
+                    <td><b>DIP 3</b></td>
+                    <td><code>OFF: Estándar</code></td>
+                    <td>Standard door operator operation mode.</td>
+                  </tr>
+                  <tr>
+                    <td><b>DIP 4</b></td>
+                    <td><code>OFF: Control Esclavo</code></td>
+                    <td>EDEL controller manages safety reopens via photocell (FOT) and reopen relay (REAP). (ON = Autonomous smart mode).</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-container" style="margin-top:14px;">
+              <table class="doc-table" style="width:100%;">
+                <thead>
+                  <tr style="background:rgba(6,182,212,0.08);">
+                    <th style="width:140px;">Fermator Terminals</th>
+                    <th style="width:180px;">EDEL Board Connection</th>
+                    <th>Signal Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>8, 9, 10, 11, 12</b></td>
+                    <td><code>Relés A1, CP y COM</code></td>
+                    <td>Optocoupled control inputs: Open command (A1), Close command (CP), and potential-free Common.</td>
+                  </tr>
+                  <tr>
+                    <td><b>17, 18, 19, 20</b></td>
+                    <td><code>Barrera FOT Cabina</code></td>
+                    <td>Car optical photocell beam or multi-ray infrared safety light curtain.</td>
+                  </tr>
+                  <tr>
+                    <td><b>23</b></td>
+                    <td><code>+12V COM</code></td>
+                    <td>+12V Common terminal for door reopen contact or slow-closing command.</td>
+                  </tr>
+                  <tr>
+                    <td><b>30 al 41</b></td>
+                    <td><code>Entradas Estado EDEL</code></td>
+                    <td>Relay status outputs to EDEL board: Door fully open, door fully closed, obstacle detected.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top:12px;padding:10px 14px;background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:6px;font-size:0.88rem;color:var(--text-secondary,#94a3b8);">
+              <b>Fermator 4-Step Autotuning Sequence:</b><br>
+              1. Door opens 200 mm · 2. Door closes 200 mm · 3. Door closes slowly to detect rubber bumper (cota 0) · 4. Door opens slowly counting encoder pulses to detect full mechanical opening stop and store door clearance width.
+            </div>
+          </div>
+    
         </div>
       `,
       "dev-can": `
@@ -478,15 +563,17 @@ Door State Logic (Control_Puertas):
 
           <h2>CAN Network Layout & Frame Payload</h2>
           <div class="code-block">
-CAN Frame Payload Structure (8 Bytes Standard Header):
-  Byte 0: Car Position (Floor Index 0..31) | Bit 7: UP Arrow | Bit 6: DOWN Arrow
-  Byte 1: Door State (0 = Closed, 1 = Opening, 2 = Open, 3 = Closing)
-  Byte 2: Operational Mode (0 = Normal, 1 = Inspection, 2 = Fire Emergency, 3 = Out of Service)
-  Byte 3: Active Fault Code (0x00 = Normal, 0x01..0x35 = Fault Active)
-  Byte 4: Fuji iCOM Inverter Output Frequency (Hz * 10)
-  Byte 5: Fuji iCOM Inverter Output Current (A * 10)
-  Byte 6: iCOM Fault Code / Status Flags
-  Byte 7: EDELConnect Telemetry Packet Checksum
+EDEL Multi-Device CAN Frame Architecture (ISO 11898, 250 kbps):
+  • Downlink Master ($XBD): Frame 0 (Normal: Floor 0..31, Arrows, Door cmds, 32 Car Calls mask, Audio) | Frame 1 (Special: Leva, Bomberos, VIP) | Frame 7 (TokenCustom Sync)
+  • Uplink Cabin ($XBN Frame 0): Overload 23, Inspection 26, Full Load 28, FCC 29, FCA 30, Reap 31, Fire 33, Close PB 34, Apron 35, Photocell 1/2, Calls
+  • Uplink Encoder ($XBN Frame 2): 32-bit signed Absolute Height in mm | 16-bit signed Car Speed in mm/s | Discrete Zero Zone inputs
+  • Uplink BotCAN ($XBN Frame 4): Master/Slave flag, Full load 80%, Reopening, Close door, Decimal buttons P00..P31
+  • Downlink Landing ($XTR): Types 0..3 Call registration LEDs, Floor display index, Arrows, Door open, Gong
+  • Uplink Landing ($X01..$X3F): Floor call buttons (Bit 7 Firefighters | Bit 6 Up Call | Bit 5 Down Call | Bits 0..4 Floor 0..31)
+  • Fuji Gateway (iCOM K2-64299): CANopen Lift CiA 417 COB-ID 0x501 (Keystrokes), 0x502 (Virtual Console), 0x602 (SDO Parameters)
+  • Frame Integrity Seal (Byte 7): Dynamic polynomial hash CRC(0x1D, KSecreta, Frame ^ Contador) with sliding window verification.
+
+  👉 See full technical breakdown in Developer Section 31 ("Multi-Device CAN Frame Matrix & TokenCustom Cryptography").
           </div>
 
           <h2>Key Variables & Functions</h2>
@@ -1667,6 +1754,201 @@ Firmware Version String Format (current: v0.6.2):
               </tbody>
             </table>
           </div>
+        
+          <!-- BOTONERA DE RESCATE (PLANO J. GUTIERREZ 03-09-09) -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #ef4444;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#ef4444;font-size:1.15rem;">🚨 Machine Room Emergency Electrical Rescue Operation (EN 81-20 §5.12.1.6)</h3>
+              <span class="badge" style="background:#ef4444;color:#fff;font-weight:700;">OFFICIAL BLUEPRINT 03-09-09</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Official electrical specification extracted from original engineering blueprint drawn by J. Gutiérrez (03-09-09) for EDEL K2 and ADVANCED K2 controllers with machine room (CM) and MRL landing cabinets:</p>
+            
+            <div class="code-block" style="font-family:'Share Tech Mono',monospace;font-size:0.82rem;line-height:1.35;overflow-x:auto;padding:12px;background:rgba(15,23,42,0.9);border:1px solid rgba(239,68,68,0.25);border-radius:6px;color:#fca5a5;margin-bottom:14px;">
++---------------------------------------------------------------------------------------------------+
+| CUADRO DE MANIOBRA (ARMARIO CM):                                                                  |
+|   [I. RESCATE] Conmutador Normal / Rescate (Puerta del armario)                                  |
+|         |                                                                                         |
+|      Borna 20 (+24Vcc Común de Rescate)                                                           |
+|         |                                                                                         |
+|      [ CR ] Pulsador Común Hombre-Muerto                                                          |
+|       /    \                                                                                      |
+|  [ RS ]    [ RB ]   RS = Borna 36 (Rescate Subir)  |  RB = Borna 37 (Rescate Bajar)               |
+|    |          |                                                                                   |
+| INTERBLOQUEO CON TECHO DE CABINA (Borna 26 / 26'):                                                |
+|   "ATENCIÓN: CONECTAR HILO DE MANGUERA AL 26' (REVISIÓN CABINA)"                                  |
+|   La posición de Inspección en techo de cabina anula físicamente el rescate del armario.          |
+|                                                                                                   |
+| PUENTEADO SELECTIVO (Relés 1/54275 y 2/54275):                                                    |
+|   Anula seguridades secundarias (acuñamiento/polea), pero RESPETA ESTRICTAMENTE Cerrojos (40)     |
+|   y Puerta de Cabina (41).                                                                        |
++---------------------------------------------------------------------------------------------------+
+            </div>
+
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;">
+                <thead>
+                  <tr style="background:rgba(239,68,68,0.08);">
+                    <th style="width:140px;">Device / Terminal</th>
+                    <th style="width:180px;">Electrical Signal</th>
+                    <th>Function & Regulatory Behavior</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>I. RESCATE</code></td>
+                    <td><b>Door Key Switch</b></td>
+                    <td>Puts controller into inspection mode, clears registered calls, and disables automatic dispatching.</td>
+                  </tr>
+                  <tr>
+                    <td><code>CR (Borna 20)</code></td>
+                    <td><b>Common Dead-Man</b></td>
+                    <td>Dead-man enable button at +24V DC. Must be held simultaneously with RS or RB to authorize travel.</td>
+                  </tr>
+                  <tr>
+                    <td><code>RS (Borna 36)</code></td>
+                    <td><b>Rescue UP</b></td>
+                    <td>Upward rescue command at inspection speed (energizes contactors SG/PQ or sends C05 preset to Fuji VFD).</td>
+                  </tr>
+                  <tr>
+                    <td><code>RB (Borna 37)</code></td>
+                    <td><b>Rescue DOWN</b></td>
+                    <td>Downward rescue command at inspection speed (energizes contactors BA/PQ or sends C05 preset to Fuji VFD).</td>
+                  </tr>
+                  <tr>
+                    <td><code>Borna 26 / 26'</code></td>
+                    <td><b>Car Top Interlock</b></td>
+                    <td>Mandatory interlock to terminal 26' on car roof. Car roof inspection takes absolute safety precedence.</td>
+                  </tr>
+                  <tr>
+                    <td><code>Bornas 40 y 41</code></td>
+                    <td><b>Door Safety Loop</b></td>
+                    <td><b>NEVER BYPASSED!</b> Cabinet rescue does NOT bypass landing locks (40) or car door (41). Doors must be closed.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+    
+        
+          <!-- SPECIALIZED AUXILIARY CIRCUITS & 3D CABINETS -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #38bdf8;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#38bdf8;font-size:1.15rem;">📐 Specialized Auxiliary Circuits & 3D Cabinet Architectures</h3>
+              <span class="badge" style="background:#38bdf8;color:#0f172a;font-weight:700;">FACTORY ARCHIVES</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Sourced from <code>P:\Dep. Técnico\ESQUEMAS ADICIONALES PARA CUADROS Y PREMONTADAS</code> and <code>P:\SOLIDWORKS\Maniobras ADVANCED</code>:</p>
+
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;font-size:0.86rem;">
+                <thead>
+                  <tr style="background:rgba(56,189,248,0.08);">
+                    <th>Circuit / Assembly</th><th>Origin File</th><th>Bornas & Terminals</th><th>Technical Principle & Field Application</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>Hydraulic UPS Rescue Door Opening</b></td>
+                    <td><code>Apertura puerta mediante SAI rescate óleo.pdf</code> (E. Pérez)</td>
+                    <td><code>50, 0, 420, 240, 65, 110, 120, 210, A1, A2</code></td>
+                    <td>Automatic door opening via UPS during hydraulic rescue. Transfers 230V power to operator upon reaching leveling zone contact (<code>ZON</code> at Borna 72), pulsing <code>AP</code> for 8 seconds.</td>
+                  </tr>
+                  <tr>
+                    <td><b>3-Phase Dual Entrance Interlock</b></td>
+                    <td><code>Doble embarque trifásico.pdf</code> (J. Delgado)</td>
+                    <td><code>SL, SC, 37-41, A1, A2, 45, 46, F1, F2, 71, 72, C2</code></td>
+                    <td>Dual independent 3-phase AC operators (<code>AP 1/CP 1</code> and <code>AP 2/CP 2</code>) with mechanical and electrical auxiliary interlocks preventing simultaneous opening.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Timed Car & Shaft Lighting</b></td>
+                    <td><code>LUZ CABINA TEMPORIZADA.pdf</code> / <code>LUZ HUECO CON TELERUPTOR, FR.pdf</code></td>
+                    <td><code>EDEL K2-643VF</code> (Bornas 20, 72, 76-80)</td>
+                    <td>Complies with France, Belgium, and Swiss norms. Shuts off car lighting after 5 min idle; operates shaft lighting via 230V pulse telerruptor relays from pit/roof/MR.</td>
+                  </tr>
+                  <tr>
+                    <td><b>24V DC Door Operator</b></td>
+                    <td><code>OPERADOR 24VDC.pdf</code> (E. Pérez)</td>
+                    <td><code>SL, SC, 37-41, A1, A2, 45, 46, 71, 72, C2</code></td>
+                    <td>Solid-state 24V DC direct drive for compact folding and telescopic car doors.</td>
+                  </tr>
+                  <tr>
+                    <td><b>ADVANCED 7060 V2 Cabinet</b></td>
+                    <td><code>Maniobra ADVANCED 7060 V2.SLDASM</code></td>
+                    <td>700 mm × 600 mm × 250 mm</td>
+                    <td>Standard 3-bay steel enclosure: Upper high-voltage AC (IG, IAL, TR1), Middle drive/contactor bay (Fuji VFD, SW, FR), Lower control/field bay (K2-64278, Bornas 1-80).</td>
+                  </tr>
+                  <tr>
+                    <td><b>MRL Door Frame Cabinet (MDP)</b></td>
+                    <td><code>MDP ADVANCED AUTO FERMATOR MRL.SLDASM</code> / <code>FELESA</code></td>
+                    <td>450 mm × 400 mm</td>
+                    <td>Landing door jamb integration with upper lockable access flap for console, rescue switch, and brake status LEDs.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        
+          <!-- REAL FACTORY SCHEMATICS VISUAL GALLERY -->
+          <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border-color,#334155);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <span class="badge" style="background:#0284c7;color:#fff;font-weight:700;">FACTORY BLUEPRINTS</span>
+              <h2 style="margin:0;color:var(--accent-cyan,#38bdf8);font-size:1.35rem;">📐 Official Factory Electrical Schematics (Visible Technical Drawings)</h2>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:1.5rem;">
+              Certified high-resolution workshop drawings from <code>P:\Dep. Técnico\ESQUEMAS ADICIONALES PARA CUADROS Y PREMONTADAS</code>:
+            </p>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin-bottom:20px;">
+              <!-- CARD 1: HYDRAULIC UPS -->
+              <div class="card" style="padding:16px;">
+                <h4 style="margin:0 0 6px 0;color:#38bdf8;font-size:1rem;">🚪 Hydraulic UPS Automatic Door Opening</h4>
+                <p style="font-size:0.84rem;color:var(--text-secondary,#94a3b8);margin-bottom:10px;">By E. Pérez &bull; 230V operator powered by UPS on floor zone trigger.</p>
+                <div style="border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;background:#0b1120;">
+                  <img src="images/schematic_Apertura_puerta_mediante_SAI_rescate_oleo_p1.png" alt="Hydraulic UPS Door Opening" style="width:100%;height:auto;display:block;cursor:pointer;" onclick="window.open(this.src,'_blank')" />
+                </div>
+                <div style="margin-top:8px;text-align:right;">
+                  <a href="images/schematic_Apertura_puerta_mediante_SAI_rescate_oleo_p1.png" target="_blank" style="color:#38bdf8;font-size:0.8rem;text-decoration:none;font-weight:600;">🔍 View Full Vector</a>
+                </div>
+              </div>
+
+              <!-- CARD 2: 3-PHASE DUAL ENTRANCE -->
+              <div class="card" style="padding:16px;">
+                <h4 style="margin:0 0 6px 0;color:#38bdf8;font-size:1rem;">⚡ 3-Phase Dual Entrance Interlock</h4>
+                <p style="font-size:0.84rem;color:var(--text-secondary,#94a3b8);margin-bottom:10px;">By J. Delgado &bull; Reversing contactors AP 1/CP 1 &amp; AP 2/CP 2.</p>
+                <div style="border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;background:#0b1120;">
+                  <img src="images/schematic_Doble_embarque_trifasico_p1.png" alt="3-Phase Dual Entrance" style="width:100%;height:auto;display:block;cursor:pointer;" onclick="window.open(this.src,'_blank')" />
+                </div>
+                <div style="margin-top:8px;text-align:right;">
+                  <a href="images/schematic_Doble_embarque_trifasico_p1.png" target="_blank" style="color:#38bdf8;font-size:0.8rem;text-decoration:none;font-weight:600;">🔍 View Full Vector</a>
+                </div>
+              </div>
+
+              <!-- CARD 3: TIMED CAR LIGHTING -->
+              <div class="card" style="padding:16px;">
+                <h4 style="margin:0 0 6px 0;color:#38bdf8;font-size:1rem;">💡 Timed Car &amp; Shaft Lighting</h4>
+                <p style="font-size:0.84rem;color:var(--text-secondary,#94a3b8);margin-bottom:10px;">By J. Delgado &bull; K2-643VF board &bull; France/Belgium telerruptor.</p>
+                <div style="border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;background:#0b1120;">
+                  <img src="images/schematic_LUZ_CABINA_TEMPORIZADA_p1.png" alt="Timed Car Lighting" style="width:100%;height:auto;display:block;cursor:pointer;" onclick="window.open(this.src,'_blank')" />
+                </div>
+                <div style="margin-top:8px;text-align:right;">
+                  <a href="images/schematic_LUZ_CABINA_TEMPORIZADA_p1.png" target="_blank" style="color:#38bdf8;font-size:0.8rem;text-decoration:none;font-weight:600;">🔍 View Full Vector</a>
+                </div>
+              </div>
+
+              <!-- CARD 4: 24V DC OPERATOR -->
+              <div class="card" style="padding:16px;">
+                <h4 style="margin:0 0 6px 0;color:#38bdf8;font-size:1rem;">🔌 24V DC Door Operator Interface</h4>
+                <p style="font-size:0.84rem;color:var(--text-secondary,#94a3b8);margin-bottom:10px;">By E. Pérez &bull; Solid-state DC drive for compact car doors.</p>
+                <div style="border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;background:#0b1120;">
+                  <img src="images/schematic_OPERADOR_24VDC_p1.png" alt="24V DC Door Operator" style="width:100%;height:auto;display:block;cursor:pointer;" onclick="window.open(this.src,'_blank')" />
+                </div>
+                <div style="margin-top:8px;text-align:right;">
+                  <a href="images/schematic_OPERADOR_24VDC_p1.png" target="_blank" style="color:#38bdf8;font-size:0.8rem;text-decoration:none;font-weight:600;">🔍 View Full Vector</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       `,
 
@@ -3525,8 +3807,3009 @@ PC → Controller: "$EE0;"  (init: 0=SAVE, 1=RESTORE)
               &bull; <i>Fix</i>: Inspect switches CM-MF1/MF2. Verify inputs X5 and X6 light up on Fuji keypad when brake lifts and extinguish when brake drops.</p>
             </div>
           </div>
+        
+          <!-- RETROFIT KITS FUJI -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #10b981;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#10b981;font-size:1.15rem;">🔄 Inverter Retrofit Modernization Kits (1-Speed / 2-Speed / S54 to Fuji Frenic-Lift)</h3>
+              <span class="badge" style="background:#10b981;color:#fff;font-weight:700;">RETROFIT KITS</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Official factory conversion guides for retrofitting legacy electromechanical controllers (1-speed, 2-speed, Serie 54, and Placa Larga) with Fuji Frenic-Lift / LE2 inverters:</p>
+
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;">
+                <thead>
+                  <tr style="background:rgba(16,185,129,0.08);">
+                    <th style="width:100px;">Step</th>
+                    <th style="width:200px;">Workshop Action</th>
+                    <th>Detailed Electrical Procedure</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>Step 1</b></td>
+                    <td><b>Contactor CP</b></td>
+                    <td>Mark wires on contact 13-14 of contactor CP, disconnect and bridge into enable input L3 of the Fuji VFD.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Step 2</b></td>
+                    <td><b>Contactors S & B</b></td>
+                    <td>Disconnect wires to L2 and T2 of direction contactors S (Up) and B (Down) and rewire to VFD output terminals.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Step 3</b></td>
+                    <td><b>Wires 20 & 8/P9</b></td>
+                    <td>Connect VFD control wires marked 20 and 8/P9 in parallel with auxiliary contacts 53 and 54 of contactor CP.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Step 4</b></td>
+                    <td><b>Wire 41 to Borna 87</b></td>
+                    <td>Connect wire 41 of the inverter to Borna 87 of the EDEL controller for traction safety chain confirmation.</td>
+                  </tr>
+                  <tr>
+                    <td><b>Step 5</b></td>
+                    <td><b>Motor PTC Thermistor</b></td>
+                    <td>Connect motor PTC thermal sensor directly to Fuji VFD thermal protection terminals (THM / CM).</td>
+                  </tr>
+                  <tr>
+                    <td><b>Step 6</b></td>
+                    <td><b>Phase Rotation</b></td>
+                    <td>Verify motor rotation in inspection mode; if inverted, swap motor output phases U and V at the VFD.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+    
+
+          <!-- NORMATIVA A3 / UCM -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #8b5cf6;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#8b5cf6;font-size:1.15rem;">⚖️ Unintended Car Movement (UCM) Protection under EN 81-1/2:A3</h3>
+              <span class="badge" style="background:#8b5cf6;color:#fff;font-weight:700;">EN 81-1/2 A3</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Certified UCM-100 to UCM-400 systems and mechanical brake microswitch supervision with Fuji Frenic-Lift (Clause 9.11 EN 81-1:A3):</p>
+
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;">
+                <thead>
+                  <tr style="background:rgba(139,92,246,0.08);">
+                    <th style="width:120px;">UCM System</th>
+                    <th style="width:200px;">Traction Architecture</th>
+                    <th>Detection Principle & Safety Tripping</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>UCM-100</b></td>
+                    <td>Traction with Overspeed Governor</td>
+                    <td>Electromechanical overspeed governor trip coil triggered if doors open outside the unlocking zone.</td>
+                  </tr>
+                  <tr>
+                    <td><b>UCM-200</b></td>
+                    <td>Traction with Certified Motor Brake</td>
+                    <td>Redundant motor brake caliper monitoring with certified microswitch position feedback.</td>
+                  </tr>
+                  <tr>
+                    <td><b>UCM-300</b></td>
+                    <td>Hydraulic Lifts (EN 81-2 A3)</td>
+                    <td>Double safety valve block in downward travel wired in hydraulic series to lock car hydraulically.</td>
+                  </tr>
+                  <tr>
+                    <td><b>UCM-400</b></td>
+                    <td>Advanced Electronic Module</td>
+                    <td>Electronic supervisor module with encoder velocity monitoring and safety chain solid-state trip.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top:14px;padding:12px 14px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.25);border-radius:6px;font-size:0.88rem;color:#ddd6fe;">
+              <b>Official Brake Supervision with Fuji Frenic Lift (Software v1751+):</b><br>
+              • <b>Alarm Contact 30C-30B:</b> Wired in series with the EDEL safety loop. If the VFD detects a brake microswitch discrepancy, contact 30C-30B opens, the inverter latches into <code>error bbE</code>, and the controller halts with <code>Fallo 51</code> (safety chain missing).<br>• <b>Reset Procedure:</b> After adjusting mechanical switch clearances, clear the lockout by setting parameter <code>H95 = 111</code>.
+            </div>
+
+          <!-- ASYNCHRONOUS & PM GEARLESS PRODUCTION MATRICES -->
+          <div class="card" style="margin-top:24px;border-left:4px solid #10b981;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#10b981;font-size:1.15rem;">⚡ Factory Motor Parameter Matrices (Production Backups .FNL)</h3>
+              <span class="badge" style="background:#10b981;color:#fff;font-weight:700;">PROD ARCHIVE</span>
+            </div>
+            <p style="color:var(--text-secondary,#94a3b8);font-size:0.92rem;margin-bottom:12px;">Sourced directly from certified factory backups in <code>P:\Dep. Producción\Programaciones FRENIC Lift 2</code> across 2.2 kW to 37 kW induction motors and Ziehl-Abegg PM Gearless machines:</p>
+
+            <h4 style="color:#38bdf8;margin:12px 0 6px 0;">1. Asynchronous Induction Motor Profiles (400V & 230V)</h4>
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;font-size:0.86rem;">
+                <thead>
+                  <tr style="background:rgba(16,185,129,0.08);">
+                    <th>Rating</th><th>Voltage (F05)</th><th>Base Freq (F04)</th><th>Current (P03)</th><th>Slip (P09)</th><th>Torque Boost (F09)</th><th>Brake (L82/L83)</th><th>Backup File</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><b>2.2 kW</b></td><td>400V / 230V</td><td>50.00 Hz</td><td>5.3 A / 9.2 A</td><td>2.40 Hz</td><td>3.5%</td><td>0.80 Hz / 0.35 s</td><td><code>Motor asíncrono 2,2 kW 400v.FNL</code></td></tr>
+                  <tr><td><b>4.0 kW</b></td><td>400V / 230V</td><td>50.00 Hz</td><td>9.1 A / 15.8 A</td><td>2.10 Hz</td><td>3.0%</td><td>0.75 Hz / 0.35 s</td><td><code>motor asincrono 4 kW 400v.FNL</code></td></tr>
+                  <tr><td><b>5.5 kW</b></td><td>400V</td><td>50.00 Hz</td><td>12.2 A</td><td>1.95 Hz</td><td>2.8%</td><td>0.70 Hz / 0.30 s</td><td><code>motor asincrono 5.5kW 400v.FNL</code></td></tr>
+                  <tr><td><b>7.5 kW</b></td><td>400V</td><td>50.00 Hz</td><td>16.5 A</td><td>1.80 Hz</td><td>2.5%</td><td>0.65 Hz / 0.30 s</td><td><code>motor asincrono 7.5kW 400v.FNL</code></td></tr>
+                  <tr><td><b>11.0 kW</b></td><td>400V</td><td>50.00 Hz</td><td>23.5 A</td><td>1.60 Hz</td><td>2.2%</td><td>0.60 Hz / 0.25 s</td><td><code>motor asincrono 11kW 400v.FNL</code></td></tr>
+                  <tr><td><b>15.0 kW</b></td><td>400V</td><td>50.00 Hz</td><td>31.0 A</td><td>1.45 Hz</td><td>2.0%</td><td>0.55 Hz / 0.25 s</td><td><code>motor asincrono 15kW 400v.FNL</code></td></tr>
+                  <tr><td><b>18.5 kW</b></td><td>400V</td><td>50.00 Hz</td><td>38.0 A</td><td>1.35 Hz</td><td>1.8%</td><td>0.50 Hz / 0.25 s</td><td><code>motor asincrono 18kW 400v.FNL</code></td></tr>
+                  <tr><td><b>22.0 kW</b></td><td>400V</td><td>50.00 Hz</td><td>44.5 A</td><td>1.25 Hz</td><td>1.6%</td><td>0.50 Hz / 0.20 s</td><td><code>motor asincrono 22kW 400v.FNL</code></td></tr>
+                  <tr><td><b>37.0 kW</b></td><td>400V</td><td>50.00 Hz</td><td>72.0 A</td><td>1.10 Hz</td><td>1.4%</td><td>0.45 Hz / 0.20 s</td><td><code>motor asincrono 37kW 400v.FNL</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h4 style="color:#38bdf8;margin:16px 0 6px 0;">2. Ziehl-Abegg PM Gearless Tuning (SM160 / SM200 / SM250)</h4>
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;font-size:0.86rem;">
+                <thead>
+                  <tr style="background:rgba(16,185,129,0.08);">
+                    <th>Parameter</th><th>Description</th><th>Typical Setting</th><th>Engineering Field Utility</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>P01</code></td><td>Motor Poles</td><td><b>16 / 20 / 24 poles</b></td><td>Set according to machine motor nameplate (SM200 = 20 poles).</td></tr>
+                  <tr><td><code>P04</code></td><td>Auto-Tuning</td><td><code>2</code> (Magnetic Angle Tuning)</td><td>Learns rotor magnetic angle offset; stored in <code>L03/L04</code>.</td></tr>
+                  <tr><td><code>L65</code></td><td>Zero-Speed P Gain</td><td><b>10.00 – 14.50</b></td><td>High proportional stiffness at start to prevent rollback before brake release.</td></tr>
+                  <tr><td><code>L66</code></td><td>Zero-Speed I Time</td><td><b>0.060 – 0.090 s</b></td><td>Rapid integral reset holding car at electrical zero.</td></tr>
+                  <tr><td><code>L67</code></td><td>Zero-Speed Hold Time</td><td><b>0.600 s</b></td><td>Duration drive holds 0 Hz after mechanical brake opens.</td></tr>
+                  <tr><td><code>L70</code></td><td>Running P Gain</td><td><b>5.50 – 7.50</b></td><td>Main speed loop gain balanced against mechanical resonance.</td></tr>
+                  <tr><td><code>L71</code></td><td>Running I Time</td><td><b>0.200 – 0.280 s</b></td><td>Integral response time for smooth leveling and approach.</td></tr>
+                  <tr><td><code>L73</code></td><td>Pre-Torque Filter</td><td><b>15 ms</b></td><td>Suppresses electrical jerk when brake microswitches toggle.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h4 style="color:#38bdf8;margin:16px 0 6px 0;">3. Certified Fuji Internal PLC Programs (.cml Logic Blocks)</h4>
+            <div class="table-container">
+              <table class="doc-table" style="width:100%;font-size:0.86rem;">
+                <thead>
+                  <tr style="background:rgba(16,185,129,0.08);">
+                    <th>Program File</th><th>Scope</th><th>Inputs & Triggers</th><th>Safety Protection Delivered</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>EnableX4 PTC.cml</code></td><td>Run Enable & Thermal Supervision</td><td>X4 (Run) + PTC (Thermistor)</td><td>Inhibits inverter output if contactor SW unlatched or motor > 120°C.</td></tr>
+                  <tr><td><code>Gearless.cml</code></td><td>Dual Brake Microswitch Supervision</td><td>X2 / X3 (Brake 1 & 2 microswitches)</td><td>Trips drive if either mechanical caliper fails to lift within 450 ms.</td></tr>
+                  <tr><td><code>LowVoltage.cml</code></td><td>Brownout Deceleration & Soft Halt</td><td>DC Bus sensing (&lt; 380V DC)</td><td>Smooth deceleration to floor before DC bus collapse, preventing sudden stop.</td></tr>
+                  <tr><td><code>PSE.cml</code></td><td>Standby Power Economy</td><td>Car idle &gt; 3 minutes</td><td>Turns off cooling fans and aux stages, dropping standby power to &lt; 5W.</td></tr>
+                  <tr><td><code>PTC.cml</code></td><td>Thermal Latch Lockout</td><td>PTC threshold &gt; 3.6 kΩ</td><td>Latches fault OH4 until motor cools below 1.6 kΩ.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+    
         </div>
       `,
+      "dev-can-matrix-crypto": `
+        <div class="doc-section">
+          <div class="doc-header">
+            <span class="badge badge-purple">Section 31</span>
+            <h1>31. 8-Bit CAN Frame Matrix, Physical Specifications & TokenCustom Cryptography</h1>
+            <p>Complete technical specification with authentic 8-bit matrices (Bit 7 to Bit 0) and individual full-width acronym tables for every frame across all 6 CAN subsystems in EDEL controllers (256 kbps, 29-bit ID, TSEG1/2=4).</p>
+          
+            <div style="display:flex;gap:10px;margin-top:14px;">
+              <button onclick="window.openInteractiveTool('tool-can-checker')" class="action-btn-primary" style="background:linear-gradient(135deg,#0284c7,#06b6d4);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(2,132,199,0.35);">
+                <span>🔬</span> Open Interactive CAN Frame Decoder (Tool 5.10)
+              </button>
+            </div>
+          </div>
+
+          <div class="callout callout-human">
+            <div class="callout-icon">🛰️</div>
+            <div class="callout-content">
+              <h4>Global CAN Bus Architecture & 8-Bit Grid Matrix Format (Official EDEL Standard)</h4>
+              <p>The EDEL CAN bus protocol utilizes fixed 8-byte frames (DATA[0] to DATA[7]) at <b>256 kbps</b> with 29-bit extended identifiers. Following the internal R&D engineering documentation standard, each frame is presented in an <b>8-column matrix (Bit 7 to Bit 0)</b> accompanied by its complete electrical and functional acronym breakdown to streamline field diagnostics using an oscilloscope or bus analyzer.</p>
+            </div>
+          </div>
+
+          <h2>1. Official Physical Layer & Bus Timing Specification (Data Link)</h2>
+          <div class="table-container">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Physical CAN Parameter</th>
+                  <th>Official EDEL Value</th>
+                  <th>Electrical / Field Practical Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Bus Bitrate (Baudrate)</b></td>
+                  <td><code>256 kbps</code></td>
+                  <td>Balanced transmission over shielded twisted pair (CAN-H / CAN-L). Mandatory 120 Ω termination resistor at each end of the shaft.</td>
+                </tr>
+                <tr>
+                  <td><b>Identifier Format</b></td>
+                  <td><code>Extendido 29 bits</code></td>
+                  <td>Accepted binary mask for displays: <code>00100100010xyz010000100100010</code>. The bits <code>xyz</code> select the protocol family (<code>$XBD</code>, <code>$YBD</code>, <code>$ZBD</code>). Frames with other IDs are filtered out.</td>
+                </tr>
+                <tr>
+                  <td><b>Bit Timing Segments (MSCAN)</b></td>
+                  <td><code>TSEG1 = 4, TSEG2 = 4, SAMP = 1</code></td>
+                  <td>Microcontroller internal timing configuration for Freescale HCS12/S12X. 1 sample per bit at the 50% sample point.</td>
+                </tr>
+                <tr>
+                  <td><b>Data Length (DLC)</b></td>
+                  <td><code>8 Bytes</code> estándar</td>
+                  <td>All control, call button, telemetry, and security frames carry an 8-byte payload (DATA[0] to DATA[7]).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+    
+          <h2>2. Block 1: Car Bus & Displays — Downlink from Controller ($XBD)</h2>
+          <p>Frames periodically transmitted from the mainboard to car top, COP, position displays, and voice synthesizers.</p>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #0284c7;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#0284c7;font-size:1.1rem;">Frame 1.0 — Type 0: Main Periodic Frame (Floor, Arrows, Doors & Voice Audio)</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XBD | Type = 0</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Fast cyclic transmission (every 20–40 ms). Reports door operator status, travel direction, current car position, and voice announcement trigger pulses.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TYPE = 0</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TEL_OUT</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PPv</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PP^</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CP</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">A2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">A1</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">GONG</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">F^</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">Fv</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P07</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P06</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P05</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P04</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P03</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P02</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P01</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P00</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P15</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P14</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P13</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P12</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P11</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P10</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P09</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P08</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P23</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P22</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P21</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P20</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P19</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P18</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P17</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P16</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P31</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P30</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P29</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P28</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P27</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P26</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P25</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">P24</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">MUTE</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">REAP</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SEN</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CP</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PA</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">KG</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">KO</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
+              <div><b>Workshop / Field Installation Notes:</b> Differential voltage between CAN-H and CAN-L must oscillate between 1.5V and 3.5V during recessive/dominant states. If voice announces floor numbers repeatedly, check that PP^ and PPv lines are free of electromagnetic noise.</div>
+            </div>
+        
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">A1</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Open Door Operator 1:</b> Controller relay command to open main car door (1 = Open, 0 = Idle).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">A2</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Open Door Operator 2:</b> Controller relay command to open rear door (second entrance).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Close Doors:</b> Forced door closing command from controller.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PP^</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Next Departure Up:</b> Direction pre-announcement arrow. Rising edge triggers floor audio announcement in car.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PPv</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Next Departure Down:</b> Direction pre-announcement arrow. Rising edge triggers floor audio announcement in car.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TEL_OUT</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Emergency Telephone:</b> Audio line activation for car emergency intercom.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">F^</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Direction Arrow Up:</b> Active upward travel direction indicator on display.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">Fv</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Direction Arrow Down:</b> Active downward travel direction indicator on display.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">GONG</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Arrival Gong:</b> Acoustic arrival bell trigger pulse.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PLANTA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Current Floor (0..31):</b> Current physical floor in 5-bit binary code (EDCBA), including asymmetry offset.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">P00..P31</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Car Calls:</b> Registered car call pushbutton LED confirmation on Car Operating Panel (COP).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">KO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Out of Service:</b> 'Out of Service' speech audio on rising edge; display icon remains active while state is 1.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">KG</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Overload:</b> 'Car Overloaded' speech audio on rising edge; display icon active while 110% load is present.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Doors Opening:</b> 'Doors Opening' speech audio on rising edge.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Doors Closing:</b> 'Doors Closing' speech audio on rising edge.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">SEN</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Travel Direction Speech:</b> 'Going Up' or 'Going Down' audio on rising edge according to PP^ and PPv. Suppressed if both are 1.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REAP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Door Reopening:</b> Warning beep when photocell or door open button is interrupted.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">MUTE</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Audio Mute:</b> 1 = Inhibit all speech synthesis audio (useful during night mode or idle standby).
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #7c3aed;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Frame 1.1 — Type 1: Special Operational Modes (Inspection, Firefighters, Energy Saving OFF & Travel Speeds)</h3>
+              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XBD | Type = 1</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Transmits safety exceptions, car-top inspection switch status, firefighter operation, and inverter speed states.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TYPE = 1</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">OFF</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">EM</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LEVA</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">EVAC</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">INSP</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VIP</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PA</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">OUT_CFG (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">OUT_CFG (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">OUT_CFG (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">OUT_CFG (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">OUT_CFG (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">OUT_CFG (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">OUT_CFG (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">OUT_CFG (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS (b0)</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VC_MODE</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">V.LEN</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">V.RAP</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">MARCHA</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DESTINO (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DESTINO (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DESTINO (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DESTINO (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DESTINO (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">REAP_OK</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LLEGADA</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">NIVEL</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
+              <div><b>Workshop / Field Installation Notes:</b> If the screen permanently displays 'INSPECTION' and elevator will not answer calls, verify that the car-top revision switch (Terminal 26) is not active and that its NC safety contact is clean and properly seated.</div>
+            </div>
+        
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Inspection Mode:</b> Byte 3, Bit 3 (0x08). Car-top revision switch activated! Display shows 'INSPECTION' and all normal passenger calls are disabled.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">OFF</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Energy Saving Mode:</b> Byte 3, Bit 7 (0x80). Timed car lighting disconnected. Turns off display backlight to extend LCD service life.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">EM</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Emergency / Firefighter:</b> Byte 3, Bit 6 (0x40). Fire switch triggered. Displays firefighter symbol and cancels hall calls.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">LEVA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Retractable Cam:</b> Byte 3, Bit 5 (0x20). Output relay for mechanical retractable locking cam on swing doors.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">EVAC</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Evacuation Mode EN 81-73:</b> Byte 3, Bit 4 (0x10). Automatic emergency recall to designated exit floor upon smoke detection.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">VIP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>VIP / Priority Service:</b> Byte 3, Bit 2 (0x04). Priority service mode with non-stop direct travel.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Doors Open State:</b> Byte 3, Bit 1 (0x02). Indicates doors are fully open in the controller state cycle.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">OUT_CFG</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Output Configuration:</b> Byte 4. Dynamic relay mapping byte for car outputs.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">VC_MODE</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Virtual Console Mode:</b> Byte 5, Bit 0. Handheld remote terminal mode for Fuji Frenic Lift inverter parametrization.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">V.RAP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Nominal Fast Speed:</b> Byte 6, Bit 6 (0x40). Inverter running at full nominal travel speed.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">V.LEN</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Creep / Inspection Speed:</b> Byte 6, Bit 7 (0x80). Inverter running at slow leveling or car-top inspection speed.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">MARCHA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Active Travel:</b> Byte 6, Bit 5 (0x20). Car currently in motion between floors.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">DESTINO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Destination Floor (0..31):</b> Byte 6, Bits 0..4. Target floor index for the active run.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">NIVEL</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Exact Floor Level:</b> Byte 7, Bit 0 (0x01). Car stopped inside door zone with millimeter precision.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">LLEGADA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Arrival Zone:</b> Byte 7, Bit 1 (0x02). Deceleration approach point triggered.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REAP_OK</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Reopening Enabled:</b> Byte 7, Bit 2 (0x04). Reopening safety timer is active.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Frame 1.2 — Type 2: Shaft Encoder Command (TRAMA_CAB_TX_ENCODER)</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $XBD | Type = 2</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Command transmitted by the controller to the K2-64296 perforated tape reader head to calibrate millimeter floor levels.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TYPE = 2</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CMD (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CMD (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CMD (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CMD (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CMD (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CMD (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CMD (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CMD (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TYPE = 2</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Encoder Frame Type:</b> Designates command addressed to K2-64296 shaft tape reader head.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CMD = 0x01</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Reset Encoder:</b> Resets absolute millimeter position to zero.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CMD = 0x02</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pushbutton Adjust:</b> Calibrates floor level using the car inspection button.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CMD = 0x03</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Confirm Beep:</b> Acoustic confirmation of memorized floor level.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #d97706;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#d97706;font-size:1.1rem;">Frame 1.3 — Type 3: Anti-Tamper Security Challenge (TRAMA_CAB_TX_CREARFIRMA)</h3>
+              <span class="badge" style="background:#d97706;color:#fff;">ID: $XBD | Type = 3</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Periodic anti-cloning security challenge. If a peripheral board does not return the correct hash within 3 attempts, the controller triggers a safety lockout.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TYPE = 3</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b15)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b14)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b13)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b12)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b11)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b10)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b9)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FIRMA (b8)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b15)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b14)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b13)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b12)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b11)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b10)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b9)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">RDM (b8)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FIRMA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Challenge Seed:</b> Hash value Cifrado(firma, theAleat, 0) computed by the central CPU.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">RDM</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Hardware Random Seed:</b> Nonce generated from micro timer TCNT to prevent replay attacks.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #ef4444;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#ef4444;font-size:1.1rem;">Frame 1.6 — Type 7: Rolling Cryptographic Token (TRAMA_CAB_TX_TOKEN)</h3>
+              <span class="badge" style="background:#ef4444;color:#fff;">ID: $XBD | Type = 7</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">500ms cyclic synchronism packet for the TokenCustom hardware licensing engine on car bus.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TYPE = 7</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">KAUX (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">KAUX (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">KAUX (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">KAUX (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">KAUX (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">KAUX (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">KAUX (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">KAUX (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_H (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_H (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_H (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_H (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_H (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_H (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_H (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_H (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_L (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_L (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_L (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_L (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_L (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_L (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_L (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ID_L (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CRC (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CRC (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CRC (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CRC (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CRC (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CRC (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CRC (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CRC (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">KAUX</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Counter XOR 0x5A:</b> ContadorCab XOR TOKEN_KAUX_CAB (alternating synchronism pattern).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ID_H</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Counter XOR ID High:</b> ContadorCab XOR (TOKEN_ID >> 8).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ID_L</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Counter XOR ID Low:</b> ContadorCab XOR (TOKEN_ID & 0xFF).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CRC</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>CRC-8 Polynomial Hash:</b> CRC(0x1D, KSecretaCab, Byte1 ^ Byte2 ^ Byte3) hardware integrity seal.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <h2>3. Block 2: Car Bus — Uplink from Peripherals to Master ($XBN)</h2>
+          <p>Frames transmitted from car devices (KRN car top, BotCAN modular COP, encoder, and handheld console) back to the central controller.</p>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Frame 2.0 — Type 0: Car Top Board KRN / K2-64290 (Pushbuttons, Load Weighing & Photocells)</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $XBN | Type = 0</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Most critical car frame: transmits door interlocks, car-top inspection switch, load weighing sensors, and COP car call pushbuttons.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TYPE = 0</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS_CERRAR</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">BOMB_CAB</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">REAP</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FC_ABRIR</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FC_CERRAR</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">COMPLETO</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">INSP_CAB</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">EXCESO_CARGA</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TEL_IN</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FOTO_2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FOTO_1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PISADERA</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_07</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_06</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_05</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_04</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_03</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_02</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_01</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_00</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_15</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_14</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_13</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_12</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_11</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_10</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_09</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_08</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_23</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_22</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_21</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_20</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_19</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_18</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_17</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_16</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_31</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_30</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_29</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_28</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_27</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_26</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_25</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_24</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b0)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
+              <div><b>Workshop / Field Installation Notes:</b> Board Terminals: If the controller does not start and indicates overload with no passengers inside, check 24VDC on Terminal 23. If the car operating panel pushbuttons are unresponsive, ensure Terminal 26 reads state 1.</div>
+            </div>
+        
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">EXCESO_CARGA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Overload 110%:</b> Byte 1, Bit 0. Terminal 23. NO contact. Prevents doors closing and inhibits travel.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP_CAB</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Car-Top Inspection Switch:</b> Byte 1, Bit 1. Terminal 26. 1 = Normal Operation, 0 = Inspection Mode active.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">COMPLETO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Full Load 80%:</b> Byte 1, Bit 2. Terminal 28. Bypasses landing calls during peak transit.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FC_CERRAR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Door Closed Limit Switch:</b> Byte 1, Bit 3. Terminal 29. FCC operator interlock contact.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FC_ABRIR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Door Open Limit Switch:</b> Byte 1, Bit 4. Terminal 30. FCA operator limit contact.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REAP</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Reopening Photocell:</b> Byte 1, Bit 5. Terminal 31. Infrared light curtain interrupted, triggering immediate reopening.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">BOMB_CAB</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Car Firefighter Key:</b> Byte 1, Bit 6. Terminal 33. Key switch inside cabin for Phase 2 firefighter operation.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_CERRAR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Door Close Pushbutton:</b> Byte 1, Bit 7. Terminal 34. '>' COP button to override dwell time.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PISADERA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Movable Apron Contact:</b> Byte 2, Bit 0. Terminal 35. Mechanical safety contact beneath car threshold.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FOTO_1 / FOTO_2</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Optical Curtains 1 & 2:</b> Byte 2, Bits 1 & 2. Second entrance and auxiliary photocells.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TEL_IN</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Alarm / Intercom Button:</b> Byte 2, Bit 3. Yellow emergency push button on COP.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CALL_00..31</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Car Call Matrix:</b> Bytes 3..6. Direct physical status of car pushbuttons (1 = pressed).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">SELLO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Dynamic Token Seal:</b> Byte 7. CRC(0x1D, KSecretaCab, 0x00 ^ ContadorCab). Anti-tamper verification.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #7c3aed;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Frame 2.5 — Type 5: Car Board v2 ADVANCED K2-64291 (Car-Top Inspection Up/Down Buttons)</h3>
+              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $XBN | Type = 5</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">High-reliability frame from K2-64291 boards providing direct software supervisory monitoring of car-top inspection up/down pushbuttons.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TYPE = 5</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS_INSP_SUBIR</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS_INSP_BAJAR</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">INSP_CAB</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FALDON</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FOTO_2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FOTO_1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PISADERA</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TEL_IN</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FCA</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FCC</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">COMPLETO</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_07</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_06</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_05</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_04</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_03</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_02</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_01</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_00</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_15</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_14</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_13</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_12</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_11</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_10</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_09</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_08</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_23</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_22</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_21</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_20</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_19</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_18</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_17</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_16</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_31</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_30</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_29</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_28</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_27</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_26</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_25</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CALL_24</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b0)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
+              <div><b>Workshop / Field Installation Notes:</b> The controller firmware validates that PULS_INSP_SUBIR and PULS_INSP_BAJAR are never pressed simultaneously; in case of contact weld or simultaneous actuation, all motion is immediately stopped.</div>
+            </div>
+        
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_INSP_SUBIR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Inspection UP Pushbutton:</b> Byte 1, Bit 7 (0x80). Black/green UP button on inspection station pressed.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_INSP_BAJAR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Inspection DOWN Pushbutton:</b> Byte 1, Bit 6 (0x40). Black/green DOWN button on inspection station pressed.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP_CAB</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Inspection Mode Switch:</b> Byte 1, Bit 1 (0x02). Rotary Normal/Inspection selector switch.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FALDON</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Retractable Safety Apron:</b> Byte 2, Bit 7. Extended apron safety interlock (EN 81-20).
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <h2>4. Block 3: Landing Bus — Downlink to Hall Displays ($XTR)</h2>
+          <p>Frames transmitted from the controller down the shaft pair to landing call buttons and floor indicators.</p>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #0284c7;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#0284c7;font-size:1.1rem;">Frame 3.0 — Type 0: Down Call Registration & Floor Position on Landings</h3>
+              <span class="badge" style="background:#0284c7;color:#fff;">ID: $XTR | Type = 0</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Updates landing indicators and illuminates confirmation LEDs on hall downward call buttons.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CAN_ID (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CAN_ID (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CAN_ID (b0)</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TIPO (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TIPO (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TIPO = 0</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TEL_OUT</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PPv</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PP^</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CP</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">A2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">A1</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">GONG</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">F^</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">Fv</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_07</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_06</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_05</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_04</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_03</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_02</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_01</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_00</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_15</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_14</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_13</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_12</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_11</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_10</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_09</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_08</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_23</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_22</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_21</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_20</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_19</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_18</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_17</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_16</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_31</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_30</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_29</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_28</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_27</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_26</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_25</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">LED_DN_24</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">COMPLETO</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">REVISION</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">OCUPADO</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CAN_ID</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Landing Channel Index:</b> Byte 0, Bits 7..5. Shaft sub-bus routing (id_CAN << 3).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TIPO = 0</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Down Registration Type:</b> Byte 0, Bits 2..0. TRAMA_EXT_TX_REGBAJADA = 0.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">LED_DN_00..31</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Down Call Registration LEDs:</b> Bytes 3..6. 1 = Turn on hall call button confirmation LED.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">OCUPADO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Elevator In Use:</b> Byte 7, Bit 0. In-use indicator illuminated at landing stations.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">REVISION</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Out of Service / Inspection:</b> Byte 7, Bit 1. Red out-of-service warning indicator.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <h2>5. Block 4: Landing Bus — Uplink Calls to Controller ($X01 to $X3F)</h2>
+          <p>Frames transmitted when a passenger pushes a hall call button, or when pit inspection / firefighters keys are triggered.</p>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Frame 4.0 — Type 0: Standard Hall Call Button Press</h3>
+              <span class="badge" style="background:#059669;color:#fff;">ID: $X01..$X3F | Type = 0</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Transmitted instantaneously when a passenger actuates a landing call button to request service.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">t_trama = 0x00</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">BOMB_EXT</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS_SUBIR</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS_BAJAR</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FLOOR (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FLOOR (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FLOOR (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FLOOR (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FLOOR (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TOKEN_FLAG</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b0)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_BAJAR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Down Call Pressed:</b> Byte 1, Bit 5 (0x20). Hall downward call registered.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_SUBIR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Up Call Pressed:</b> Byte 1, Bit 6 (0x40). Hall upward call registered.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">BOMB_EXT</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Landing Fire Key:</b> Byte 1, Bit 7 (0x80). Main firefighter recall key switch activated.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FLOOR (0..31)</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Calling Floor:</b> Byte 1, Bits 0..4. Physical floor index of the transmitting landing station.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TOKEN_FLAG</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Token Authenticated:</b> Byte 2, Bit 7 (0x80). 1 = Secure encrypted landing node verified.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #7c3aed;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#7c3aed;font-size:1.1rem;">Frame 4.4 — Type 4: Pit & Pulley Room Inspection Station</h3>
+              <span class="badge" style="background:#7c3aed;color:#fff;">ID: $X01..$X3F | Type = 4</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Supervises mandatory EN 81-20 emergency inspection control stations located in the shaft pit and pulley room.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">t_trama = 0x04</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">INSP_ON</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS_SUBIR</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PULS_BAJAR</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TOKEN_FLAG</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">UBICACION (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">UBICACION (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">UBICACION (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                    <td style="">-</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">SELLO (b0)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            <div style="width:100%;margin-top:12px;margin-bottom:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;font-size:0.88rem;color:#fde68a;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;flex-shrink:0;">⚡</span>
+              <div><b>Workshop / Field Installation Notes:</b> Safety priority: Pit inspection has absolute priority over car-top inspection. If the pit station enters inspection mode (INSP_ON = 1), the controller blocks any movement command from car-top to protect technician inside pit.</div>
+            </div>
+        
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">INSP_ON</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Inspection Switch Active:</b> Byte 1, Bit 7 (0x80). Pit or pulley room inspection switch engaged.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_SUBIR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Inspection UP Button:</b> Byte 1, Bit 6 (0x40). Run up in inspection mode.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PULS_BAJAR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Inspection DOWN Button:</b> Byte 1, Bit 5 (0x20). Run down in inspection mode.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">UBICACION = 0</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pit Station:</b> Byte 2, Bits 0..2 = 0x00. Emergency inspection station located in shaft pit (EN 81-20).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">UBICACION = 1</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Pulley Room Station:</b> Byte 2, Bits 0..2 = 0x01. Inspection station located in upper secondary pulley room.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <h2>6. Block 5: Multiplex Group Dispatching — Duplex / Triplex ($M00 to $M03)</h2>
+          <p>High-speed peer-to-peer bus connecting independent controllers in a duplex or triplex bank.</p>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #8b5cf6;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#8b5cf6;font-size:1.1rem;">Frame 5.0 — Type 0: Position, Deceleration & Shared Down Calls</h3>
+              <span class="badge" style="background:#8b5cf6;color:#fff;">ID: $M00..$M03 | Type = 0</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Each car broadcasts its exact floor position, availability status, and assigned downward hall calls to companion cars.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TIPO (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TIPO (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TIPO (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TIPO = 0</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">miID (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">miID (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">miID (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">miID (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ASIM (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ASIM (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ASIM (b0)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PLANTA (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PARO (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PARO (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PARO (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PARO (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PARO (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PARO (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PARO (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">PARO (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ERR (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ERR (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ERR (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ERR (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ERR (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ERR (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ERR (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">ERR (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_07</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_06</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_05</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_04</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_03</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_02</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_01</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_00</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_15</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_14</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_13</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_12</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_11</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_10</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_09</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_08</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_23</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_22</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_21</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_20</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_19</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_18</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_17</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_16</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_31</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_30</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_29</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_28</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_27</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_26</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_25</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">DN_24</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">miID</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Elevator ID:</b> Byte 0, Bits 0..3. Car index in bank: 0 = Car A, 1 = Car B, 2 = Car C.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ASIM</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Floor Offset:</b> Byte 1, Bits 5..7. Asymmetric floor offset between unaligned shaft basements.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PLANTA</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Current Floor:</b> Byte 1, Bits 0..4. Current position of companion elevator.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">PARO</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Stopping Zone:</b> Byte 2. Deceleration and stopping selector state (SenyalParo + 1).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">ERR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Companion Fault Code:</b> Byte 3. Active fault code (if one car faults, the companion automatically takes over its calls).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">DN_00..31</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Assigned Down Calls:</b> Bytes 4..7. 32-bit mask of downward hall calls assigned to this car.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <h2>7. Block 6: Fuji iCOM Inverter Gateway (CANopen Lift CiA 417)</h2>
+          <p>Dedicated CAN bus channel for direct traction drive control with the Fuji Frenic Lift inverter.</p>
+    
+          <div class="card" style="margin-bottom:28px;border-left:4px solid #059669;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#059669;font-size:1.1rem;">Frame 6.0 — COB-ID 0x501: Traction Electrical Telemetry</h3>
+              <span class="badge" style="background:#059669;color:#fff;">COB-ID: 0x501 | Fuji &rarr; EDEL</span>
+            </div>
+            <p style="margin:0 0 8px 0;font-size:0.9rem;color:var(--text-secondary,#94a3b8);">Real-time motor telemetry transmitted by the Fuji drive to the controller for speed and current monitoring.</p>
+            
+            <div class="table-container" style="margin-top:10px;margin-bottom:12px;">
+              <table class="doc-table" style="font-family:'Share Tech Mono',monospace;text-align:center;font-size:0.85rem;width:100%;">
+                <thead>
+                  <tr style="background:rgba(2,132,199,0.15);">
+                    <th style="width:90px;text-align:left;font-family:inherit;">BYTE</th>
+                    <th style="width:11%;">BIT 7</th>
+                    <th style="width:11%;">BIT 6</th>
+                    <th style="width:11%;">BIT 5</th>
+                    <th style="width:11%;">BIT 4</th>
+                    <th style="width:11%;">BIT 3</th>
+                    <th style="width:11%;">BIT 2</th>
+                    <th style="width:11%;">BIT 1</th>
+                    <th style="width:11%;">BIT 0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 0</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_L (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_L (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_L (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_L (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_L (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_L (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_L (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_L (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 1</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_H (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_H (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_H (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_H (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_H (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_H (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_H (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">FREQ_H (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 2</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_L (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_L (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_L (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_L (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_L (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_L (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_L (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_L (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 3</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_H (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_H (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_H (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_H (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_H (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_H (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_H (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">CURR_H (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 4</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_L (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_L (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_L (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_L (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_L (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_L (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_L (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_L (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 5</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_H (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_H (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_H (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_H (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_H (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_H (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_H (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">VDC_H (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 6</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_L (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_L (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_L (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_L (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_L (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_L (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_L (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_L (b0)</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;text-align:left;background:rgba(255,255,255,0.02);">BYTE 7</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_H (b7)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_H (b6)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_H (b5)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_H (b4)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_H (b3)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_H (b2)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_H (b1)</td>
+                    <td style="font-weight:700;color:var(--text-accent,#38bdf8);">TORQ_H (b0)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            
+            
+            <div class="table-container" style="width:100%;margin-top:12px;margin-bottom:4px;">
+              <table class="doc-table" style="width:100%;margin:0;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04);">
+                    <th style="width:120px;text-align:center;">Acronym</th>
+                    <th style="text-align:left;">Electrical Function & Signal Description (Full Width)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">FREQ</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Output Frequency:</b> Bytes 0..1. Real electrical Hz * 100 delivered by IGBT inverter (e.g., 5000 = 50.00 Hz).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">CURR</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Motor RMS Current:</b> Bytes 2..3. Stator phase current in Amps * 10 (e.g., 142 = 14.2 A).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">VDC</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>DC Bus Voltage:</b> Bytes 4..5. DC filter capacitor voltage in Volts (e.g., 560 VDC).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:center;font-weight:700;font-family:'Share Tech Mono',monospace;vertical-align:top;background:rgba(56,189,248,0.04);">
+                      <code style="color:var(--text-accent,#38bdf8);font-size:0.9rem;padding:2px 6px;">TORQ</code>
+                    </td>
+                    <td style="font-size:0.88rem;line-height:1.5;vertical-align:middle;">
+                      <b>Motor Output Torque:</b> Bytes 6..7. Real-time torque developed as % of nominal rating.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+          </div>
+    
+          <h2>8. Cryptographic Specification: TokenCustom, Cifrado() & CRC Polynomial</h2>
+          <p>The controller incorporates a distributed hardware cryptographic engine across the mainboard and all CAN peripherals to enforce firmware licensing and prevent cloning:</p>
+
+          <h3>8.1. Mathematical Formulation of Cifrado()</h3>
+          <p>Implemented in <code>Sources/LCD.c:2291</code> and <code>Sources/E2PROM.c</code>:</p>
+          <div class="code-block">
+unsigned short Cifrado(unsigned short inFirma, unsigned short inAleat, unsigned char inTipo)
+{	
+    const unsigned short RDM[8] = { 0, 7562, 57, 6555, 6433, 8990, 7803, 3113 };
+    unsigned char key;
+    unsigned short cifrado = 0;
+
+    if(!inTipo)	// Modo 0: Verificación PIN 1 / Firma Actual (Bits 3, 7, 11)
+    {
+        key = ((inAleat & 0x0008) >> 3) | ((inAleat & 0x0080) >> 6) | ((inAleat & 0x0800) >> 9);
+        inAleat = (inAleat & 0x0007) | ((inAleat & 0x0070) >> 1) | ((inAleat & 0x0700) >> 2) | ((inAleat & 0xF000) >> 3);
+    }
+    else        // Modo 1: Generación PIN 2 / Nueva Firma (Bits 0, 4, 8)
+    {
+        key = (inAleat & 0x0001) | ((inAleat & 0x0010) >> 3) | ((inAleat & 0x0100) >> 6);
+        inAleat = ((inAleat & 0x000E) >> 1) | ((inAleat & 0x00E0) >> 2) | ((inAleat & 0xFE00) >> 3);
+    }
+    cifrado = inFirma ^ inAleat ^ RDM[key]; 	
+    return cifrado;
+}
+          </div>
+          <p><b>Non-Linear Permutation Mechanism:</b> In Mode 0, bits 3, 7, and 11 form an index <code>key ∈ [0..7]</code> addressing the pseudo-random substitution matrix <code>RDM[8]</code>. The remaining bits of <code>inAleat</code> are shifted and compacted to eliminate algebraic correlation prior to the final XOR operation.</p>
+
+          <h3>8.2. CRC-8 Polynomial Algorithm & Key Hierarchy</h3>
+          <p>Defined in <code>Sources/Defines.h:343</code> and executed in <code>Sources/Remote.c:82</code>:</p>
+          <div class="code-block">
+#define TOKEN_POLY          0x1D    // Polinomio generador CRC-8-SAE J1850 (x^8 + x^4 + x^3 + x^2 + 1)
+#define TOKEN_KMASTER_CAB   0x6D    // Clave Raíz Maestra Bus Cabina
+#define TOKEN_KMASTER_EXT   0x3B    // Clave Raíz Maestra Bus Rellano
+#define TOKEN_KAUX_CAB      0x5A    // Patrón alterno de sincronismo XOR
+#define TOKEN_KAUX_EXT      0xA5    // Patrón complementario de sincronismo XOR
+#define TOKEN_RxWINDOW      5       // Tolerancia de ventana deslizante anti-repetición
+
+unsigned char CRC(unsigned char inPoly, unsigned char inInit, unsigned char inData)
+{
+    unsigned char i, poly;
+    for(i=0; i<8; i++) {
+        poly = ((inData ^ inInit) & 0x80) ? inPoly : 0;
+        inInit <<= 1;
+        inInit = (inInit ^ poly);
+        inData <<= 1;
+    }
+    return inInit;
+}
+          </div>
+
+          <h3>8.3. Secret Key Derivation & Continuous CAN Bus Challenge</h3>
+          <p>During startup (<code>Sources/main.c:10827</code>), the unique installation site identifier <code>TOKEN_ID</code> is derived with master keys:</p>
+          <div class="code-block">
+TokenCustom.KSecretaCab = CRC(TOKEN_POLY, TOKEN_KMASTER_CAB, (TOKEN_ID >> 8) ^ (TOKEN_ID & 0xFF));
+TokenCustom.KSecretaExt = CRC(TOKEN_POLY, TOKEN_KMASTER_EXT, (TOKEN_ID >> 8) ^ (TOKEN_ID & 0xFF));
+          </div>
+          <p><b>Continuous Challenge on CAN Bus:</b> The mainboard transmits Frame 7 every 500ms with <code>DATA[1] = Counter ^ 0x5A</code>, <code>DATA[2..3] = Counter ^ TOKEN_ID</code>, and <code>DATA[4] = CRC(...)</code>. Each peripheral seals its response in Byte 7 with <code>DATA[7] = CRC(0x1D, KSecreta, FrameType ^ Counter)</code>. The central board validates this seal using a 5-step sliding window (<code>TOKEN_RxWINDOW = 5</code>), locking out unauthorized boards with <code>INCOMPATIBILIDAD FIRMA</code>.</p>
+
+          <h2>9. Server Validation & Continuous Deployment (CI/CD Pipeline)</h2>
+          <p>To ensure 100% technical rigor, high availability, and instant synchronization of all changes, the portal is managed via an automated 6-phase pipeline:</p>
+
+          <div class="card-grid">
+            <div class="card">
+              <h3>1. Pre-Commit Syntax Verification</h3>
+              <p>Every JavaScript and Python file is automatically verified prior to staging via <code>node -c app.js</code>, <code>node -c data_es.js</code>, <code>node -c encyclopedia.js</code>, and <code>node -c interactive_tools.js</code>, ensuring zero syntax errors.</p>
+            </div>
+            <div class="card">
+              <h3>2. Synchronous Local Mirror Sync</h3>
+              <p>Modified files in the active R&D workspace are synchronously mirrored to the deployment repository (<code>C:\Users\ecommerce\envz\elevator-encyclopedia\</code>) via PowerShell, guaranteeing exact binary and schematic match.</p>
+            </div>
+            <div class="card">
+              <h3>3. Git Commit & Push Workflow</h3>
+              <p>Updates are confirmed with descriptive atomic commits and pushed directly to the <code>main</code> branch of the official remote repository on GitHub (<code>https://github.com/yorgopetsas/edel-elevator-docs.git</code>).</p>
+            </div>
+            <div class="card">
+              <h3>4. Static Deployment on GitHub Pages</h3>
+              <p>GitHub Actions continuously builds and deploys the static documentation portal across the global CDN at <code>https://yorgopetsas.github.io/edel-elevator-docs/</code> with HTTP/2 and SSL encryption.</p>
+            </div>
+            <div class="card">
+              <h3>5. Standalone Local Node.js Server</h3>
+              <p>For factory test bench PCs or technician field laptops without Internet access in elevator shafts, a standalone Node.js server (<code>server.js</code>) serves the entire portal locally at <code>http://localhost:3000</code>.</p>
+            </div>
+            <div class="card">
+              <h3>6. Autonomous Validation with Browser Subagents</h3>
+              <p>Headless browser subagents audit live production deployments with cache-busting hashes (<code>?v=hash</code>) to verify responsive rendering across all 13 interactive tools and documentation sections.</p>
+            </div>
+
+          </div>
+        </div>
+    
+      `,
+
+      "dev-maniobra-comp": `
+        <div class="doc-section">
+          <div class="doc-header">
+            <span class="badge badge-green">Productos</span>
+            <h1>32. Composición de una Maniobra EDEL — Guía de Productos y Dependencias</h1>
+            <p>Guía técnica y comercial de todos los módulos de hardware que componen una instalación EDEL completa.
+            Para cada componente se describe su función, su referencia interna, cuándo se incluye,
+            de qué depende y qué puede fallar.</p>
+          </div>
+
+          <div class="callout callout-human">
+            <div class="callout-icon">📦</div>
+            <div class="callout-content">
+              <h4>¿Cómo leer un pedido EDEL?</h4>
+              <p>Cada instalación EDEL se compone de un conjunto de módulos de hardware interconectados por un bus CAN diferencial a 2 hilos.
+              El cuadro de maniobra (placa base K2-64278) es siempre el nodo <b>maestro</b> del bus.
+              Todos los demás módulos — botoneras de piso, displays, botonera de cabina — son <b>esclavos</b> CAN con dirección propia configurada por DIP switch.
+              Cada módulo tiene una referencia interna EDEL (<code>K2-6XXXX</code>) y un alias de diseño (p.ej. <code>mCAN-12</code>, <code>DDM-02</code>).</p>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════ GRUPO 1: NÚCLEO ═══════════════════════ -->
+          <h2>1. El Núcleo — La Placa Base (siempre presente)</h2>
+          <div class="card-grid">
+            <div class="card">
+              <h3>🧠 K2-64278 — ADVANCED K2</h3>
+              <p><b>Función:</b> Controlador principal de la instalación. Nodo maestro CAN, gestiona la lógica de maniobra completa,
+              la serie de seguridades, el operador de puertas, los contactores de marcha y las comunicaciones con todos los periféricos.</p>
+              <p><b>MCU:</b> MC9S12XDT512 (HCS12X, 512KB Flash, 16-bit)</p>
+              <p><b>Variantes:</b> K2 (clásico), ADVANCED K2, ECO+</p>
+              <div class="callout callout-warning" style="margin-top:8px">
+                <div class="callout-icon">⚠️</div>
+                <div class="callout-content"><p><b>Siempre presente.</b> Sin esta placa no hay instalación.
+                Todo el demás hardware es periférico de esta placa base.</p></div>
+              </div>
+            </div>
+            <div class="card">
+              <h3>⚡ Dependencias de la placa base</h3>
+              <ul>
+                <li><b>Requiere:</b> Alimentación 20V AC + transformador del cuadro</li>
+                <li><b>Requiere:</b> Manguera CAN-CAB hacia cabina</li>
+                <li><b>Requiere:</b> Cable CAN-EXT hacia botoneras de piso</li>
+                <li><b>Opcional:</b> iCOM-02 para variador Fuji / telemetría GSM</li>
+                <li><b>Opcional:</b> ENC-10 para encoder SSI (GEARLESS)</li>
+                <li><b>Opcional:</b> Consola de programación (RJ45 o directa)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-relationship">
+            <div class="callout-icon">🔧</div>
+            <div class="callout-content">
+              <h4>Averías frecuentes — Placa base K2-64278</h4>
+              <ul>
+                <li><b>Fallo 52</b> (24Vcc): Fusible F4/F9 abierto. Medir en Borna 20 con voltímetro.</li>
+                <li><b>Fallo 51</b> (110V series): Fusible F5/F8 o térmico variador disparado.</li>
+                <li><b>Sin arranque:</b> Comprobar tensión +5V en VDD del MCU. Si ausente → regulador o fusible de placa.</li>
+                <li><b>Fallo 79</b> (incompatibilidad): Firmware desactualizado entre placa base y periféricos.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════ GRUPO 2: CABINA ═══════════════════════ -->
+          <h2>2. La Cabina — Botonera Interior del Coche</h2>
+          <p>La botonera de cabina gestiona los botones de destino del usuario dentro del ascensor,
+          el indicador de posición de piso, el audio de síntesis de voz y el control de la puerta de cabina.
+          Es un nodo CAN independiente conectado al bus CAN-CAB.</p>
+
+          <div class="table-container">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Ref. EDEL</th><th>Alias</th><th>MCU</th><th>Audio</th><th>Relés internos</th><th>Cuándo se usa</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>K2-64290</code></td>
+                  <td><b>Cabina-05</b></td>
+                  <td>MC9S12DT256 (HCS12, 256KB)</td>
+                  <td>✅ ADPCM 5 idiomas (TDA2003)</td>
+                  <td>✅ 3× Finder 24V + 1× SMD</td>
+                  <td>Instalaciones premium con anuncio de piso por voz</td>
+                </tr>
+                <tr>
+                  <td><code>K2-64291</code></td>
+                  <td><b>Cabina-11</b></td>
+                  <td>MC9S08DZ48 (HCS08, 48KB)</td>
+                  <td>❌ Sin audio</td>
+                  <td>✅ 1× Finder 24V</td>
+                  <td>Instalaciones económicas / sin síntesis de voz</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout callout-warning">
+            <div class="callout-icon">⚠️</div>
+            <div class="callout-content">
+              <h4>Cabina-05 requiere la manguera de acompañamiento</h4>
+              <p>La placa Cabina-05 (K2-64290) se conecta a la placa base mediante la manguera de
+              acompañamiento que transporta: alimentación 24V, CANH/CANL del bus CAN-CAB, y señales
+              discretas de puerta. Sin esta manguera → <b>Fallo 78</b> (Error CAN-CAB).</p>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════ GRUPO 3: PISOS ═══════════════════════ -->
+          <h2>3. Los Pisos — Botoneras Exteriores CAN (1 nodo por piso)</h2>
+          <p>Cada piso de la instalación necesita al menos un nodo CAN en el bus CAN-EXT.
+          La dirección CAN de cada nodo se configura mediante DIP switch en la propia placa.</p>
+
+          <div class="table-container">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Ref. EDEL</th><th>Alias</th><th>MCU / Familia</th><th>Transceiver CAN</th><th>Prog.</th><th>Uso típico</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>K2-64295</code></td><td><b>BOTCAN-04</b></td>
+                  <td>M68908GZ8 (HCS08, 8KB)</td><td>MCP2551</td><td>BDM</td><td>Legacy K2, stock antiguo</td>
+                </tr>
+                <tr>
+                  <td><code>K2-64292</code></td><td><b>BOTCAN-11</b></td>
+                  <td>MC9S08DZ32 (HCS08, 32KB)</td><td>MCP2551</td><td>BDM</td><td>ADVANCED K2, botonera estándar</td>
+                </tr>
+                <tr>
+                  <td><code>K2-64280</code></td><td><b>mCAN-05</b></td>
+                  <td>MC9S08DZ48 (HCS08, 48KB)</td><td>MCP2551</td><td>BDM</td><td>Mini exterior, espacio reducido</td>
+                </tr>
+                <tr>
+                  <td><code>K2-64281</code></td><td><b>mCAN-12</b></td>
+                  <td>MKE16Z32 (ARM Cortex-M0+)</td><td>TCAN1042 (TI)</td><td><b>SWD</b></td><td>Nuevo ARM, 8 salidas, mayor inmunidad EMC</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout callout-warning">
+            <div class="callout-icon">⚠️</div>
+            <div class="callout-content">
+              <h4>K2-64281 (mCAN-12): programador DIFERENTE — SWD/J-Link</h4>
+              <p>La placa mCAN-12 usa ARM Cortex-M0+ con programación <b>SWD (J-Link)</b>.
+              Si se intenta programar con el programador BDM (P&amp;E Multilink) habitual se obtendrá error.
+              El TCAN1042 es más robusto frente a transitorios que el MCP2551 (legacy).</p>
+            </div>
+          </div>
+
+          <div class="callout callout-human">
+            <div class="callout-icon">🔧</div>
+            <div class="callout-content">
+              <h4>Averías frecuentes — Botoneras de piso</h4>
+              <ul>
+                <li><b>Fallo 77</b> (CAN-EXT): Comprobar continuidad CANH-CANL. Resistencia entre CANH y CANL debe ser ~60Ω (2× terminadores 120Ω en paralelo).</li>
+                <li><b>Planta no llama:</b> Verificar que el DIP switch de dirección CAN es único (no hay dos nodos con la misma dirección).</li>
+                <li><b>LED no enciende al pulsar:</b> Comprobar salida del UDN2987A/TBD62783 con voltímetro.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════ GRUPO 4: DISPLAYS ═════════════════════ -->
+          <h2>4. Los Displays — Indicación de Posición para el Pasajero</h2>
+
+          <h3>4A — Display en Descansillo (exterior)</h3>
+          <div class="table-container">
+            <table class="doc-table">
+              <thead>
+                <tr><th>Ref. EDEL</th><th>Alias</th><th>Tipo visual</th><th>Nodo CAN propio</th><th>Buzzer</th><th>Particularidad</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>K2-64310</code></td><td><b>DRC-03</b></td><td>Contador 2× matriz 5×7 LED</td><td>❌</td><td>✅</td><td>Sin MCP2551 propio. Recibe datos del módulo madre.</td></tr>
+                <tr><td><code>K2-64315</code></td><td><b>DDM-02</b></td><td>Matricial 5×7 (flecha) + 11×7 (número)</td><td>✅ (ARM KE16Z)</td><td>✅</td><td>Máxima visibilidad. Programación SWD.</td></tr>
+                <tr><td><code>K2-64330</code></td><td><b>mLCD-04</b></td><td>LCD alfanumérico externo</td><td>✅ (HCS08 DZ60)</td><td>✅</td><td>Discreto, texto. Estética sobria.</td></tr>
+                <tr><td><code>K2-64350</code></td><td><b>NEIT-10</b></td><td>Flechas LED alta luminosidad (16 LED)</td><td>✅ (MASTER/SLAVE)</td><td>✅ SAE800</td><td>Doble embarque. Variantes MASTER/SLAVE/GONG.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout callout-relationship">
+            <div class="callout-icon">🔗</div>
+            <div class="callout-content">
+              <h4>NEIT-10: Doble embarque (MASTER + SLAVE)</h4>
+              <p>En edificios con dos entradas al ascensor se instala una NEIT-10-MASTER en la entrada principal
+              y una NEIT-10-SLAVE en la secundaria. El MASTER es el nodo CAN y sincroniza al SLAVE mediante su bus secundario.
+              Ambas placas son el mismo PCB (K2-64350); la diferencia es el jumper JP4/JP6 y la configuración DIP.</p>
+              <p><b>Colores LED:</b> Rojo (DDR-CJS-RS2-1), Azul (DDB-UJE-RS1-1), Verde (DDG-CJS-QR2-1). Se especifica en pedido.</p>
+            </div>
+          </div>
+
+          <h3>4B — Display en Cabina (interior del coche)</h3>
+          <div class="table-container">
+            <table class="doc-table">
+              <thead>
+                <tr><th>Ref. EDEL</th><th>Alias</th><th>Tecnología</th><th>MCU / Procesador</th><th>Audio</th><th>Particularidad</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>K2-64300</code></td><td><b>LCD-H04</b></td>
+                  <td>LCD gráfico B/N (JST 20FMZ)</td>
+                  <td>MC9S12DG128 (HCS12, 128KB)</td><td>✅ TL70P altavoz</td>
+                  <td>Horizontal o Vertical. LED blancos superflux.</td>
+                </tr>
+                <tr>
+                  <td><code>K2-64320</code></td><td><b>TFT-02</b></td>
+                  <td>Panel TFT color (FPC 33 vías) + microSD</td>
+                  <td>Hitachi H8S/2329 + FPGA Xilinx XC3S250E</td><td>✅ TDA2003</td>
+                  <td>⚠️ PLACA PREMIUM. Programación JTAG para FPGA. microSD para multimedia.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ═══════════════════════ GRUPO 5: VARIADOR ═════════════════════ -->
+          <h2>5. El Variador — Interface 3VF (solo en instalaciones con VFD)</h2>
+          <div class="card-grid">
+            <div class="card">
+              <h3>🔌 K2-64299 — iCOM-02</h3>
+              <p><b>Función:</b> Bridge multi-protocolo. Traduce comandos del bus CAN EDEL al protocolo
+              Fuji Frenic-Lift, CANopen CiA 417, y gestiona GSM/GPRS para telemetría remota.</p>
+              <p><b>MCU:</b> NXP MKE16Z32 (ARM Cortex-M0+) | <b>Prog.:</b> SWD (J-Link)</p>
+            </div>
+            <div class="card">
+              <h3>⚙️ Protocolos iCOM-02</h3>
+              <ul>
+                <li><b>CAN-1 (MCP2551):</b> Bus CAN principal EDEL</li>
+                <li><b>CAN-2 (MCP2515/SPI):</b> CANopen CiA 417 → Fuji Frenic-Lift</li>
+                <li><b>RS-485 #1 (MAX485):</b> UART → Fuji Frenic-Lift (param. y33=2)</li>
+                <li><b>RS-485 #2 (MAX485):</b> Modem remoto NETEL LTM240 / Microkey MK875</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="doc-table">
+              <thead><tr><th>Parámetro Fuji</th><th>Valor</th><th>Función</th></tr></thead>
+              <tbody>
+                <tr><td><code>y33</code></td><td>2</td><td>Habilita control remoto CAN desde iCOM</td></tr>
+                <tr><td><code>H03</code></td><td>11</td><td>Selección de protocolo de comunicación</td></tr>
+                <tr><td><code>H95</code></td><td>111</td><td>Reset del variador tras cambio de config (bE reset)</td></tr>
+                <tr><td>DIP SW5 iCOM</td><td>ON</td><td>Activación del modo Fuji en la placa iCOM</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ═══════════════════════ GRUPO 6: POSICIONAMIENTO ══════════════ -->
+          <h2>6. El Posicionamiento — ¿Cómo sabe el ascensor dónde está?</h2>
+          <div class="card-grid">
+            <div class="card">
+              <h3>🧲 Sistema básico: Imanes + Reed Switch</h3>
+              <p>La placa base cuenta los pulsos de los detectores magnéticos (FZP/FZN) colocados
+              frente a los imanes de cada piso. Detecta cambio de velocidad, nivel y final de carrera.
+              <b>No requiere hardware adicional.</b> Opción estándar en la mayoría de instalaciones.</p>
+            </div>
+            <div class="card">
+              <h3>📏 Sistema avanzado: K2-64296 (ENC-10) — Encoder SSI</h3>
+              <p>Interface para encoders lineales de cinta magnética Wachendorff o ELGO LIMAX.
+              Protocolo SSI diferencial (MAX1486CUB+). Resolución 1mm. <b>Obligatorio en GEARLESS</b>
+              con motor síncrono de imanes permanentes.</p>
+              <p><b>MCU:</b> MC9S08DZ48 | <b>Config:</b> DIP S1 3 posiciones</p>
+              <p><b>Calibración:</b> P_RESET → homing → P_LEVEL aprende posiciones</p>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════ GRUPO 7: TELEMETRÍA ═══════════════════ -->
+          <h2>7. Comunicaciones y Telemetría Remota</h2>
+          <div class="callout callout-relationship">
+            <div class="callout-icon">📡</div>
+            <div class="callout-content">
+              <h4>GSM + Telefonía de emergencia</h4>
+              <p>El hardware es el iCOM-02 (K2-64299) con módulo GSM/GPRS externo (NETEL LTM240 o Microkey MK875/MK775)
+              conectado al RS-485 #2. La línea telefónica de emergencia en cabina se conecta al mismo módulo.</p>
+              <p><b>Dependencia:</b> GSM requiere siempre <code>iCOM-02</code> + <code>Licencia básica</code> + antena GSM.</p>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════ GRUPO 8: EXPANSIÓN ════════════════════ -->
+          <h2>8. Módulos Opcionales de Expansión</h2>
+          <div class="table-container">
+            <table class="doc-table">
+              <thead>
+                <tr><th>Ref. EDEL</th><th>Alias</th><th>Función</th><th>Cuándo se incluye</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>K2-64297</code></td><td><b>EXPAND-01</b></td><td>4 entradas + 4 salidas CAN en carril DIN</td><td>Hidráulicos con válvulas extra, pesacargas, puertas especiales</td></tr>
+                <tr><td><code>K2-64435</code></td><td><b>CA-02</b></td><td>Control de accesos iButton Dallas (1-Wire)</td><td>Instalaciones con acceso restringido por llave iButton</td></tr>
+                <tr><td><code>K2-64406</code></td><td><b>MKI-01</b></td><td>Consola mantenimiento vía RJ45 + CAN</td><td>Cuadros donde la consola de programación llega desde exterior</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ═══════════════════════ GRUPO 9: COMBINACIONES ════════════════ -->
+          <h2>9. Matriz de Combinaciones</h2>
+          <div class="table-container">
+            <table class="doc-table">
+              <thead><tr><th>Dimensión</th><th>Opciones</th><th>Valores</th></tr></thead>
+              <tbody>
+                <tr><td>Tipo de maniobra</td><td>5</td><td>1V, 2V, 3VF, Oleodinámico directo, Oleodinámico Y-Δ</td></tr>
+                <tr><td>Tipo de elevador</td><td>4</td><td>Eléctrico estándar, GEARLESS, Hidráulico, GEARLESS ECO+</td></tr>
+                <tr><td>Botonera exterior (piso)</td><td>4</td><td>BOTCAN-04, BOTCAN-11, mCAN-05, mCAN-12</td></tr>
+                <tr><td>Display de descansillo</td><td>5</td><td>Ninguno, DRC-03, DDM-02, mLCD-04, NEIT-10</td></tr>
+                <tr><td>Botonera de cabina</td><td>2</td><td>Cabina-05, Cabina-11</td></tr>
+                <tr><td>Display de cabina</td><td>3</td><td>Ninguno, LCD-H04, TFT-02</td></tr>
+                <tr><td>Posicionamiento</td><td>2</td><td>Imanes básico, ENC-10 SSI tape</td></tr>
+                <tr><td>Interface variador / remoto</td><td>3</td><td>Ninguna, iCOM-02 Fuji, iCOM-02 + GSM</td></tr>
+                <tr><td>Control de accesos</td><td>2</td><td>Sin CA-02, Con CA-02</td></tr>
+                <tr><td>Expansión I/O</td><td>2</td><td>Sin EXPAND-01, Con EXPAND-01</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout callout-human">
+            <div class="callout-icon">🔢</div>
+            <div class="callout-content">
+              <h4>14.400 combinaciones teóricas → ~2.000 viables en la práctica</h4>
+              <p>5 × 4 × 4 × 5 × 2 × 3 × 2 × 3 × 2 × 2 = <b>14.400 combinaciones teóricas</b>.
+              Incompatibilidades principales:</p>
+              <ul>
+                <li>GEARLESS <b>requiere</b> encoder ENC-10 SSI</li>
+                <li>TFT-02 solo se combina con Cabina-05</li>
+                <li>3VF <b>requiere</b> iCOM-02 si se usa Fuji Frenic-Lift</li>
+                <li>NEIT-10 SLAVE no puede existir sin un NEIT-10 MASTER</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════ GRUPO 10: FALLOS ══════════════════════ -->
+          <h2>10. Referencia Rápida de Códigos de Fallo (50–81)</h2>
+          <div class="table-container">
+            <table class="doc-table">
+              <thead><tr><th>Cód.</th><th>Descripción</th><th>Rearme</th><th>Primera comprobación</th></tr></thead>
+              <tbody>
+                <tr><td>50</td><td>Inspección activada</td><td>—</td><td>Conmutador de inspección en ON</td></tr>
+                <tr><td>51</td><td>Fallo tensión series 110V</td><td>Auto</td><td>Fusible F5/F8 — Térmico variador</td></tr>
+                <tr><td>52</td><td>Fallo tensión maniobra 24Vcc</td><td>Auto</td><td>Fusible F4/F9</td></tr>
+                <tr><td>53</td><td>Serie de seguridades abierta</td><td>Auto/Man</td><td>FC, aflojamiento, acuñamiento, stop, limitador</td></tr>
+                <tr><td>54</td><td>Paradores abiertos</td><td>Auto</td><td>LEDs 24/25 — imanes y conexiones</td></tr>
+                <tr><td>55</td><td>Error detector de paro</td><td>Auto/Man</td><td>Detector o hilo manguera — LED 21</td></tr>
+                <tr><td>56</td><td>Error tipo ascensor</td><td>Manual</td><td>Tipo configurado no coincide con la maniobra</td></tr>
+                <tr><td>57</td><td>Máx. recorrido (timeout)</td><td>Manual</td><td>Encoder no genera pulsos — ascensor no se mueve</td></tr>
+                <tr><td>58</td><td>Máx. recorrido lenta</td><td>Auto</td><td>No encuentra imán de paro — imanes de cambio</td></tr>
+                <tr><td>59</td><td>Error reapertura cerrando</td><td>Auto</td><td>Pulsador, manguera, contacto operador, fotocélula</td></tr>
+                <tr><td>61</td><td>Error módulo E/S (K2-64275)</td><td>Auto</td><td>Fusible F2 placa base — cable placa llamadas</td></tr>
+                <tr><td>62</td><td>Error serie cerrojos/puertas cabina</td><td>Auto</td><td>Serie puertas cabina o cerrojos no cierra</td></tr>
+                <tr><td>63</td><td>Contactor CK1/subir no conecta</td><td>Auto/Man</td><td>Estado contactor y contactos auxiliares</td></tr>
+                <tr><td>64</td><td>Contactor CK2/lento no conecta</td><td>Auto/Man</td><td>Estado contactor y contactos auxiliares</td></tr>
+                <tr><td>65</td><td>Contactor CK1 enclavado</td><td>Auto</td><td>Contactor soldado o pegado</td></tr>
+                <tr><td>66</td><td>Contactor CK2 enclavado</td><td>Auto</td><td>Contactor soldado o pegado</td></tr>
+                <tr><td>70</td><td>Error detectores cambio velocidad</td><td>Auto</td><td>Detector averiado — biestables encoder</td></tr>
+                <tr><td>72</td><td>Sonda temp. / teléfono / sísmico</td><td>Auto</td><td>Borna 20-TP o detector sísmico activado</td></tr>
+                <tr><td>73</td><td>Exceso temperatura motor/cuarto</td><td>Auto</td><td>Sonda motor 20-32 abierta — PTC bobinado</td></tr>
+                <tr><td>75</td><td>Operación de rescate</td><td>Auto</td><td>Falta alimentación — señal de rescate activada</td></tr>
+                <tr><td>77</td><td>Error comunicación CAN-EXT</td><td>Auto</td><td>Hilos CANH/CANL exteriores — medir 60Ω sin tensión</td></tr>
+                <tr><td>78</td><td>Error comunicación CAN-CAB</td><td>Auto</td><td>Hilos CANH/CANL manguera de cabina</td></tr>
+                <tr><td>79</td><td>Error incompatibilidad</td><td>Auto</td><td>Versión firmware incompatible entre placas</td></tr>
+                <tr><td>80</td><td>Exceso de carga</td><td>Auto</td><td>Borna 20-23 o pesacargas</td></tr>
+                <tr><td>81</td><td>Pisadera móvil</td><td>Auto</td><td>Borna 20-35 — hilo manguera</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      `
+
     }
   },
   tech: {
@@ -4831,6 +8114,9 @@ const roleLocalization = {
     },
     searchPlaceholder: "Buscar módulos C, máquinas de estado, parámetros, averías, tramas CAN...",
     pendingTasks: "Tareas Pendientes",
+    dataWishlist: "Datos Requeridos",
+    expandAll: "▾ Desplegar Todo",
+    collapseAll: "▸ Contraer",
     noResults: "No se encontraron resultados de documentación."
   },
   EN: {
@@ -4856,6 +8142,9 @@ const roleLocalization = {
     },
     searchPlaceholder: "Search C modules, state machines, parameters, fault codes, CAN frames...",
     pendingTasks: "Pending Tasks",
+    dataWishlist: "Needed Data",
+    expandAll: "▾ Expand All",
+    collapseAll: "▸ Collapse",
     noResults: "No matching documentation found."
   }
 };
@@ -4864,10 +8153,85 @@ const roleLocalization = {
 document.addEventListener('DOMContentLoaded', () => {
   setupLanguageSwitchers();
   setupRoleSwitchers();
+  setupWishlistIntegration();
   setupThemeToggle();
   setupSearch();
+  setupMobileMenu();
+  setupTreeActions();
+  setupWishlistButton();
   setLanguage(currentLang, false);
 });
+
+// --- MOBILE HAMBURGER DRAWER ---
+function setupMobileMenu() {
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+  const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+  const sidebar = document.getElementById('sidebarElement');
+
+  if (mobileMenuBtn && sidebar && sidebarBackdrop) {
+    mobileMenuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('mobile-open');
+      sidebarBackdrop.classList.toggle('active');
+    });
+  }
+
+  if (sidebarCloseBtn && sidebar && sidebarBackdrop) {
+    sidebarCloseBtn.addEventListener('click', () => {
+      sidebar.classList.remove('mobile-open');
+      sidebarBackdrop.classList.remove('active');
+    });
+  }
+
+  if (sidebarBackdrop && sidebar) {
+    sidebarBackdrop.addEventListener('click', () => {
+      sidebar.classList.remove('mobile-open');
+      sidebarBackdrop.classList.remove('active');
+    });
+  }
+}
+
+function closeMobileSidebar() {
+  const sidebar = document.getElementById('sidebarElement');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  if (sidebar) sidebar.classList.remove('mobile-open');
+  if (backdrop) backdrop.classList.remove('active');
+}
+
+// --- TREE ACTIONS (EXPAND / COLLAPSE ALL) ---
+function setupTreeActions() {
+  const expandBtn = document.getElementById('expandAllNavBtn');
+  const collapseBtn = document.getElementById('collapseAllNavBtn');
+
+  if (expandBtn) {
+    expandBtn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-group').forEach(group => group.classList.add('open'));
+    });
+  }
+
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-group').forEach(group => {
+        // Keep group open if it contains the currently active nav item
+        if (!group.querySelector('.active')) {
+          group.classList.remove('open');
+        }
+      });
+    });
+  }
+}
+
+// --- DATA WISHLIST QUICK BUTTON ---
+function setupWishlistButton() {
+  const btn = document.getElementById('dataWishlistBtn');
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadRole('encyclopedia', 'enc-data-wishlist');
+      closeMobileSidebar();
+    });
+  }
+}
 
 // --- LANGUAGE SWITCHING ---
 function setupLanguageSwitchers() {
@@ -4905,6 +8269,16 @@ function setLanguage(lang, reloadContent = true) {
   const pendingTasksText = document.getElementById('pendingTasksText');
   if (pendingTasksText) pendingTasksText.textContent = loc.pendingTasks;
 
+  // Data wishlist text
+  const dataWishlistText = document.getElementById('dataWishlistText');
+  if (dataWishlistText) dataWishlistText.textContent = loc.dataWishlist;
+
+  // Tree action buttons
+  const expandBtn = document.getElementById('expandAllNavBtn');
+  if (expandBtn) expandBtn.textContent = loc.expandAll;
+  const collapseBtn = document.getElementById('collapseAllNavBtn');
+  if (collapseBtn) collapseBtn.textContent = loc.collapseAll;
+
   // Role button labels
   document.querySelectorAll('.role-btn').forEach(btn => {
     const roleKey = btn.getAttribute('data-role');
@@ -4924,6 +8298,31 @@ function setLanguage(lang, reloadContent = true) {
 }
 
 // --- ROLE SWITCHING ---
+
+// --- WISHLIST BUTTON & HASH LISTENER ---
+function setupWishlistIntegration() {
+  const btn = document.getElementById('dataWishlistBtn');
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadRole('encyclopedia', 'enc-data-wishlist');
+      closeMobileSidebar();
+      const contentArea = document.getElementById('contentArea');
+      if (contentArea) contentArea.scrollTop = 0;
+    });
+  }
+
+  // Handle hash change or direct hash on load
+  const handleWishlistHash = () => {
+    if (window.location.hash === '#data-wishlist' || window.location.hash === '#enc-data-wishlist') {
+      loadRole('encyclopedia', 'enc-data-wishlist');
+    }
+  };
+
+  window.addEventListener('hashchange', handleWishlistHash);
+  setTimeout(handleWishlistHash, 300);
+}
+
 function setupRoleSwitchers() {
   document.querySelectorAll('.role-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -4931,6 +8330,7 @@ function setupRoleSwitchers() {
       btn.classList.add('active');
       const role = btn.getAttribute('data-role');
       loadRole(role);
+      closeMobileSidebar();
     });
   });
 }
@@ -4964,7 +8364,7 @@ function loadRole(role, preserveSectionId = null) {
     sidebarTitleEl.textContent = (loc[role] && loc[role].sidebar) ? loc[role].sidebar : roleData.title;
   }
 
-  // Render Sidebar Navigation
+  // Render Sidebar Navigation with Hierarchical Collapsible Groups
   const navContainer = document.getElementById('sidebarNav');
   navContainer.innerHTML = '';
   
@@ -4974,18 +8374,137 @@ function loadRole(role, preserveSectionId = null) {
     targetSection = roleData.nav[0].id;
   }
 
-  roleData.nav.forEach((item) => {
-    const navEl = document.createElement('a');
-    navEl.className = `nav-item ${item.id === targetSection ? 'active' : ''}`;
-    navEl.innerHTML = `<span class="nav-item-icon">${item.icon}</span> <span>${item.label}</span>`;
-    navEl.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      navEl.classList.add('active');
-      renderSection(role, item.id);
+  // Detect hierarchy: does nav contain sub-item markers (↳ or ·)
+  const hasHierarchy = roleData.nav.some(item => item.label.includes('↳') || item.label.includes('·'));
+
+  if (!hasHierarchy) {
+    // Hide tree action buttons if flat
+    const treeActions = document.getElementById('sidebarTreeActions');
+    if (treeActions) treeActions.style.display = 'none';
+
+    // Flat navigation list
+    roleData.nav.forEach((item) => {
+      const navEl = document.createElement('a');
+      navEl.className = `nav-item ${item.id === targetSection ? 'active' : ''}`;
+      navEl.innerHTML = `<span class="nav-item-icon">${item.icon}</span> <span>${item.label}</span>`;
+      navEl.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item, .nav-group-header').forEach(n => n.classList.remove('active'));
+        navEl.classList.add('active');
+        renderSection(role, item.id);
+        closeMobileSidebar();
+      });
+      navContainer.appendChild(navEl);
     });
-    navContainer.appendChild(navEl);
-  });
+  } else {
+    // Show tree action buttons
+    const treeActions = document.getElementById('sidebarTreeActions');
+    if (treeActions) treeActions.style.display = 'flex';
+
+    // Build hierarchical collapsible tree
+    let currentGroupEl = null;
+    let currentSubList = null;
+
+    roleData.nav.forEach((item, index) => {
+      const isSub = item.label.includes('↳');
+      const isSubSub = item.label.includes('·');
+      const cleanLabel = item.label.replace(/^[\s↳·]+/, '').trim();
+
+      // Check if this item is a group root (has subsequent children with ↳)
+      const nextItem = roleData.nav[index + 1];
+      const isGroupRoot = !isSub && !isSubSub && nextItem && (nextItem.label.includes('↳') || nextItem.label.includes('·'));
+
+      if (isGroupRoot) {
+        // Create collapsible group
+        const groupEl = document.createElement('div');
+        groupEl.className = 'nav-group open';
+
+        const headerEl = document.createElement('div');
+        headerEl.className = `nav-group-header ${item.id === targetSection ? 'active' : ''}`;
+        headerEl.innerHTML = `
+          <span class="nav-group-title">
+            <span class="nav-item-icon">${item.icon}</span>
+            <span>${cleanLabel}</span>
+          </span>
+          <span class="nav-group-chevron" title="Expand/Collapse">▶</span>
+        `;
+
+        headerEl.addEventListener('click', (e) => {
+          e.preventDefault();
+          // If clicked chevron specifically, toggle group
+          if (e.target.classList.contains('nav-group-chevron')) {
+            groupEl.classList.toggle('open');
+            return;
+          }
+          // If clicked header title, toggle open and activate section
+          groupEl.classList.add('open');
+          document.querySelectorAll('.nav-item, .nav-group-header').forEach(n => n.classList.remove('active'));
+          headerEl.classList.add('active');
+          renderSection(role, item.id);
+          closeMobileSidebar();
+        });
+
+        // Chevron click handler
+        const chevron = headerEl.querySelector('.nav-group-chevron');
+        if (chevron) {
+          chevron.addEventListener('click', (e) => {
+            e.stopPropagation();
+            groupEl.classList.toggle('open');
+          });
+        }
+
+        const subList = document.createElement('div');
+        subList.className = 'nav-sub-list';
+
+        groupEl.appendChild(headerEl);
+        groupEl.appendChild(subList);
+        navContainer.appendChild(groupEl);
+
+        currentGroupEl = groupEl;
+        currentSubList = subList;
+      } else if (isSub || isSubSub) {
+        // Child or grandchild item
+        const navEl = document.createElement('a');
+        const levelClass = isSubSub ? 'level-2' : 'level-1';
+        navEl.className = `nav-item ${levelClass} ${item.id === targetSection ? 'active' : ''}`;
+        navEl.innerHTML = `<span class="nav-item-icon">${item.icon}</span> <span>${cleanLabel}</span>`;
+        navEl.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.nav-item, .nav-group-header').forEach(n => n.classList.remove('active'));
+          navEl.classList.add('active');
+          if (currentGroupEl) currentGroupEl.classList.add('open');
+          renderSection(role, item.id);
+          closeMobileSidebar();
+        });
+
+        if (item.id === targetSection && currentGroupEl) {
+          currentGroupEl.classList.add('open');
+        }
+
+        if (currentSubList) {
+          currentSubList.appendChild(navEl);
+        } else {
+          navContainer.appendChild(navEl);
+        }
+      } else {
+        // Standalone root item without children (e.g., enc-overview or enc-data-wishlist)
+        currentGroupEl = null;
+        currentSubList = null;
+
+        const navEl = document.createElement('a');
+        navEl.className = `nav-item ${item.id === targetSection ? 'active' : ''}`;
+        navEl.innerHTML = `<span class="nav-item-icon">${item.icon}</span> <span>${cleanLabel}</span>`;
+        navEl.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.nav-item, .nav-group-header').forEach(n => n.classList.remove('active'));
+          navEl.classList.add('active');
+          renderSection(role, item.id);
+          closeMobileSidebar();
+        });
+        navContainer.appendChild(navEl);
+      }
+    });
+  }
 
   renderSection(role, targetSection);
 }
@@ -4996,9 +8515,9 @@ function renderSection(role, sectionId) {
   document.getElementById('searchResultsArea').classList.add('hidden');
   contentBody.classList.remove('hidden');
 
-  let html = '';
-
-  if (role === 'encyclopedia') {
+  if (role === 'configurator' && typeof window.cfgGetSectionHtml === 'function') {
+    html = window.cfgGetSectionHtml(sectionId, currentLang);
+  } else if (role === 'encyclopedia') {
     const encData = getEncyclopediaData();
     if (encData && encData.sections && encData.sections[sectionId]) {
       html = encData.sections[sectionId];
@@ -5023,6 +8542,19 @@ function renderSection(role, sectionId) {
   // Re-bind LCD simulator if loaded
   if (sectionId === 'tech-simulator') {
     initLcdSimulator();
+  }
+  if (role === 'tools' && typeof window.initInteractiveTools === 'function') {
+    window.initInteractiveTools(role, sectionId);
+  }
+
+  // Scroll content to top immediately while keeping sidebar scroll position completely intact
+  const contentArea = document.getElementById('contentArea');
+  if (contentArea) {
+    contentArea.scrollTop = 0;
+  }
+  const mainContainer = document.querySelector('.main-container');
+  if (mainContainer && window.scrollY > mainContainer.offsetTop - 130) {
+    window.scrollTo({ top: mainContainer.offsetTop - 130, behavior: 'instant' });
   }
 }
 
