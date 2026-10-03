@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EDEL Elevator Controller — Technical & Engineering Documentation Portal</title>
+  <meta name="description" content="Technical engineering documentation, interactive diagnostics, and order configurator for EDEL elevator controller systems (K2, ADVANCED, MdP, K3).">
+  <meta name="theme-color" content="#0a0f1d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EDEL Docs">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -118,6 +127,16 @@
       <a href="pending_tasks.md" target="_blank" class="tasks-badge-btn" id="pendingTasksLink" title="Ver Tareas de Ingeniería Pendientes">
         <span class="tasks-icon">📋</span> <span id="pendingTasksText">Tareas Pendientes</span>
       </a>
+
+      <!-- PWA Offline Status & Install Badge -->
+      <div id="pwaStatusBadge" class="pwa-status-badge" title="Disponibilidad Offline 100% / 100% Offline Ready">
+        <span class="pwa-status-dot"></span>
+        <span id="pwaStatusText" class="pwa-status-text">Offline Ready</span>
+      </div>
+      <button id="pwaInstallBtn" class="pwa-install-btn hidden" title="Instalar Aplicación en Escritorio o Móvil / Install PWA App">
+        <span>📲</span> <span id="pwaInstallText">Instalar App</span>
+      </button>
+
       <button class="theme-toggle" id="themeToggleBtn" title="Toggle Light/Dark Theme">
         <span class="theme-icon">🌙</span>
       </button>

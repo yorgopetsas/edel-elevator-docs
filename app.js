@@ -8127,7 +8127,10 @@ const roleLocalization = {
     dataWishlist: "Datos Requeridos",
     expandAll: "▾ Desplegar Todo",
     collapseAll: "▸ Contraer",
-    noResults: "No se encontraron resultados de documentación."
+    noResults: "No se encontraron resultados de documentación.",
+    pwaOfflineReady: "Offline Listo",
+    pwaOfflineMode: "Modo Offline",
+    pwaInstall: "Instalar App"
   },
   EN: {
     dev: {
@@ -8165,7 +8168,10 @@ const roleLocalization = {
     dataWishlist: "Needed Data",
     expandAll: "▾ Expand All",
     collapseAll: "▸ Collapse",
-    noResults: "No matching documentation found."
+    noResults: "No matching documentation found.",
+    pwaOfflineReady: "Offline Ready",
+    pwaOfflineMode: "Offline Mode",
+    pwaInstall: "Install App"
   }
 };
 
@@ -8184,8 +8190,99 @@ document.addEventListener('DOMContentLoaded', () => {
   setupMobileMenu();
   setupTreeActions();
   setupWishlistButton();
+  setupServiceWorker();
   setLanguage(currentLang, false);
 });
+
+// --- PWA SERVICE WORKER & OFFLINE MANAGER ---
+let deferredInstallPrompt = null;
+
+function setupServiceWorker() {
+  const badge = document.getElementById('pwaStatusBadge');
+  const statusText = document.getElementById('pwaStatusText');
+  const installBtn = document.getElementById('pwaInstallBtn');
+
+  function updateOnlineStatus() {
+    const isOnline = (typeof navigator !== 'undefined' && 'onLine' in navigator) ? navigator.onLine : true;
+    const loc = roleLocalization[currentLang] || roleLocalization['ES'];
+    if (badge && statusText) {
+      if (isOnline) {
+        badge.classList.remove('offline');
+        badge.title = currentLang === 'ES' 
+          ? "Portal en línea y 100% disponible para uso sin conexión (Offline)" 
+          : "Portal online and 100% cached for offline use";
+        statusText.textContent = loc.pwaOfflineReady;
+      } else {
+        badge.classList.add('offline');
+        badge.title = currentLang === 'ES' 
+          ? "Modo sin conexión activo — Documentación cargada desde caché local" 
+          : "Offline mode active — Served from local cache";
+        statusText.textContent = loc.pwaOfflineMode;
+      }
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+  }
+  updateOnlineStatus();
+
+  // Register service worker
+  if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .then((reg) => {
+          console.log('[PWA] Service Worker registered with scope:', reg.scope);
+          reg.addEventListener('updatefound', () => {
+            const installingWorker = reg.installing;
+            if (installingWorker) {
+              installingWorker.addEventListener('statechange', () => {
+                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('[PWA] New documentation content cached and ready for offline use.');
+                }
+              });
+            }
+          });
+        })
+        .catch((err) => {
+          console.warn('[PWA] Service Worker registration failed:', err);
+        });
+    });
+  }
+
+  // Handle PWA installation prompt
+  if (typeof window !== 'undefined') {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      if (installBtn) {
+        installBtn.classList.remove('hidden');
+        const installText = document.getElementById('pwaInstallText');
+        const loc = roleLocalization[currentLang] || roleLocalization['ES'];
+        if (installText) installText.textContent = loc.pwaInstall;
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      console.log('[PWA] EDEL Docs installed on system.');
+      if (installBtn) installBtn.classList.add('hidden');
+      deferredInstallPrompt = null;
+    });
+  }
+
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const choice = await deferredInstallPrompt.userChoice;
+        console.log('[PWA] User install choice:', choice.outcome);
+        deferredInstallPrompt = null;
+        installBtn.classList.add('hidden');
+      }
+    });
+  }
+}
 
 // --- MOBILE HAMBURGER DRAWER ---
 function setupMobileMenu() {
@@ -8303,6 +8400,19 @@ function setLanguage(lang, reloadContent = true) {
   if (expandBtn) expandBtn.textContent = loc.expandAll;
   const collapseBtn = document.getElementById('collapseAllNavBtn');
   if (collapseBtn) collapseBtn.textContent = loc.collapseAll;
+
+  // PWA offline status & install texts
+  const pwaStatusText = document.getElementById('pwaStatusText');
+  const pwaBadge = document.getElementById('pwaStatusBadge');
+  if (pwaStatusText && pwaBadge) {
+    const isOffline = pwaBadge.classList.contains('offline') || !navigator.onLine;
+    pwaStatusText.textContent = isOffline ? loc.pwaOfflineMode : loc.pwaOfflineReady;
+    pwaBadge.title = isOffline
+      ? (currentLang === 'ES' ? "Modo sin conexión activo — Documentación cargada desde caché local" : "Offline mode active — Served from local cache")
+      : (currentLang === 'ES' ? "Portal en línea y 100% disponible para uso sin conexión (Offline)" : "Portal online and 100% cached for offline use");
+  }
+  const pwaInstallText = document.getElementById('pwaInstallText');
+  if (pwaInstallText) pwaInstallText.textContent = loc.pwaInstall;
 
   // Role button labels
   document.querySelectorAll('.role-btn').forEach(btn => {

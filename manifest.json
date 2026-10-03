@@ -1,0 +1,32 @@
+{
+  "name": "EDEL Elevator Documentation & Engineering Portal",
+  "short_name": "EDEL Docs",
+  "description": "Technical documentation, interactive engineering tools, and order configurator for EDEL elevator controllers (K2, ADVANCED, MdP, K3).",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0f1d",
+  "theme_color": "#0a0f1d",
+  "orientation": "any",
+  "categories": ["productivity", "utilities", "business"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

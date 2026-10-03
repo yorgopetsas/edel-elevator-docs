@@ -203,6 +203,83 @@ body {
   transform: translateY(-1px);
 }
 
+/* --- PWA OFFLINE STATUS BADGE & INSTALL BUTTON --- */
+.pwa-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: var(--radius-md);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #10b981;
+  transition: all 0.25s ease;
+  user-select: none;
+  backdrop-filter: blur(8px);
+}
+
+.pwa-status-badge.offline {
+  border-color: rgba(245, 158, 11, 0.5);
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.pwa-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  display: inline-block;
+  animation: pwaPulse 2.5s infinite;
+}
+
+.pwa-status-badge.offline .pwa-status-dot {
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+  animation: none;
+}
+
+@keyframes pwaPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
+.pwa-install-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(14, 165, 233, 0.3));
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  border-radius: var(--radius-md);
+  color: #38bdf8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pwa-install-btn:hover {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.35), rgba(14, 165, 233, 0.45));
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+.pwa-install-btn.hidden {
+  display: none !important;
+}
+
+
 .theme-toggle {
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
@@ -3009,6 +3086,12 @@ body.auth-locked > *:not(#authOverlay) {
 @media (max-width: 768px) {
   .cfg-checkbox-grid {
     grid-template-columns: 1fr;
+  }
+  .pwa-status-text {
+    display: none;
+  }
+  .pwa-status-badge {
+    padding: 6px 8px;
   }
 }
 
