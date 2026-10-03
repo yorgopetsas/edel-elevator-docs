@@ -6809,7 +6809,6 @@ TokenCustom.KSecretaExt = CRC(TOKEN_POLY, TOKEN_KMASTER_EXT, (TOKEN_ID >> 8) ^ (
 
         </div>
       `
-
     }
   },
   tech: {
